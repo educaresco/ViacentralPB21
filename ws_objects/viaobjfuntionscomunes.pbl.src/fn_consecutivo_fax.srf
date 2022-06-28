@@ -1,0 +1,27 @@
+﻿$PBExportHeader$fn_consecutivo_fax.srf
+global type fn_consecutivo_fax from function_object
+end type
+
+forward prototypes
+global function double fn_consecutivo_fax ()
+end prototypes
+
+global function double fn_consecutivo_fax ();Double	ld_consecutivo
+  
+  
+    SELECT MAX(dba.internal_control_fax.id_internal_control) + 1  
+    INTO :ld_consecutivo
+    FROM dba.internal_control_fax  ;
+
+
+	If isnull(ld_consecutivo) Then
+		ld_consecutivo = 1
+	end if
+	
+	Return ld_consecutivo
+
+
+
+
+end function
+

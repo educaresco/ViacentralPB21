@@ -1,0 +1,56 @@
+﻿$PBExportHeader$fn_fixfile.srf
+global type fn_fixfile from function_object
+end type
+
+forward prototypes
+global function integer fn_fixfile (string p_filepath)
+end prototypes
+
+global function integer fn_fixfile (string p_filepath);
+integer li_FileNum, li_FileNumtmp, loops, i
+long flen, bytes_read, new_pos
+string b //, tot_b
+
+// Set a wait cursor
+SetPointer(HourGlass!)
+
+// Get the file length, and open the file
+flen = FileLength(p_filepath)
+
+// crea una copia
+fn_filecopy(p_filepath,p_filepath+".tmp")
+
+// abre los dos archivos (borrando el contenido del original)
+li_FileNum = FileOpen(p_filepath+".tmp", StreamMode!, Read!, LockRead!)
+li_FileNumtmp = FileOpen(p_filepath, StreamMode!, Write!, LockRead!, Replace!)
+
+// Determine how many times to call FileRead
+IF flen > 32765 THEN
+	IF Mod(flen, 32765) = 0 THEN
+		loops = flen/32765
+	ELSE
+		loops = (flen/32765) + 1
+	END IF
+ELSE
+	loops = 1
+END IF
+
+// Read the file
+new_pos = 1
+FOR i = 1 to loops
+	bytes_read = FileRead(li_FileNum, b)
+	b = fn_reeplace(b,char(13)+char(13),char(13))
+	b = fn_reeplace(b,char(10)+char(10),char(10))
+	b = fn_reeplace(b,char(13)+char(13),char(13))
+	b = fn_reeplace(b,char(10)+char(10),char(10))
+	FileWrite(li_FileNumtmp,b)
+NEXT
+
+FileClose(li_FileNum)
+FileClose(li_FileNumtmp)
+FileDelete(p_filepath+".tmp")
+
+// Any Questions? estebanbernal@hotmail.com
+return 0
+end function
+

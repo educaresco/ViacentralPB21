@@ -1,0 +1,630 @@
+﻿$PBExportHeader$mb_report_rich_text.srm
+forward
+global type mb_report_rich_text from m_master
+end type
+type m_navegar from menucascade within m_view
+end type
+type m_primero from menu within m_navegar
+end type
+type m_anterior from menu within m_navegar
+end type
+type m_siguiente from menu within m_navegar
+end type
+type m_ultimo from menu within m_navegar
+end type
+type m_navegar from menucascade within m_view
+m_primero m_primero
+m_anterior m_anterior
+m_siguiente m_siguiente
+m_ultimo m_ultimo
+end type
+end forward
+
+global type mb_report_rich_text from m_master
+end type
+global mb_report_rich_text mb_report_rich_text
+
+on mb_report_rich_text.create
+mb_report_rich_text=this
+call super::create
+end on
+
+on mb_report_rich_text.destroy
+call super::destroy
+end on
+
+on m_file.create
+call super::create
+this.Text="&Archivo"
+end on
+
+on m_new.create
+call super::create
+this.Text="&Nuevo~tCtrl+N"
+this.Microhelp="Permite crear nuevos elementos dentro de la ventana actual."
+this.ToolBarItemText="Nuevo"
+this.Visible=false
+this.ToolBarItemOrder=0
+this.ToolBarItemVisible=false
+this.Shortcut=334
+end on
+
+on m_open.create
+call super::create
+this.Text="&Abrir~tCtrl+A"
+this.Microhelp="Permite cargar elementos creados, dentro de la ventana actual."
+this.ToolBarItemText="Abrir"
+this.Visible=false
+this.Enabled=false
+this.ToolBarItemOrder=1
+this.ToolBarItemVisible=false
+this.Shortcut=321
+end on
+
+event m_open::clicked;call super::clicked;ParentWindow.TriggerEvent("ue_abrir")
+end event
+
+on m_close.create
+call super::create
+this.Text="&Cerrar~tCtrl+F4"
+this.Microhelp="Cierra la ventana actual."
+this.ToolBarItemName="Exit!"
+this.ToolBarItemText="Cerrar"
+this.ToolBarItemOrder=800
+this.ToolBarItemVisible=true
+this.Shortcut=371
+end on
+
+on m_dash11.create
+call super::create
+this.Visible=false
+end on
+
+on m_save.create
+call super::create
+this.Text="&Guardar Como...~tCtrl+G"
+this.Microhelp="Permite almacenar la información procesada dentro de la ventana enun Archivo Plano."
+this.ToolBarItemName="SaveAs!"
+this.ToolBarItemText="Guardar Como..."
+this.ToolBarItemOrder=2
+this.Shortcut=327
+end on
+
+event m_save::clicked;of_SendMessage ("pfc_saveas")
+end event
+
+on m_saveas.create
+call super::create
+this.Text="A&dicionar"
+this.Microhelp="Permite adicionar registros."
+this.ToolBarItemName="Insert5!"
+this.ToolBarItemText="Adicionar"
+this.Visible=false
+this.ToolBarItemOrder=3
+this.ToolBarItemSpace=2
+end on
+
+event m_saveas::clicked;SetPointer (hourglass!)
+of_SendMessage ("pfc_addrow")
+end event
+
+on m_print.create
+call super::create
+this.Text="Im&primir~tCtrl+P"
+this.Microhelp="Permite la impresión de información basada en la ventana actual."
+this.ToolBarItemName="Print!"
+this.ToolBarItemText="Imprimir"
+this.ToolBarItemOrder=4
+this.Shortcut=336
+end on
+
+on m_printpreview.create
+call super::create
+this.Text="Vista Preli&minar"
+this.Microhelp="Permite visualizar previamente los datos de la ventana actual antes de la impresión."
+this.ToolBarItemText="Preliminar"
+end on
+
+on m_pagesetup.create
+call super::create
+this.Text="Configu&rar Página..."
+this.Microhelp="Permite cambiar los atributos de impresión."
+end on
+
+on m_printimmediate.create
+call super::create
+this.Text="Imprimir Inmediatamente"
+this.Microhelp="Imprime inmediatamente la información de la ventana actual."
+this.ToolBarItemText="Imprimir"
+this.ToolBarItemVisible=false
+end on
+
+on m_dash13.create
+call super::create
+this.Visible=true
+end on
+
+on m_delete.create
+call super::create
+this.Text="&Borrar~tCtrl+D"
+this.Microhelp="Permite eliminar el registro de la ventana actual."
+this.ToolBarItemText="Borrar"
+this.Enabled=true
+this.Shortcut=324
+end on
+
+on m_properties.create
+call super::create
+this.Text="&Propiedades"
+this.Microhelp="Permite la visualización o modificación de las propiedades asociadas a la información contenida en la ventana actual."
+this.ToolBarItemText="Propiedades"
+
+this.ToolBarItemOrder=5
+end on
+
+on m_dash14.create
+call super::create
+this.Visible=false
+end on
+
+on m_exit.create
+call super::create
+this.Text="&Salir~tAlt+F4"
+this.Microhelp="Salir de la aplicación."
+this.ToolBarItemText="Salir"
+this.Shortcut=627
+end on
+
+on m_edit.create
+call super::create
+this.Text="&Edición"
+this.Visible=false
+end on
+
+on m_undo.create
+call super::create
+this.Text="&Deshacer~tCtrl+Z"
+this.Microhelp="Reversa la última acción de edición realizada."
+this.ToolBarItemText="Deshacer"
+this.ToolBarItemVisible=false
+this.Shortcut=346
+end on
+
+on m_cut.create
+call super::create
+this.Text="Cor&tar~tCtrl+X"
+this.Microhelp="Mueve la información seleccionada al portapapeles (ClipBoard)."
+this.ToolBarItemText="Cortar"
+this.ToolBarItemVisible=false
+this.Shortcut=344
+end on
+
+on m_copy.create
+call super::create
+this.Text="&Copiar~tCtrl+C"
+this.Microhelp="Copia la información seleccionada al portapapeles (ClipBoard)."
+this.ToolBarItemText="Copiar"
+this.ToolBarItemVisible=false
+this.Shortcut=323
+end on
+
+on m_paste.create
+call super::create
+this.Text="&Pegar~tCtrl+V"
+this.Microhelp="Inserta el contenido del Portapapeles (ClipBoard) en el sitio donde se encuentre el cursor."
+this.ToolBarItemText="Pegar"
+this.ToolBarItemVisible=false
+this.Shortcut=342
+end on
+
+on m_pastespecial.create
+call super::create
+this.Text="Pegar &Especial..."
+this.Microhelp="Inserta el contenido del Portapapeles (ClipBoard) como un vínculo, objeto, u otro formato."
+this.Visible=false
+this.ToolBarItemVisible=false
+end on
+
+on m_clear.create
+call super::create
+this.Text="&Limpiar"
+this.Microhelp="Remueve la selección de la ventana actual."
+this.ToolBarItemText="Limpiar"
+this.Visible=false
+end on
+
+on m_dash22.create
+call super::create
+this.Visible=false
+end on
+
+on m_selectall.create
+call super::create
+this.Text="Seleccionar &Todo~tCtrl+A"
+this.Microhelp="Selecciona toda la información disponible en la ventana actual."
+this.ToolBarItemText="Seleccionar Todo"
+this.Visible=false
+this.Shortcut=321
+end on
+
+on m_dash23.create
+call super::create
+this.Visible=false
+end on
+
+on m_find.create
+call super::create
+this.Text="&Buscar...~tCtrl+F"
+this.Microhelp="Encuentra el texto especificado dentro de la ventana actual."
+this.ToolBarItemText="Buscar"
+this.Visible=false
+this.ToolBarItemVisible=false
+this.Shortcut=326
+end on
+
+on m_replace.create
+call super::create
+this.Text="&Reemplazar...~tCtrl+H"
+this.Microhelp="Reemplaza el texto especificado  por otro dentro de la ventana actual."
+this.ToolBarItemText="Reemplazar"
+this.Visible=false
+this.ToolBarItemVisible=false
+this.Shortcut=328
+end on
+
+on m_dash24.create
+call super::create
+this.Visible=false
+end on
+
+on m_updatelinks.create
+call super::create
+this.Text="Actualizar Vínculos"
+this.Microhelp="Permite la actualización de vínculos con los objetos insertados dentro de la ventana actual."
+this.Visible=false
+end on
+
+on m_object1.create
+call super::create
+this.Text="&Objeto"
+this.Microhelp="Contiene las opciones para los objetos insertados."
+this.Visible=false
+end on
+
+on m_edit1.create
+call super::create
+this.Text="&Editar"
+this.Microhelp="Edita el objeto seleccionado."
+end on
+
+on m_open1.create
+call super::create
+this.Text="&Abrir..."
+this.Microhelp="Carga información del objeto seleccionado."
+end on
+
+type m_view from m_master`m_view within mb_report_rich_text
+m_navegar m_navegar
+end type
+
+on m_view.create
+call super::create
+this.Text="&Ver"
+this.m_navegar=create m_navegar
+this.Item[UpperBound(this.item)+1]=this.m_navegar
+end on
+
+on m_view.destroy
+call super::destroy
+destroy(this.m_navegar)
+end on
+
+on m_ruler.create
+call super::create
+this.Text="&Regla"
+this.Microhelp="Visualiza u oculta la regla."
+this.ToolBarItemName="Custom041!"
+this.ToolBarItemText="Regla"
+this.ToolBarItemOrder=99
+end on
+
+on m_dash31.create
+call super::create
+this.Visible=false
+end on
+
+on m_largeicon.create
+call super::create
+this.Text="Iconos &Grandes"
+this.Microhelp="Visualiza los items usando íconos grandes."
+this.ToolBarItemText="Iconos Grandes"
+end on
+
+on m_smallicons.create
+call super::create
+this.Text="Iconos &Pequeños"
+this.Microhelp="Visualiza los items usando íconos pequeños."
+this.ToolBarItemText="Iconos Pequeños"
+end on
+
+on m_list.create
+call super::create
+this.Text="&Lista"
+this.Microhelp="Visualiza los items a manera de lista."
+this.ToolBarItemText="Lista"
+end on
+
+on m_details.create
+call super::create
+this.Text="&Detalles"
+this.Microhelp="Visualiza información correspondiente a los items."
+this.ToolBarItemText="Detalles"
+end on
+
+on m_arrangeicons.create
+call super::create
+this.Text="Organizar &Iconos"
+this.Microhelp="Contiene comandos para organizar items."
+end on
+
+on m_by1.create
+call super::create
+this.Text="&Por"
+this.Microhelp="Organiza por.."
+end on
+
+on m_autoarrange.create
+call super::create
+this.Text="Organización &Automática"
+this.Microhelp="Organiza los items automáticamente."
+end on
+
+on m_first.create
+call super::create
+this.Text="Primero"
+this.Microhelp="Primer registro."
+this.ToolBarItemText="Primero"
+this.Visible=false
+end on
+
+on m_priorpage.create
+call super::create
+this.Text="Anterior"
+this.Microhelp="Registro anterior."
+this.ToolBarItemText="Anterior"
+this.Visible=false
+end on
+
+on m_nextpage.create
+call super::create
+this.Text="Siguiente"
+this.Microhelp="Siguiente registro."
+this.ToolBarItemText="Siguiente"
+this.Visible=false
+end on
+
+on m_lastpage.create
+call super::create
+this.Text="Ultimo"
+this.Microhelp="Ultimo registro."
+this.ToolBarItemText="Ultimo"
+this.Visible=false
+end on
+
+on m_sort.create
+call super::create
+this.Text="&Ordenar..."
+this.Microhelp="Permite ordenar los items de la ventana actual."
+this.ToolBarItemName="Sort!"
+this.ToolBarItemText="Ordenar"
+this.ToolBarItemOrder=185
+end on
+
+on m_filter.create
+call super::create
+this.Text="&Filtrar..."
+this.Microhelp="Permite filtrar los items de la ventana actual."
+this.ToolBarItemName="Custom062!"
+this.ToolBarItemText="Filtrar"
+this.ToolBarItemOrder=190
+end on
+
+on m_zoom.create
+call super::create
+this.Text="&Ampliar..."
+this.Microhelp="Escala la visualización de la vista preliminar."
+this.ToolBarItemName="Search!"
+this.ToolBarItemText="Ampliar"
+this.Visible=false
+this.Enabled=false
+this.ToolBarItemOrder=195
+this.ToolBarItemVisible=false
+end on
+
+on m_insert.create
+call super::create
+this.Text="&Insertar"
+this.Visible=false
+end on
+
+on m_insertfile.create
+call super::create
+this.Text="&Archivo..."
+this.Microhelp="Inserta el texto de un archivo externo."
+end on
+
+on m_picture.create
+call super::create
+this.Text="&Imagen..."
+this.Microhelp="Inserta una imagen desde un archivo."
+end on
+
+on m_object.create
+call super::create
+this.Text="&Objeto..."
+this.Microhelp="Inserta un objeto."
+end on
+
+on m_tools.create
+call super::create
+this.Text="&Herramientas"
+end on
+
+on m_toolbars.create
+call super::create
+this.Text="&Personalizar Barras..."
+this.Microhelp="Permite personalizar la barra de herramientas."
+end on
+
+on m_window.create
+call super::create
+this.Text="Ven&tana"
+end on
+
+on m_cascade.create
+call super::create
+this.Text="&Cascada"
+this.Microhelp="Organiza las ventanas cargadas en forma de cascada."
+this.ToolBarItemText="Cascada"
+end on
+
+on m_tilehorizontal.create
+call super::create
+this.Text="Mosaico &Horizontal"
+this.Microhelp="Organiza las ventanas cargadas en estilo mosaico horizontal."
+this.ToolBarItemText="Mosaico Horizontal"
+end on
+
+on m_tilevertical.create
+call super::create
+this.Text="Mosaico &Vertical"
+this.Microhelp="Organiza las ventanas cargadas en estilo mosaico vertical."
+this.ToolBarItemText="Mosaico Vertical"
+end on
+
+on m_layer.create
+call super::create
+this.Text="C&ompleta"
+this.Microhelp="Ajusta la ventana actual al espacio disponible en el módulo."
+this.ToolBarItemText="Completa"
+end on
+
+on m_minimizeall.create
+call super::create
+this.Text="&Minimizar Todas"
+end on
+
+on m_undoarrange.create
+call super::create
+this.Text="&Deshacer"
+this.Microhelp="Deshace la última acción al rededor de las ventanas."
+this.Visible=false
+end on
+
+on m_help.create
+call super::create
+this.Text="A&yuda"
+end on
+
+on m_helptopics.create
+call super::create
+this.Text="&Temas de Ayuda..."
+this.Microhelp="Visualiza los temas de ayuda disponibles por la aplicación."
+this.ToolBarItemName="..\Bitmaps\Ayuda.bmp"
+this.ToolBarItemText="Ayuda"
+this.ToolBarItemOrder=9000
+end on
+
+on m_about.create
+call super::create
+this.Text="&Acerca de..."
+this.Microhelp="Visualiza información acerca del Sistema de Información."
+end on
+
+type m_navegar from menucascade within m_view
+m_primero m_primero
+m_anterior m_anterior
+m_siguiente m_siguiente
+m_ultimo m_ultimo
+end type
+
+on m_navegar.create
+this.Text="&Navegar"
+this.Visible=false
+this.ToolBarItemVisible=false
+this.ToolBarItemOrder=165
+this.ToolBarItemSpace=2
+this.Enabled=false
+this.m_primero=create m_primero
+this.m_anterior=create m_anterior
+this.m_siguiente=create m_siguiente
+this.m_ultimo=create m_ultimo
+this.Item[]={this.m_primero, &
+this.m_anterior, &
+this.m_siguiente, &
+this.m_ultimo}
+end on
+
+on m_navegar.destroy
+destroy(this.m_primero)
+destroy(this.m_anterior)
+destroy(this.m_siguiente)
+destroy(this.m_ultimo)
+end on
+
+type m_primero from menu within m_navegar
+end type
+
+on m_primero.create
+this.Text="&Primero"
+this.Microhelp="Primer registro."
+this.ToolBarItemName="VCRFirst!"
+this.ToolBarItemText="Primero"
+this.ToolBarItemOrder=166
+end on
+
+event clicked;of_SendMessage ("pfc_firstpage")
+end event
+
+type m_anterior from menu within m_navegar
+end type
+
+on m_anterior.create
+this.Text="&Anterior"
+this.Microhelp="Registro anterior."
+this.ToolBarItemName="VCRPrior!"
+this.ToolBarItemText="Anterior"
+this.ToolBarItemOrder=167
+end on
+
+event clicked;of_SendMessage ("pfc_previouspage")
+end event
+
+type m_siguiente from menu within m_navegar
+end type
+
+on m_siguiente.create
+this.Text="&Siguiente"
+this.Microhelp="Siguiente registro."
+this.ToolBarItemName="VCRNext!"
+this.ToolBarItemText="Siguiente"
+this.ToolBarItemOrder=168
+end on
+
+event clicked;of_SendMessage ("pfc_nextpage")
+end event
+
+type m_ultimo from menu within m_navegar
+end type
+
+on m_ultimo.create
+this.Text="&Ultimo"
+this.Microhelp="Ultimo registro."
+this.ToolBarItemName="VCRLast!"
+this.ToolBarItemText="Ultimo"
+this.ToolBarItemOrder=169
+end on
+
+event clicked;of_SendMessage ("pfc_lastpage")
+end event
+

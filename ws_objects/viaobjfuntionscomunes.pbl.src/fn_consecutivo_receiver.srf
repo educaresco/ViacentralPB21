@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_consecutivo_receiver.srf
+global type fn_consecutivo_receiver from function_object
+end type
+
+forward prototypes
+global function double fn_consecutivo_receiver (string is_branch_insta)
+end prototypes
+
+global function double fn_consecutivo_receiver (string is_branch_insta);Double	ld_receiver
+  
+ SELECT Max(dba.receiver.id_receiver) + 1 
+   INTO :ld_receiver  
+   FROM dba.receiver 
+WHERE dba.receiver.id_branch = :is_branch_insta  ;
+
+
+If isnull(ld_receiver) Then
+	ld_receiver = 1
+END IF
+
+	Return ld_receiver
+
+
+
+end function
+

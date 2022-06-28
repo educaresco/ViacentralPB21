@@ -1,0 +1,12 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "Informes\\ava_informes_ldp.pbl" "";
+@end;
+@begin Objects
+ "Informes\\w_cambiar_limitecredito.srw" "Informes\\ava_informes_ldp.pbl";
+ "Informes\\dw_limitecredito.srd" "Informes\\ava_informes_ldp.pbl";
+ "Informes\\dcs_informe_crosstab_bk.srd" "Informes\\ava_informes_ldp.pbl";
+ "Informes\\w_ldp_informes.srw" "Informes\\ava_informes_ldp.pbl";
+ "Informes\\dcs_informe_crosstab.srd" "Informes\\ava_informes_ldp.pbl";
+ "Informes\\d_frmwrk_parametros_ldc.srd" "Informes\\ava_informes_ldp.pbl";
+@end;

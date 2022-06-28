@@ -1,0 +1,36 @@
+﻿$PBExportHeader$fn_status_giro.srf
+global type fn_status_giro from function_object
+end type
+
+forward prototypes
+global function string fn_status_giro (string ls_branch, double ld_receiver)
+end prototypes
+
+global function string fn_status_giro (string ls_branch, double ld_receiver);string	ls_status =""
+	
+	SELECT dba.pago_invoice.cedula_pago_invoice  
+    INTO :ls_status  
+    FROM dba.pago_invoice  
+    WHERE ( dba.pago_invoice.id_branch = :ls_branch ) AND  
+          ( dba.pago_invoice.id_receiver = :ld_receiver )   ;
+
+
+if ls_status <> "" then
+	Return ls_status;
+else	
+ 
+   SELECT dba.costumer_service.des_costumer_service  
+    INTO :ls_status  
+    FROM dba.costumer_service  
+    WHERE ( dba.costumer_service.id_branch = :ls_branch ) AND  
+         ( dba.costumer_service.id_receiver = :ld_receiver )   ;
+
+    if ls_status <> "" then
+	    Return ls_status;
+    else
+       ls_status = "NO Pagado No Avisos "
+		 Return ls_status;
+    end if
+end if
+end function
+

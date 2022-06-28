@@ -1,0 +1,34 @@
+﻿$PBExportHeader$dw_agent_conf_deposit.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912~t/*IF(MOD(GETROW(),2)=0,RGB(102,153,255),RGB(255,255,255)) */RGB(255,255,255)"  height.autosize=yes)
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="agent_deposit.id_branch" )
+ column=(type=char(4) updatewhereclause=yes name=branch_id_main_branch dbname="agent_deposit.id_main_branch" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="agent_deposit.name_branch" )
+ column=(type=long updatewhereclause=yes name=qty dbname="qty" )
+ column=(type=decimal(4) updatewhereclause=yes name=vlr_total dbname="vlr_total" )
+ retrieve="select   ad.id_branch,b.id_main_branch, b.name_branch, COUNT(*) qty ,sum(ad.trans_amount) vlr_total
+from     dba.agent_deposit ad,dba.branch b
+where    ad.id_branch = b.id_branch
+and      ad.id_proc ='N'
+group by ad.id_branch,b.id_main_branch, b.name_branch
+order by ad.id_branch" )
+group(level=1 header.height=0 trailer.height=0 by=("" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Agent" border="2" color="0" x="9" y="8" height="56" width="366" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="8" height="56" width="366" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Pending Dep." border="2" color="0" x="1925" y="8" height="56" width="375" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="1925" y="8" height="56" width="375" format="[general]" html.valueishtml="0"  name=qty visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Total Deposits" border="2" color="0" x="2318" y="8" height="56" width="366" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="2318" y="8" height="56" width="366" format="[currency]" html.valueishtml="0"  name=vlr_total visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Agent Name" border="2" color="0" x="777" y="8" height="56" width="1129" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="777" y="8" height="56" width="1129" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Group" border="2" color="0" x="393" y="8" height="56" width="366" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="393" y="8" height="56" width="366" format="[general]" html.valueishtml="0"  name=branch_id_main_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

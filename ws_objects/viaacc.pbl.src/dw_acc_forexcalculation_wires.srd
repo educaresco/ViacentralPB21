@@ -1,0 +1,41 @@
+﻿$PBExportHeader$dw_acc_forexcalculation_wires.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=76 color="536870912" )
+summary(height=80 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=datetime updatewhereclause=yes name=transaccion_diaria_payee_reconciliationdate dbname="TRANSACCION_DIARIA_PAYEE.RECONCILIATIONDATE" )
+ column=(type=decimal(0) updatewhereclause=yes name=transaccion_diaria_payee_cons_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=transaccion_diaria_payee_debit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=transaccion_diaria_payee_exchange_rate dbname="TRANSACCION_DIARIA_PAYEE.EXCHANGE_RATE" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA" )
+ retrieve="SELECT RECONCILIATIONDATE,
+		 T.CONS_TRANS_DIARIA, 
+		 DEBIT_TRANS_DIARIA, 
+		 EXCHANGE_RATE,
+		 DES_TRANS_DIARIA
+  FROM dba.TRANSACCION_DIARIA_PAYEE T, dba.TRANSACCION_DIARIA_BANCO_PAYEE B
+ WHERE T.CONS_TRANS_DIARIA = B.CONS_TRANS_DIARIA
+	AND ID_CONCEPTO_CONTABLE = 'DP'
+	AND ISNULL(ISUSEDFORSTOCK,'N') = 'N'
+	AND ID_GROUP_TRANS_DIARIA = :p_payer
+--	AND ISNULL(EXCHANGE_RATE,0) <> 0
+--	AND ISNULL(EXCHANGE_RATE,0) > 2
+	AND RECONCILIATIONDATE >= :p_date
+ORDER BY RECONCILIATIONDATE" arguments=(("p_date", datetime),("p_payer", string)) )
+text(band=header alignment="2" text="Date " border="2" color="0" x="18" y="16" height="52" width="370" html.valueishtml="0"  name=date__t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount" border="2" color="0" x="407" y="16" height="52" width="421" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Exch.Rate" border="2" color="0" x="846" y="16" height="52" width="274" html.valueishtml="0"  name=orders_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Foreign Amt" border="2" color="0" x="1138" y="16" height="52" width="526" html.valueishtml="0"  name=foreignamount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="18" y="4" height="52" width="370" format="[shortdate]" html.valueishtml="0"  name=transaccion_diaria_payee_reconciliationdate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="33554432" x="407" y="4" height="52" width="421" format="[currency]" html.valueishtml="0"  name=transaccion_diaria_payee_debit_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="846" y="4" height="52" width="274" format="#,##0.0000" html.valueishtml="0"  name=transaccion_diaria_payee_exchange_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" transaccion_diaria_payee_debit_trans_diaria *  transaccion_diaria_payee_exchange_rate "border="0" color="33554432" x="1143" y="4" height="52" width="526" format="[currency]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum( transaccion_diaria_payee_debit_trans_diaria *  transaccion_diaria_payee_exchange_rate  for all)"border="0" color="33554432" x="1143" y="12" height="52" width="526" format="[currency]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="33554432" x="1687" y="4" height="56" width="1152" html.valueishtml="0"  name=transaccion_diaria_payee_des_trans_diaria visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

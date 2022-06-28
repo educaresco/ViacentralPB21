@@ -1,0 +1,24 @@
+﻿$PBExportHeader$fn_tipo_agencia.srf
+global type fn_tipo_agencia from function_object
+end type
+
+forward prototypes
+global function string fn_tipo_agencia (string ls_branch)
+end prototypes
+
+global function string fn_tipo_agencia (string ls_branch);string	ls_tipo
+  
+  
+  SELECT dba.aplication_branch.tipo_agencia  
+    INTO :ls_tipo  
+    FROM dba.aplication_branch  
+   WHERE dba.aplication_branch.id_branch = :ls_branch   ;
+
+
+	if sqlca.sqlcode <> 0 then
+		ls_tipo = 'D'
+	end if
+	
+	Return	ls_tipo
+end function
+

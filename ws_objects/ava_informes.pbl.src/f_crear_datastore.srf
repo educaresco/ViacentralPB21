@@ -1,0 +1,125 @@
+﻿$PBExportHeader$f_crear_datastore.srf
+$PBExportComments$Origen nor_fu_1.pbl
+global type f_crear_datastore from function_object
+end type
+
+forward prototypes
+global function datastore f_crear_datastore (stru_frmwrk_parametros astr_parametros)
+end prototypes
+
+global function datastore f_crear_datastore (stru_frmwrk_parametros astr_parametros);//************************************************************************
+//	AvanSoft S.A. 2004/09/04
+//
+//	Esta función es general, se usa para construir un datastore dinamicamente
+// basádose en unos parámetro enviados.
+//
+//	Recibe como parámetro la estructura astr_parametros de tipo stru_frmwrk_parametros
+// la cual tiene los siguientes datos:
+//
+// String[1] 
+// Tipo: String
+// Sensitivo: No
+// Requerido: Si
+//
+// Es posible usar este para enviar tres tipos de parametros los cuales
+// se explican a continuación:
+// 1 - Se envia una cadena con el SQL con el cual se quiere construir la DataStore,
+// Ej SQL: "SELECT CDCODIGO, DSNOMBE FROM TCOLORES WHERE SNACTIVO = 'S'"
+//
+// 2 - Se envia un número que indica cuantas columnas debe tener la DataStore
+// y esta se crea de una tabla basura de la DB con todas las columnas de tipo
+// String
+// Ej Nro Columnas: '3' se crea una DataStore con 3 columnas de tipo STRING,
+//
+// 3 - Se envia una cadena con el nombre de una datawindow existente (previamente
+// creada) la cual se le asigna a la DataStore
+// Ej DataWindow: 'd_colores_activos'
+//
+// Integer[1] 
+// Tipo: Integer
+// Sensitivo: No
+// Requerido: No
+// En este se envia la longitud máxima que deben tener todas las columnas creadas
+// en la DataStore, si no se envia se pone por defecto 1 como longitud maxima
+// para todas la columnas de la DataStore creada.
+//
+// NOTA:
+// Este parámetro solo es usado cuando se crea la DataStore usando una tabla
+// basura de la DB de acuerdo a un número de columnas enviado.
+//
+// String[2] 
+// Tipo: String
+// Sensitivo: No
+// Requerido: Si
+// S envia una cadena que contiene la descripción del tipo de lista
+// de datos que se va a generar en el DataStore para el mensaje en
+// caso de error.
+//
+//	Retorna como parametro la datastore creada si la operación fue exitosa
+// si falló retorna un objeto DataStore Nulo
+//************************************************************************
+
+stru_frmwrk_parametros		lstr_mensajes
+DATASTORE				lds_sql_datos
+BOOLEAN					lb_continuar
+INTEGER					li_fila, li_columnas
+STRING 					ls_columna, ls_sql, ls_syntax, ls_error_syntax, ls_error_crear
+
+lb_continuar = True
+
+// Valida si se envio el número de columnas que debe tener la datastore
+IF IsNumber(astr_parametros.String[1]) THEN
+	li_columnas = Long(astr_parametros.String[1])
+	IF li_columnas > 0 THEN
+		IF UpperBound(astr_parametros.Integer) = 0 OR &
+			IsNull(astr_parametros.Integer) THEN
+			astr_parametros.Integer[1] = 1
+		ELSE
+			IF astr_parametros.Integer[1] = 0 THEN
+				astr_parametros.Integer[1] = 1
+			END IF	
+		END IF
+		
+		ls_sql='SELECT  '
+		FOR li_fila = 1 TO li_columnas
+			ls_sql = ls_sql + "'" + Space(astr_parametros.Integer[1]) + "' AS COLUMNA" + (String(li_fila))
+			IF li_fila <> li_columnas THEN
+				ls_sql = ls_sql+', '
+			END IF	
+		NEXT 		
+	ELSE
+		Messagebox("Error","No se definieron columnas para generar " + astr_parametros.String[2] + ".",Stopsign!)
+		lb_continuar = False
+	END IF	
+ELSE
+	IF Upper(Left(astr_parametros.String[1],7)) = 'SELECT ' THEN
+		ls_sql = astr_parametros.String[1]
+	END IF	
+END IF	
+
+IF lb_continuar THEN						
+	IF IsNumber(astr_parametros.String[1]) OR Upper(Left(astr_parametros.String[1],7)) = 'SELECT ' THEN	
+		ls_syntax	= SQLCA.SyntaxFromSQL(ls_sql,'Style(Type=Tabular)',ls_error_syntax)
+		lds_sql_datos = Create DataStore 
+	
+		// Validación de la sintaxis del Query
+		IF Len(ls_error_syntax) > 0 THEN
+			Messagebox("Error","Los criterios para generar " + astr_parametros.String[2] + " no están disponibles, comuniquese con informática. Error: " + ls_error_syntax,Stopsign!)
+			Destroy lds_sql_datos
+		ELSE
+			lds_sql_datos.Create(ls_syntax,ls_error_crear)
+			IF Len(ls_error_crear) > 0 THEN
+				Messagebox("Error","Los criterios para generar " + astr_parametros.String[2] + " no están disponibles, comuniquese con informática. Error: " + ls_error_syntax,Stopsign!)
+				Destroy lds_sql_datos
+			END IF
+		END IF	
+	ELSE
+		lds_sql_datos = Create DataStore 
+		lds_sql_datos.DataObject = astr_parametros.String[1]
+	END IF
+END IF
+	
+Return lds_sql_datos
+
+end function
+

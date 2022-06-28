@@ -1,0 +1,12 @@
+﻿$PBExportHeader$stru_frmwrk_parametros_reportes.srs
+global type stru_frmwrk_parametros_reportes from structure
+	string		s_parametro[]
+	string		s_tipo_parametro[]
+	string		s_lista_valores[]
+	string		s_valor_x_defecto[]
+	string		s_descripcion_x_defecto[]
+	string		s_mascara[]
+	string		s_micro_ayuda[]
+	boolean		b_ventana_seleccion[]
+end type
+

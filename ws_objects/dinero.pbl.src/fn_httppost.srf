@@ -1,0 +1,117 @@
+﻿$PBExportHeader$fn_httppost.srf
+global type fn_httppost from function_object
+end type
+
+forward prototypes
+global function integer fn_httppost ()
+end prototypes
+
+global function integer fn_httppost ();//Inet iinet
+//Blob lblb_args
+//String ls_headers
+//String ls_url
+//Long ll_length
+//
+//
+//
+//iir_msgbox = CREATE n_ir_msgbox
+////String iir_msgbox
+//
+//ls_url = "https://sandbox.akosmrge.com/"
+//lblb_args = blob("me")
+//
+//ll_length = Len(lblb_args)
+//ls_headers = "Content-Length: " + String(ll_length) + "~n~n"
+//iinet.PostURL (ls_url, lblb_args, ls_headers, 8080, iir_msgbox)
+
+
+
+
+
+String ls_Headers, ls_URL
+Long ll_Length
+Inet iinet_1
+Blob lblob_args 
+
+n_ir_msgbox iir_Results1
+This.GetContextService("Internet", iinet_1 )
+iir_Results1 = CREATE n_ir_msgbox
+ls_URL= "http://www.applied-software.com/index.cgi"
+lblob_args = Blob("")
+ll_Length = Len(lblob_args)
+ls_Headers = "Content-Length: " + String(ll_Length) + "~n~n"
+iinet_1.PostURL( ls_URL, lblob_args, ls_Headers, iir_Results1 ) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+return 1
+//messagebox("",iir_Results1)
+
+//<remittance_request>
+//                <SENDER_MDN>7602340004</SENDER_MDN>
+//                <REMIT_AMOUNT>999.9900</REMIT_AMOUNT>
+//                <MOBILE_SERVICE_PROVIDER>0001</MOBILE_SERVICE_PROVIDER>
+//                <CLIENT_TRANSACTION_ID>2111111110</CLIENT_TRANSACTION_ID>
+//                <CLIENT_SENDER_ACCOUNT_ID>222222222223</CLIENT_SENDER_ACCOUNT_ID>
+//                <CLIENT_AGENCY_ID>3333333333</CLIENT_AGENCY_ID>
+//                <CLIENT_RECIPIENT_ID>444444444444445</CLIENT_RECIPIENT_ID>
+//                <SENDER_FIRST_NAME>CLARA</SENDER_FIRST_NAME>
+//                <SENDER_MIDDLE_NAME>O</SENDER_MIDDLE_NAME>
+//                <SENDER_LAST_NAME> WILLIAMS</SENDER_LAST_NAME>
+//                <SENDER_SECOND_LAST_NAME>COMPS</SENDER_SECOND_LAST_NAME>
+//                <SENDER_ADDRESS>310 ROGERS APTO F305 ATHENS</SENDER_ADDRESS>
+//                <SENDER_PHONE_1>8581111111</SENDER_PHONE_1>
+//                <SENDER_PHONE_2>8582222222</SENDER_PHONE_2>
+//                <SENDER_ZIP_CODE>92075</SENDER_ZIP_CODE>
+//                <SENDER_CITY>ATHENS</SENDER_CITY>
+//                <SENDER_STATE_ID>GEORGIA</SENDER_STATE_ID>
+//                <SENDER_COUNTY>SOMEWHERE</SENDER_COUNTY>
+//                <SENDER_COUNTRY>USA</SENDER_COUNTRY>
+//                <SENDER_IDENTIFICATION_TYPE>LD</SENDER_IDENTIFICATION_TYPE>
+//                <CLIENT_SENDER_IDENTIFICATION>555555555555555</CLIENT_SENDER_IDENTIFICATION>
+//                <RECIPIENT_ID>6666666666666667</RECIPIENT_ID>
+//                <CURRENCY>MXP</CURRENCY>
+//                <RECIPIENT_STATE_ID>XXXXX</RECIPIENT_STATE_ID>
+//                <RECIPIENT_COUNTRY_ID>MEX</RECIPIENT_COUNTRY_ID>
+//                <PAYMENT_LOCATION_ID>7777777777</PAYMENT_LOCATION_ID>
+//                <RECIPIENT_FIRST_NAME>JULIAN</RECIPIENT_FIRST_NAME>
+//                <RECIPIENT_MIDDLE_NAME>ESTEBAN</RECIPIENT_MIDDLE_NAME>
+//                <RECIPIENT_LAST_NAME>OROZCO</RECIPIENT_LAST_NAME>
+//                <RECIPIENT_SECOND_LAST_NAME>VASQUEZ</RECIPIENT_SECOND_LAST_NAME>
+//                <RECIPIENT_ADDRESS>AV. EL POBLADO 123456</RECIPIENT_ADDRESS>
+//                <RECIPIENT_PHONE_1>5255536381</RECIPIENT_PHONE_1>
+//                <RECIPIENT_PHONE_2>5255536382</RECIPIENT_PHONE_2>
+//                <RECIPIENT_ZIP_CODE>8888888</RECIPIENT_ZIP_CODE>
+//                <AMOUNT_SEND>988.9900</AMOUNT_SEND>
+//                <CLIENT_EXCHANGE_RATE>10.6581</CLIENT_EXCHANGE_RATE>
+//                <PAYMENT_MODE>P</PAYMENT_MODE>
+//                <BANK_NAME>EXAMPLE BANK</BANK_NAME>
+//                <RECIPIENT_ACCOUNT_NUM>99999999999999999999999999999</RECIPIENT_ACCOUNT_NUM>
+//                <PAYMENT_CURRENCY>N</PAYMENT_CURRENCY>
+//                <PAY_AMOUNT>10540.7543</PAY_AMOUNT>
+//                <RECIPIENT_CITY>OAXACA</RECIPIENT_CITY>
+//                <PAYMENT_LOCATION>VENIR Y CONSEGUIR QUE</PAYMENT_LOCATION>
+//                <PAYMENT_COMPANY>Sample Payment Co</PAYMENT_COMPANY>
+//                <PAYMENT_ADDRESS>Sample Payment Address</PAYMENT_ADDRESS>
+//                <PAYMENT_CITY>Oaxaca</PAYMENT_CITY>
+//                <PAYMENT_STATE_ID>XYXYX</PAYMENT_STATE_ID>
+//                <PAYMENT_ZIP_CODE>13131</PAYMENT_ZIP_CODE>
+//                <PAYMENT_PHONE>1414141414</PAYMENT_PHONE>
+//                <FOLIO>121212121212121212121212121213</FOLIO>
+//                <CLIENT_FEE>6.5000</CLIENT_FEE>
+//                <MRG_FEE>2.0000</MRG_FEE>
+//                <FUNDING_SOURCE_FEE>2.5000</FUNDING_SOURCE_FEE>
+//                <SENDER_LANGUAGE>ENG</SENDER_LANGUAGE>
+//</remittance_request>
+end function
+

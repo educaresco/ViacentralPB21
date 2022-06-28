@@ -1,0 +1,47 @@
+﻿$PBExportHeader$fn_recursionfillmenutable.srf
+global type fn_recursionfillmenutable from function_object
+end type
+
+forward prototypes
+global function integer fn_recursionfillmenutable (menu p_menu, integer p_level, string p_id)
+end prototypes
+
+global function integer fn_recursionfillmenutable (menu p_menu, integer p_level, string p_id);
+int li_items, i
+string ls_id, ls_show
+
+li_items = UpperBound(p_menu.item)
+
+p_level = p_level + 1
+
+for i = 1 to li_items	
+//	messagebox("",p_menu.item[i].text)
+
+	if p_menu.item[i].visible then
+	
+		ls_id = p_id + fn_completar_cadena(string(i),'I'," ",3) + "."
+	
+		ls_show = fn_replace(p_menu.item[i].text,"&","")
+		ls_show = fn_replace(ls_show,"~t"," - ")		
+		
+		INSERT INTO DBA.SEC_MENUTITLES 
+		( idmenutitle,   
+		levelmenutitle,   
+		menutitle,   
+		showtitle )  
+		VALUES ( :ls_id,   
+		:p_level,   
+		:p_menu.item[i].text,   
+		:ls_show)  ;
+		if SQLCA.SQLCode <> 0 then
+			Messagebox("Error","Error creating menu table."+SQLCA.SQLErrText,StopSign!)
+			return 0
+		end if		
+		fn_recursionfillmenutable(p_menu.item[i],p_level,ls_id)
+	end if
+
+next
+
+return 0
+end function
+

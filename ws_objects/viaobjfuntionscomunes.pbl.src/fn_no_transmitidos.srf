@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_no_transmitidos.srf
+global type fn_no_transmitidos from function_object
+end type
+
+forward prototypes
+global function long fn_no_transmitidos ()
+end prototypes
+
+global function long fn_no_transmitidos ();Double ll_cont
+
+  SELECT Count(*)  
+    INTO :ll_cont  
+    FROM dba.receiver  
+   WHERE (dba.receiver.id_flag_receiver = 'T' OR  
+         dba.receiver.id_flag_receiver = 'I') AND  
+         dba.receiver.trans_receiver <> 'T'   ;
+
+			
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ll_cont
+end if
+end function
+

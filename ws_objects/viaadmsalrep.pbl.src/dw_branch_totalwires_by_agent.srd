@@ -1,0 +1,68 @@
+﻿$PBExportHeader$dw_branch_totalwires_by_agent.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=364 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=name_branch dbname="NAME_BRANCH" )
+ column=(type=long updatewhereclause=yes identity=yes name=came_branch dbname="" )
+ column=(type=char(10) updatewhereclause=yes name=id_agent dbname="ID_AGENT" )
+ retrieve="SELECT A.ID_BRANCH, A.NAME_BRANCH, SUM(TOTAL_WIRES), A.ID_AGENT
+FROM (SELECT  DBA.RECEIVER.ID_BRANCH, NAME_BRANCH,COUNT(ID_RECEIVER) AS TOTAL_WIRES, ID_AGENT
+	  FROM DBA.RECEIVER, DBA.BRANCH, DBA.BRANCH_AGENT
+	  WHERE DBA.RECEIVER.ID_BRANCH = DBA.BRANCH.ID_BRANCH AND
+		    DBA.BRANCH.ID_BRANCH = DBA.BRANCH_AGENT.ID_BRANCH AND
+			DATE_RECEIVER BETWEEN :date_from AND :date_to and
+			dba.receiver.id_flag_receiver <> 'A' AND 
+			dba.receiver.id_receiver > 0
+	  GROUP BY DBA.RECEIVER.ID_BRANCH, NAME_BRANCH,ID_AGENT
+	  UNION
+	  SELECT  DBA.RECEIVER.ID_BRANCH, NAME_BRANCH,COUNT(ID_RECEIVER)* -1 AS TOTAL_WIRES, ID_AGENT
+	  FROM DBA.RECEIVER, DBA.BRANCH, DBA.BRANCH_AGENT
+ 	  WHERE DBA.RECEIVER.ID_BRANCH = DBA.BRANCH.ID_BRANCH AND
+		    DBA.BRANCH.ID_BRANCH = DBA.BRANCH_AGENT.ID_BRANCH AND
+			DATE_RECEIVER BETWEEN :date_from AND :date_to and
+			dba.receiver.id_flag_receiver <> 'A' AND 
+			dba.receiver.id_receiver < 0
+	  GROUP BY DBA.RECEIVER.ID_BRANCH, NAME_BRANCH,ID_AGENT) A
+GROUP BY A.ID_BRANCH, A.NAME_BRANCH,A.ID_AGENT
+
+" arguments=(("date_from", datetime),("date_to", datetime))  sort="id_agent A name_branch A " )
+group(level=1 header.height=176 trailer.height=92 by=("id_agent" ) header.color="536870912" trailer.color="536870912" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_16 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_14 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2953" y="28" height="68" width="471" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2702" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2702" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Total Wires by Branch" border="0" color="0" x="1179" y="24" height="100" width="1225" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="From :" border="0" color="0" x="1111" y="240" height="80" width="242" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" date_from "border="0" color="33554432" x="1381" y="240" height="80" width="443" format="[SHORTDATE]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="To :" border="0" color="0" x="1911" y="240" height="80" width="151" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" date_to "border="0" color="33554432" x="2094" y="240" height="76" width="407" format="[SHORTDATE]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=header x1="0" y1="352" x2="3534" y2="352"  name=l_1 visible="1" pen.style="0" pen.width="9" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Total Wires" border="2" color="33554432" x="2894" y="112" height="52" width="549" html.valueishtml="0"  name=id_agent_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Name Branch" border="2" color="33554432" x="855" y="112" height="52" width="2016" html.valueishtml="0"  name=name_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Id Branch" border="2" color="33554432" x="288" y="112" height="52" width="544" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="0" text="Sales representative:" border="0" color="33554432" x="59" y="24" height="52" width="553" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.1 id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="631" y="24" height="64" width="704" format="[general]" html.valueishtml="0"  name=id_agent visible="1" dddw.name=dddw_agente dddw.displaycolumn=name_agent dddw.datacolumn=id_agent dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="855" y="4" height="64" width="2016" format="[general]" html.valueishtml="0"  name=name_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="283" y="4" height="64" width="544" format="[general]" html.valueishtml="0"  name=receiver_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="33554432" x="2894" y="4" height="64" width="549" format="[general]" html.valueishtml="0"  name=cᓶname_branch_t visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="0" y1="84" x2="3538" y2="84"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="0" text="Total By Agent:" border="0" color="33554432" x="2478" y="12" height="52" width="393" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum(  came_branch  for group 1 )"border="0" color="33554432" x="2894" y="12" height="52" width="549" format="[GENERAL]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="2437" y1="4" x2="3479" y2="4"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

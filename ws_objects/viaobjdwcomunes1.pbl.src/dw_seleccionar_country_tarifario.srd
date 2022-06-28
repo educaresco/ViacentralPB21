@@ -1,0 +1,17 @@
+﻿$PBExportHeader$dw_seleccionar_country_tarifario.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=100 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=id_country dbname="COUNTRY.ID_COUNTRY" )
+ column=(type=char(40) updatewhereclause=yes name=name_country dbname="COUNTRY.NAME_COUNTRY" )
+ column=(type=char(1) updatewhereclause=yes name=flag_country dbname="COUNTRY.FLAG_COUNTRY" )
+ column=(type=char(1) updatewhereclause=yes name=new_rate dbname="COUNTRY.NEW_RATE" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.COUNTRY~" ) COLUMN(NAME=~"DBA.COUNTRY.ID_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.NAME_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.FLAG_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.NEW_RATE~")) " )
+text(band=header alignment="2" text="Id. Country"border="1" color="8388608" x="0" y="12" height="56" width="320"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name Country"border="1" color="8388608" x="343" y="12" height="56" width="421"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="0" y="0" height="56" width="320" format="[general]"  name=id_country edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="343" y="0" height="56" width="919" format="[general]"  name=name_country edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

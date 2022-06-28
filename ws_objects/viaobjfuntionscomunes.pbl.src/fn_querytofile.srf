@@ -1,0 +1,38 @@
+﻿$PBExportHeader$fn_querytofile.srf
+global type fn_querytofile from function_object
+end type
+
+forward prototypes
+global subroutine fn_querytofile (string ls_sql, string ls_filename, string ls_titles)
+end prototypes
+
+global subroutine fn_querytofile (string ls_sql, string ls_filename, string ls_titles);string ls_sqlline
+long ll_filenum
+
+ll_filenum = FileOpen(ls_filename, LineMode!, Write!, LockWrite!, Replace!)
+
+DECLARE cur_data DYNAMIC CURSOR FOR SQLSA ;
+PREPARE SQLSA FROM :ls_sql ;
+OPEN DYNAMIC cur_data;
+
+if SQLCA.SQLCODE <> 0 then
+	Messagebox("Error SQL Dinamico",SQLCA.SQLErrText+"~n~n"+ls_sql,StopSign!)
+	return
+end if
+
+if not isnull(ls_titles) then
+	FileWrite(ll_filenum,ls_titles)	
+end if
+
+FETCH cur_data INTO :ls_sqlline;
+DO WHILE SQLCA.SQLCODE = 0		
+	ls_sqlline = trim(ls_sqlline)
+	FileWrite(ll_filenum,ls_sqlline)	
+	FETCH cur_data INTO :ls_sqlline;
+LOOP
+CLOSE cur_data;
+
+FileClose(ll_filenum)
+
+end subroutine
+

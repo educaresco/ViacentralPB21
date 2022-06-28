@@ -1,0 +1,84 @@
+﻿$PBExportHeader$fn_security.srf
+global type fn_security from function_object
+end type
+
+forward prototypes
+global function boolean fn_security (string as_menu_name, string as_menu_option, string as_user)
+end prototypes
+
+global function boolean fn_security (string as_menu_name, string as_menu_option, string as_user);//IF ProfileString("C:\Dinero\Envio.INI", "HostID","ID", "None")= '0001A00002' THEN //Agency
+//	Return True
+//ELSEIF ProfileString("C:\Dinero\Envio.INI", "HostID","ID", "None")= 'None' THEN //Headquaters
+//	Return True
+//END IF
+
+Return True
+
+
+as_user = trim(as_user)
+
+If as_user = 'ADM' then
+	Return True
+end if
+
+
+String	ls_status, ls_name_user, ls_id_group
+
+as_menu_option=Upper(as_menu_option)
+
+IF Pos(as_menu_option,Char(9)) - 1 > 0 THEN
+	as_menu_option = Mid(as_menu_option,1,Pos(as_menu_option,Char(9)) - 1)
+END IF
+
+SELECT DISTINCT security.status_security  
+  INTO :ls_status  
+  FROM dba.security security,   
+       dba.user_group_cashier user_group_cashier 
+ WHERE ( security.menu_name = :as_menu_name ) AND
+	 	 ( security.id_user_group = user_group_cashier.id_user_group ) and  
+       ( ( user_group_cashier.id_cashier = :as_user ) AND  
+       ( security.option_name = 'ALL' ) )   ;
+		 
+ls_status = trim(ls_status)		 
+	
+IF ls_status = 'E' THEN
+	Return TRUE
+ELSEIF ls_status = 'D' THEN
+   SELECT cashier.name_cashier
+     INTO :ls_name_user
+     FROM dba.cashier cashier
+    WHERE cashier.id_cashier = :as_user   ;
+	 
+	 ls_name_user = trim(ls_name_user)
+	 
+	MessageBox('SECURITY MESSAGE','OPTION '+as_menu_option+' FOR '+ls_name_user+' NOT ENABLED.',Exclamation!)
+	Return FALSE
+END IF
+
+SELECT DISTINCT security.status_security  
+  INTO :ls_status  
+  FROM dba.security security,   
+       dba.user_group_cashier user_group_cashier 
+ WHERE ( security.menu_name = :as_menu_name ) AND
+	 	 ( security.id_user_group = user_group_cashier.id_user_group ) and  
+       ( (user_group_cashier.id_cashier = :as_user ) AND  
+       ( security.option_name = :as_menu_option ) )   ;
+		 
+		 
+		 ls_status = trim(ls_status)		
+
+IF ls_status = 'E' THEN //Enabled
+	Return TRUE
+ELSEIF ls_status = 'D' OR IsNull(ls_status) OR ls_status = "" THEN // Disabled
+   SELECT cashier.name_cashier
+     INTO :ls_name_user
+     FROM dba.cashier cashier
+    WHERE cashier.id_cashier = :as_user   ;
+	 
+	 ls_name_user = trim(ls_name_user)
+
+	MessageBox('SECURITY MESSAGE','OPTION '+as_menu_option+' FOR '+ls_name_user+' NOT ENABLED.',Exclamation!)
+	Return FALSE
+END IF
+end function
+

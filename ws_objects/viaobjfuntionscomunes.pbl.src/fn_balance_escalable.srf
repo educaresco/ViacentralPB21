@@ -1,0 +1,35 @@
+﻿$PBExportHeader$fn_balance_escalable.srf
+global type fn_balance_escalable from function_object
+end type
+
+forward prototypes
+global function double fn_balance_escalable (string ls_group, string ls_date)
+end prototypes
+
+global function double fn_balance_escalable (string ls_group, string ls_date);
+
+Double	ld_balance = 0
+Date		ld_date
+
+
+
+
+ld_date = Date(ls_date)
+
+    SELECT SUM(dba.transaccion_diaria_payee.debit_trans_diaria) - SUM(dba.transaccion_diaria_payee.credit_trans_diaria)  
+    INTO :ld_balance  
+    FROM dba.transaccion_diaria_payee  
+   WHERE ( dba.transaccion_diaria_payee.id_group_trans_diaria = :ls_group ) AND  
+         ( dba.transaccion_diaria_payee.date_trans_diaria <= :ld_date )   ;
+
+
+
+if sqlca.sqlcode <> 0 then
+	ld_balance = 0
+	Return round(ld_balance,2)
+else
+	IF Isnull(ld_balance) Then ld_balance = 0
+	Return round(ld_balance,2)
+end if
+end function
+

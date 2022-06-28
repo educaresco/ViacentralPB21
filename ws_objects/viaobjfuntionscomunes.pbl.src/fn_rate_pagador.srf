@@ -1,0 +1,41 @@
+﻿$PBExportHeader$fn_rate_pagador.srf
+global type fn_rate_pagador from function_object
+end type
+
+forward prototypes
+global function double fn_rate_pagador (string ls_grupo)
+end prototypes
+
+global function double fn_rate_pagador (string ls_grupo);double		ld_diference
+
+
+	ld_diference   = 0
+//
+//	SELECT foreing_exchange_group_country.rate_payee  
+//    INTO :ld_diference  
+//    FROM foreing_exchange_group_country  
+//   WHERE ( foreing_exchange_group_country.id_main_branch = :ls_grupo ) AND  
+//         ( foreing_exchange_group_country.id_country = :ls_country )   ;
+
+	if Isnull(ld_diference) or ld_diference   = 0 then
+		
+		SELECT dba.group_branch.diference_exchange 
+    	INTO :ld_diference  
+    	FROM dba.group_branch  
+   	WHERE dba.group_branch.id_main_branch = :ls_grupo   ;
+		
+	end if
+	
+	
+		if Isnull(ld_diference) Then
+			ld_diference = 0
+		End if
+				
+				 
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_diference
+end if
+end function
+

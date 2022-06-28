@@ -1,0 +1,85 @@
+﻿$PBExportHeader$dw_group_branch_financial_chain.srd
+release 12.5;
+datawindow(units=0 timer_interval=0 color=80269524 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.scale=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.background=no print.preview.background=no print.preview.outline=yes hidegrayline=no showbackcoloronxp=no picture.file="" )
+header(height=80 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+summary(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+footer(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+detail(height=80 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+table(column=(type=char(4) updatewhereclause=yes key=yes name=id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(2) updatewhereclause=yes name=fin_collectmethod dbname="GROUP_BRANCH.fin_collectmethod" values="DEPOSIT	DE/ACH	AC/ARMORED CAR	CA/ELECTRONIC CHECK.	EA/VIACHECK	VC/VIASAFE	VF/" )
+ column=(type=char(20) updatewhereclause=yes name=fin_depidbanco dbname="GROUP_BRANCH.fin_depidbanco" )
+ column=(type=char(20) updatewhereclause=yes name=fin_depidcuentabanco dbname="GROUP_BRANCH.fin_depidcuentabanco" )
+ column=(type=char(20) updatewhereclause=yes name=fin_depdepositcode dbname="GROUP_BRANCH.fin_depdepositcode" )
+ column=(type=char(2) updatewhereclause=yes name=fin_achacctypeid dbname="GROUP_BRANCH.fin_achacctypeid" values="CHECKING	C/SAVINGS	S/GENERAL LEDGER	G/" )
+ column=(type=char(9) updatewhereclause=yes name=fin_achaccrouting dbname="GROUP_BRANCH.fin_achaccrouting" )
+ column=(type=char(20) updatewhereclause=yes name=fin_achaccnumber dbname="GROUP_BRANCH.fin_achaccnumber" )
+ column=(type=char(25) updatewhereclause=yes name=fin_schedule dbname="GROUP_BRANCH.fin_schedule" )
+ column=(type=char(2) updatewhereclause=yes name=fin_status dbname="GROUP_BRANCH.fin_status" )
+ column=(type=decimal(2) updatewhereclause=yes name=fin_amttobereconciled dbname="GROUP_BRANCH.fin_amttobereconciled" )
+ column=(type=char(250) updatewhereclause=yes name=fin_amttobereconcilednotes dbname="GROUP_BRANCH.fin_amttobereconcilednotes" )
+ column=(type=char(50) updatewhereclause=yes name=fin_depdescription dbname="GROUP_BRANCH.fin_depdescription" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=fin_monthlyclosing dbname="GROUP_BRANCH.FIN_MONTHLYCLOSING" values="	Y/	N" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=fin_closingdaycode dbname="GROUP_BRANCH.FIN_CLOSINGDAYCODE" values="01	01/11	11/21	21/" )
+ column=(type=decimal(2) updatewhereclause=yes name=fin_viacheck_comxchk dbname="GROUP_BRANCH.FIN_VIACHECK_COMXCHK" )
+ column=(type=decimal(4) updatewhereclause=yes name=fin_yearlyinterestrate dbname="GROUP_BRANCH.FIN_YEARLYINTERESTRATE" )
+ column=(type=decimal(4) updatewhereclause=yes name=fin_viacheck_perxchk dbname="GROUP_BRANCH.FIN_VIACHECK_PERXCHK" )
+ column=(type=char(1) updatewhereclause=yes name=allow_dep_fax_not dbname="GROUP_BRANCH.ALLOW_DEP_FAX_NOT" values="	Y/	N" )
+ column=(type=char(2) updatewhereclause=yes name=fin_collectmethod_2 dbname="GROUP_BRANCH.fin_collectmethod_2" values="DEPOSIT	DE/ACH	AC/ARMORED CAR	CA/ELECTRONIC CHECK.	EA/VIACHECK	VC/VIASAFE	VF/" )
+ column=(type=char(1) updatewhereclause=yes name=fin_rcc_allowed dbname="GROUP_BRANCH.FIN_RCC_ALLOWED" values="RCC Allowed?	Y/RCC Allowed?	N" )
+ column=(type=char(1) updatewhereclause=yes name=pastdue_inactivation dbname="PASTDUE_INACTIVATION" values="YES	Y/NO	N/" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=fin_achacctypeid_com dbname="GROUP_BRANCH.FIN_ACHACCTYPEID_COM" values="CHECKING	C/SAVING	S/GENERAL LEDGER	G/" )
+ column=(type=char(9) update=yes updatewhereclause=yes name=fin_achaccrouting_com dbname="GROUP_BRANCH.FIN_ACHACCROUTING_COM" )
+ column=(type=char(20) update=yes updatewhereclause=yes name=fin_achaccnumber_com dbname="GROUP_BRANCH.FIN_ACHACCNUMBER_COM" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=flag_com_chain dbname="FLAG_COM_CHAIN" values="CHAIN Commission	1/CHAIN Commission	0" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=fin_commissionmethod dbname="GROUP_BRANCH.FIN_COMMISSIONMETHOD" values="Check	T/Credit	C/ACH	A/Hold	H/" )
+ retrieve="SELECT  DBA.GROUP_BRANCH.ID_MAIN_BRANCH ,
+		  DBA.GROUP_BRANCH.NAME_MAIN_BRANCH ,
+		  DBA.GROUP_BRANCH.fin_collectmethod ,
+		  DBA.GROUP_BRANCH.fin_depidbanco ,
+		  DBA.GROUP_BRANCH.fin_depidcuentabanco ,
+		  DBA.GROUP_BRANCH.fin_depdepositcode ,
+		  DBA.GROUP_BRANCH.fin_achacctypeid ,
+		  DBA.GROUP_BRANCH.fin_achaccrouting ,
+		  DBA.GROUP_BRANCH.fin_achaccnumber ,
+		  DBA.GROUP_BRANCH.fin_schedule ,
+		  DBA.GROUP_BRANCH.fin_status ,
+		  DBA.GROUP_BRANCH.fin_amttobereconciled ,
+		  DBA.GROUP_BRANCH.fin_amttobereconcilednotes ,
+		  DBA.GROUP_BRANCH.fin_depdescription ,
+		  DBA.GROUP_BRANCH.FIN_MONTHLYCLOSING,	
+		  DBA.GROUP_BRANCH.FIN_CLOSINGDAYCODE,
+		  dba.GROUP_BRANCH.FIN_VIACHECK_COMXCHK,
+		  dba.GROUP_BRANCH.FIN_YEARLYINTERESTRATE,
+		  dba.GROUP_BRANCH.FIN_VIACHECK_PERXCHK,
+		  dba.GROUP_BRANCH.ALLOW_DEP_FAX_NOT,
+	       DBA.GROUP_BRANCH.fin_collectmethod_2,
+		 FIN_RCC_ALLOWED,
+		 IsNull(PASTDUE_INACTIVATION,'Y') PASTDUE_INACTIVATION,
+		 dba.GROUP_BRANCH.FIN_ACHACCTYPEID_COM,
+		dba.GROUP_BRANCH.FIN_ACHACCROUTING_COM ,
+		dba.GROUP_BRANCH.FIN_ACHACCNUMBER_COM ,
+		isnull(dba.GROUP_BRANCH.FLAG_COM_CHAIN,'0') as FLAG_COM_CHAIN,
+
+		dba.GROUP_BRANCH.FIN_COMMISSIONMETHOD
+	FROM DBA.GROUP_BRANCH      
+  WHERE DBA.GROUP_BRANCH.group_type in ('R','A')
+	 AND DBA.GROUP_BRANCH.FLAG_GRUPO <> 'C'
+	and exists( select 1 from dba.branch b where b.id_main_branch = DBA.GROUP_BRANCH.ID_MAIN_BRANCH and b.id_chain = :as_id_chain)
+ORDER BY DBA.GROUP_BRANCH.NAME_MAIN_BRANCH ASC,
+		  DBA.GROUP_BRANCH.ID_MAIN_BRANCH ASC" update="DBA.GROUP_BRANCH" updatewhere=0 updatekeyinplace=yes arguments=(("as_id_chain", string))  sort="fin_collectmethod A name_main_branch A " )
+text(band=header alignment="2" text="ID" border="2" color="0" x="146" y="16" height="56" width="151" html.valueishtml="0"  name=id_main_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header alignment="2" text="Name" border="2" color="0" x="311" y="16" height="56" width="1673" html.valueishtml="0"  name=name_main_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=1 alignment="2" tabsequence=10 border="5" color="0" x="146" y="12" height="60" width="151" format="[general]" html.valueishtml="0"  name=id_main_branch visible="1" edit.limit=4 edit.case=upper edit.autoselect=yes edit.required=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="5" color="0" x="315" y="12" height="60" width="1669" format="[general]" html.valueishtml="0"  name=name_main_branch visible="1" edit.limit=40 edit.case=upper edit.autoselect=yes edit.required=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,31 @@
+﻿$PBExportHeader$fn_register_selected_option.srf
+global type fn_register_selected_option from function_object
+end type
+
+forward prototypes
+global subroutine fn_register_selected_option (string as_path_option, string as_name_option)
+end prototypes
+
+global subroutine fn_register_selected_option (string as_path_option, string as_name_option);
+
+if isnull(as_path_option ) and isnull(as_name_option) then return
+
+INSERT INTO dba.AUDIT_OPTION_APP
+	(
+	NAME_APPLICATION
+	, OPTION_PATH
+	, OPTION_NAME
+	, USER_ACCESS
+	)
+VALUES
+	(
+	'Viacentral'
+	, :as_path_option
+	, :as_name_option
+	, :gs_iduser
+	);
+
+
+commit;
+end subroutine
+

@@ -1,0 +1,6 @@
+﻿$PBExportHeader$shitemid.srs
+global type shitemid from structure
+	unsignedint		cb
+	character		abid
+end type
+

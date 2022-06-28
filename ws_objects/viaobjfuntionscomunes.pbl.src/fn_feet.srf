@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_feet.srf
+global type fn_feet from function_object
+end type
+
+forward prototypes
+global function double fn_feet (string ls_country_receiver, string ls_branch_insta, double ld_amount, string ls_tipo_moneda)
+end prototypes
+
+global function double fn_feet (string ls_country_receiver, string ls_branch_insta, double ld_amount, string ls_tipo_moneda);Double ld_feet
+
+SELECT dba.comision.feet_comision  
+INTO :ld_feet 
+FROM dba.comision  
+WHERE ( dba.comision.id_country = :ls_country_receiver )
+AND ( dba.comision.id_branch = :ls_branch_insta )
+AND ( dba.comision.range_begin_comision <= :ld_amount )
+AND ( dba.comision.range_end_comision >= :ld_amount ) 
+AND ( dba.comision.mod_pay_currency	= :ls_tipo_moneda );
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_feet
+end if
+end function
+

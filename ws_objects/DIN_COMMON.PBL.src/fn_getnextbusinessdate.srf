@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_getnextbusinessdate.srf
+global type fn_getnextbusinessdate from function_object
+end type
+
+forward prototypes
+global function string fn_getnextbusinessdate (string ps_date)
+end prototypes
+
+global function string fn_getnextbusinessdate (string ps_date);Date     ld_date
+Datetime ld_return
+String   ls_return
+
+ld_date = date(ps_date)
+
+SELECT dba.sfGetNextBusinessDay(:ld_date)
+  INTO :ld_return
+  FROM dba.DUAL;
+  
+ls_return = string(ld_return,'mm/dd/yyyy')
+  
+return ls_return
+end function
+

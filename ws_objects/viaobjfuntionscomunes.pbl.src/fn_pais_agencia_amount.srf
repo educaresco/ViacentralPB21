@@ -1,0 +1,43 @@
+﻿$PBExportHeader$fn_pais_agencia_amount.srf
+global type fn_pais_agencia_amount from function_object
+end type
+
+forward prototypes
+global function long fn_pais_agencia_amount (string ls_pais, string ls_branch, string arg_fecha1, string arg_fecha2)
+end prototypes
+
+global function long fn_pais_agencia_amount (string ls_pais, string ls_branch, string arg_fecha1, string arg_fecha2);long	ll_cont
+date fecha1, fecha2
+string p,q
+
+fecha1=date(arg_fecha1)
+fecha2=date(arg_fecha2)
+
+p=string(fecha1,'yyyy/mm/dd')
+q=string(fecha2,'yyyy/mm/dd')
+
+fecha1=date(p)
+fecha2=date(q)
+
+SELECT   sum(dba.receiver.net_amount_receiver+dba.receiver.exchange_company+dba.receiver.total_modo_pago_comp+dba.receiver.telex_company+ dba.receiver.handling_receiver)   
+	INTO  :ll_cont
+   FROM  dba.receiver,dba.branch_licencia
+   WHERE ( dba.receiver.id_branch = dba.branch_licencia.id_branch ) AND  
+			( dba.receiver.id_receiver >= dba.branch_licencia.id_receiver ) AND  
+			( dba.branch_licencia.id_licencia = '05' ) AND  
+			( dba.receiver.id_country_receiver = :ls_pais ) AND  
+			( dba.receiver.id_flag_receiver <> 'A' ) AND  
+         ( dba.receiver.id_flag_receiver <> 'C' ) AND  
+         ( dba.receiver.date_receiver>= :fecha1) and
+			( dba.receiver.date_receiver<= :fecha2) and
+			( dba.receiver.ref_receiver > 0) AND  
+         ( dba.receiver.id_branch  = :ls_branch)   ;
+  		
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ll_cont
+end if
+end function
+

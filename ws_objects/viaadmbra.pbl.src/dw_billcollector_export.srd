@@ -1,0 +1,268 @@
+﻿$PBExportHeader$dw_billcollector_export.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912"  height.autosize=yes)
+table(column=(type=char(10) updatewhereclause=yes name=collectionstatus dbname="CollectionStatus" )
+ column=(type=char(15) updatewhereclause=yes name=agencystatus dbname="AgencyStatus" )
+ column=(type=char(60) updatewhereclause=yes name=branch_fullname dbname="BRANCH.FullName" )
+ column=(type=char(60) updatewhereclause=yes name=branch_debtorfirstname dbname="BRANCH.DebtorFirstName" )
+ column=(type=char(1) updatewhereclause=yes name=debtorlastname dbname="DebtorLastName" )
+ column=(type=char(10) updatewhereclause=yes name=branch_accountnumber dbname="BRANCH.AccountNumber" )
+ column=(type=char(100) updatewhereclause=yes name=email dbname="Email" )
+ column=(type=char(15) updatewhereclause=yes name=homephone dbname="HomePhone" )
+ column=(type=char(15) updatewhereclause=yes name=officephone dbname="Officephone" )
+ column=(type=char(1) updatewhereclause=yes name=cellphone dbname="CellPhone" )
+ column=(type=char(1) updatewhereclause=yes name=otherphone dbname="OtherPhone" )
+ column=(type=char(15) updatewhereclause=yes name=branch_fax dbname="BRANCH.Fax" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address dbname="BRANCH.Address" )
+ column=(type=char(1) updatewhereclause=yes name=suiteapt dbname="SuiteApt" )
+ column=(type=char(40) updatewhereclause=yes name=city_city dbname="CITY.City" )
+ column=(type=char(5) updatewhereclause=yes name=branch_state dbname="BRANCH.State" )
+ column=(type=decimal(0) updatewhereclause=yes name=branch_zip dbname="BRANCH.Zip" )
+ column=(type=char(1) updatewhereclause=yes name=dateofbirth dbname="DateofBirth" )
+ column=(type=char(30) updatewhereclause=yes name=ssn dbname="SSN" )
+ column=(type=char(30) updatewhereclause=yes name=ein dbname="EIN" )
+ column=(type=char(1) updatewhereclause=yes name=driverslicensestate dbname="DriversLicenseState" )
+ column=(type=char(1) updatewhereclause=yes name=driverslicensenumber dbname="DriversLicenseNumber" )
+ column=(type=char(1) updatewhereclause=yes name=principalamountdue dbname="PrincipalAmountDue" )
+ column=(type=char(1) updatewhereclause=yes name=feedue dbname="FeeDue" )
+ column=(type=char(1) updatewhereclause=yes name=interestrate dbname="InterestRate" )
+ column=(type=char(1) updatewhereclause=yes name=chargedate dbname="Chargedate" )
+ column=(type=char(1) updatewhereclause=yes name=payment dbname="Payment" )
+ column=(type=char(1) updatewhereclause=yes name=paymentdate dbname="Paymentdate" )
+ column=(type=char(1) updatewhereclause=yes name=abaroutingnumber dbname="ABARoutingNumber" )
+ column=(type=char(1) updatewhereclause=yes name=bankaccountnumber dbname="BankAccountNumber" )
+ column=(type=char(1) updatewhereclause=yes name=checknumber dbname="CheckNumber" )
+ column=(type=char(1) updatewhereclause=yes name=checkdate dbname="Checkdate" )
+ column=(type=char(1) updatewhereclause=yes name=checkamount dbname="CheckAmount" )
+ column=(type=char(60) updatewhereclause=yes name=codebtorfirstname dbname="CoDebtorFirstname" )
+ column=(type=char(121) updatewhereclause=yes name=codebtorlastname dbname="CoDebtorLastname" )
+ column=(type=char(100) updatewhereclause=yes name=codebtoremail dbname="CoDebtorEmail" )
+ column=(type=char(15) updatewhereclause=yes name=codebtorhomephone dbname="CoDebtorHomePhone" )
+ column=(type=char(15) updatewhereclause=yes name=codebtorofficephone dbname="CoDebtorOfficephone" )
+ column=(type=char(15) updatewhereclause=yes name=codebtorcellphone dbname="CoDebtorCellPhone" )
+ column=(type=char(1) updatewhereclause=yes name=codebtorotherphone dbname="CoDebtorOtherPhone" )
+ column=(type=char(1) updatewhereclause=yes name=codebtorfax dbname="CoDebtorFax" )
+ column=(type=char(100) updatewhereclause=yes name=codebtoraddress dbname="CoDebtorAddress" )
+ column=(type=char(1) updatewhereclause=yes name=codebtorsuiteapt dbname="CoDebtorSuiteApt" )
+ column=(type=char(60) updatewhereclause=yes name=codebtorcity dbname="CoDebtorCity" )
+ column=(type=char(5) updatewhereclause=yes name=codebtorstate dbname="CoDebtorState" )
+ column=(type=char(5) updatewhereclause=yes name=codebtorzip dbname="CoDebtorZip" )
+ column=(type=char(1) updatewhereclause=yes name=codebtordateofbirth dbname="CoDebtorDateofBirth" )
+ column=(type=char(30) updatewhereclause=yes name=codebtorssn dbname="CoDebtorSSN" )
+ column=(type=char(30) updatewhereclause=yes name=codebtorein dbname="CoDebtorEIN" )
+ column=(type=char(1) updatewhereclause=yes name=codebtordriverslicensestate dbname="CoDebtorDriversLicenseState" )
+ column=(type=char(40) updatewhereclause=yes name=codebtordriverslicensenumber dbname="CoDebtorDriversLicenseNumber" )
+ column=(type=char(150) updatewhereclause=yes name=reference1firstname dbname="Reference1Firstname" )
+ column=(type=char(1) updatewhereclause=yes name=reference1lastname dbname="Reference1Lastname" )
+ column=(type=char(1) updatewhereclause=yes name=reference1relationship dbname="Reference1Relationship" )
+ column=(type=char(1) updatewhereclause=yes name=reference1email dbname="Reference1Email" )
+ column=(type=char(1) updatewhereclause=yes name=reference1homephone dbname="Reference1HomePhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference1officephone dbname="Reference1Officephone" )
+ column=(type=char(1) updatewhereclause=yes name=reference1cellphone dbname="Reference1CellPhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference1otherphone dbname="Reference1OtherPhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference1fax dbname="Reference1Fax" )
+ column=(type=char(1) updatewhereclause=yes name=reference1address dbname="Reference1Address" )
+ column=(type=char(1) updatewhereclause=yes name=reference1suiteapt dbname="Reference1SuiteApt" )
+ column=(type=char(1) updatewhereclause=yes name=reference1city dbname="Reference1City" )
+ column=(type=char(1) updatewhereclause=yes name=reference1state dbname="Reference1State" )
+ column=(type=char(1) updatewhereclause=yes name=reference1zip dbname="Reference1Zip" )
+ column=(type=char(1) updatewhereclause=yes name=reference2firstname dbname="Reference2Firstname" )
+ column=(type=char(1) updatewhereclause=yes name=reference2lastname dbname="Reference2Lastname" )
+ column=(type=char(1) updatewhereclause=yes name=reference2relationship dbname="Reference2Relationship" )
+ column=(type=char(1) updatewhereclause=yes name=reference2email dbname="Reference2Email" )
+ column=(type=char(1) updatewhereclause=yes name=reference2homephone dbname="Reference2HomePhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference2officephone dbname="Reference2Officephone" )
+ column=(type=char(1) updatewhereclause=yes name=reference2cellphone dbname="Reference2CellPhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference2otherphone dbname="Reference2OtherPhone" )
+ column=(type=char(1) updatewhereclause=yes name=reference2fax dbname="Reference2Fax" )
+ column=(type=char(1) updatewhereclause=yes name=reference2address dbname="Reference2Address" )
+ column=(type=char(1) updatewhereclause=yes name=reference2suiteapt dbname="Reference2SuiteApt" )
+ column=(type=char(1) updatewhereclause=yes name=reference2city dbname="Reference2City" )
+ column=(type=char(1) updatewhereclause=yes name=reference2state dbname="Reference2State" )
+ column=(type=char(1) updatewhereclause=yes name=reference2zip dbname="Reference2Zip" )
+ retrieve="SELECT 
+
+case dba.group_branch.FIN_STATUS when 'CO' then 'COLLECTION' else 'NORMAL' end as CollectionStatus,
+dba.sfGetBranchStatus(dba.BRANCH.ID_BRANCH) as AgencyStatus,
+
+name_branch	as FullName,
+
+name_branch as DebtorFirstName, 
+'' as DebtorLastName,
+dba.BRANCH.ID_BRANCH	as AccountNumber,
+isnull(EMAIL_GROUP,'')	as Email,
+phone1_branch	as HomePhone,
+phone2_branch	as Officephone,
+''	as CellPhone,
+''	as OtherPhone,
+fax_branch as Fax,
+address_branch as Address,
+'' as SuiteApt,
+dba.city.name_city as City,
+dba.BRANCH.ID_STATE State,
+zip_branch Zip,
+'' DateofBirth,
+isnull(TAX_ID,'') SSN,
+isnull(EIN,'') EIN,
+'' DriversLicenseState,
+'' DriversLicenseNumber,
+
+'' PrincipalAmountDue,
+'' FeeDue,
+'' InterestRate,
+'' Chargedate,
+'' Payment,
+'' Paymentdate,
+
+'' ABARoutingNumber,
+'' BankAccountNumber,
+'' CheckNumber,
+'' Checkdate,
+'' CheckAmount,
+
+isnull(OWNER_FNAME,'')  CoDebtorFirstname,
+isnull(OWNER_LNAME,'')+' '+isnull(OWNER_SLNAME,'') CoDebtorLastname,
+isnull(EMAIL_GROUP,'')	CoDebtorEmail,
+isnull(PHONE_1,'')	CoDebtorHomePhone,
+isnull(PHONE_2,'')	CoDebtorOfficephone,
+isnull(CELLULAR_NUMBER,'')	CoDebtorCellPhone,
+''	CoDebtorOtherPhone,
+'' CoDebtorFax,
+isnull(OWNER_ADDRESS,'') CoDebtorAddress,
+'' CoDebtorSuiteApt,
+isnull(dba.BRANCH_OWNER_INFORMATION.NAME_CITY,'') CoDebtorCity,
+isnull(dba.BRANCH_OWNER_INFORMATION.ID_STATE,'') CoDebtorState,
+isnull(ZIP_CODE,'') CoDebtorZip,
+'' CoDebtorDateofBirth,
+isnull(TAX_ID,'') CoDebtorSSN,
+isnull(EIN,'') CoDebtorEIN,
+'' CoDebtorDriversLicenseState,
+isnull(ID_NUMBER,'') CoDebtorDriversLicenseNumber,
+
+isnull(COSIGNER_NAME,'') Reference1Firstname,
+'' Reference1Lastname,
+'' Reference1Relationship,
+'' Reference1Email,
+'' Reference1HomePhone,
+'' Reference1Officephone,
+'' Reference1CellPhone,
+'' Reference1OtherPhone,
+'' Reference1Fax,
+'' Reference1Address,
+'' Reference1SuiteApt,
+'' Reference1City,
+'' Reference1State,
+'' Reference1Zip,
+
+'' Reference2Firstname,
+'' Reference2Lastname,
+'' Reference2Relationship,
+'' Reference2Email,
+'' Reference2HomePhone,
+'' Reference2Officephone,
+'' Reference2CellPhone,
+'' Reference2OtherPhone,
+'' Reference2Fax,
+'' Reference2Address,
+'' Reference2SuiteApt,
+'' Reference2City,
+'' Reference2State,
+'' Reference2Zip
+
+FROM dba.BRANCH, DBA.GROUP_BRANCH, dba.BRANCH_OWNER_INFORMATION, dba.city
+WHERE dba.BRANCH.id_main_branch = DBA.GROUP_BRANCH.id_main_branch
+AND dba.BRANCH.id_branch *= DBA.BRANCH_OWNER_INFORMATION.id_branch
+AND dba.branch.id_city = dba.city.id_city
+AND dba.branch.id_type_branch in ('A','R')
+AND (dba.group_branch.FIN_STATUS in ('CO') or (id_flag_branch = 'I' and id_status_branch = 'O'))
+
+
+" )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="0" x="0" y="0" height="44" width="233" html.valueishtml="0"  name=collectionstatus visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="0" x="233" y="0" height="44" width="347" html.valueishtml="0"  name=agencystatus visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=0 border="0" color="0" x="581" y="0" height="44" width="1381" html.valueishtml="0"  name=branch_fullname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="1961" y="0" height="44" width="1381" html.valueishtml="0"  name=branch_debtorfirstname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="0" x="3342" y="0" height="44" width="23" html.valueishtml="0"  name=debtorlastname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=0 border="0" color="0" x="3365" y="0" height="44" width="233" html.valueishtml="0"  name=branch_accountnumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=0 border="0" color="0" x="3598" y="0" height="44" width="2299" html.valueishtml="0"  name=email visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=0 border="0" color="0" x="5897" y="0" height="44" width="347" html.valueishtml="0"  name=homephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=0 border="0" color="0" x="6245" y="0" height="44" width="347" html.valueishtml="0"  name=officephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=0 border="0" color="0" x="6592" y="0" height="44" width="23" html.valueishtml="0"  name=cellphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=0 border="0" color="0" x="6615" y="0" height="44" width="23" html.valueishtml="0"  name=otherphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=0 border="0" color="0" x="6638" y="0" height="44" width="347" html.valueishtml="0"  name=branch_fax visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=0 border="0" color="0" x="6985" y="0" height="44" width="1381" html.valueishtml="0"  name=branch_address visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=14 alignment="0" tabsequence=0 border="0" color="0" x="8366" y="0" height="44" width="23" html.valueishtml="0"  name=suiteapt visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=15 alignment="0" tabsequence=0 border="0" color="0" x="8389" y="0" height="44" width="923" html.valueishtml="0"  name=city_city visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=16 alignment="0" tabsequence=0 border="0" color="0" x="9312" y="0" height="44" width="114" html.valueishtml="0"  name=branch_state visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=17 alignment="0" tabsequence=0 border="0" color="0" x="9426" y="0" height="44" width="2002" html.valueishtml="0"  name=branch_zip visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=18 alignment="0" tabsequence=0 border="0" color="0" x="11429" y="0" height="44" width="23" html.valueishtml="0"  name=dateofbirth visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=19 alignment="0" tabsequence=0 border="0" color="0" x="11451" y="0" height="44" width="690" html.valueishtml="0"  name=ssn visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=20 alignment="0" tabsequence=0 border="0" color="0" x="12142" y="0" height="44" width="690" html.valueishtml="0"  name=ein visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=21 alignment="0" tabsequence=0 border="0" color="0" x="12832" y="0" height="44" width="23" html.valueishtml="0"  name=driverslicensestate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=22 alignment="0" tabsequence=0 border="0" color="0" x="12855" y="0" height="44" width="23" html.valueishtml="0"  name=driverslicensenumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=23 alignment="0" tabsequence=0 border="0" color="0" x="12878" y="0" height="44" width="23" html.valueishtml="0"  name=principalamountdue visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=24 alignment="0" tabsequence=0 border="0" color="0" x="12901" y="0" height="44" width="23" html.valueishtml="0"  name=feedue visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=25 alignment="0" tabsequence=0 border="0" color="0" x="12923" y="0" height="44" width="23" html.valueishtml="0"  name=interestrate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=26 alignment="0" tabsequence=0 border="0" color="0" x="12946" y="0" height="44" width="23" html.valueishtml="0"  name=chargedate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=27 alignment="0" tabsequence=0 border="0" color="0" x="12969" y="0" height="44" width="23" html.valueishtml="0"  name=payment visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=28 alignment="0" tabsequence=0 border="0" color="0" x="12992" y="0" height="44" width="23" html.valueishtml="0"  name=paymentdate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=29 alignment="0" tabsequence=0 border="0" color="0" x="13015" y="0" height="44" width="23" html.valueishtml="0"  name=abaroutingnumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=30 alignment="0" tabsequence=0 border="0" color="0" x="13038" y="0" height="44" width="23" html.valueishtml="0"  name=bankaccountnumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=31 alignment="0" tabsequence=0 border="0" color="0" x="13061" y="0" height="44" width="23" html.valueishtml="0"  name=checknumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=32 alignment="0" tabsequence=0 border="0" color="0" x="13083" y="0" height="44" width="23" html.valueishtml="0"  name=checkdate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=33 alignment="0" tabsequence=0 border="0" color="0" x="13106" y="0" height="44" width="23" html.valueishtml="0"  name=checkamount visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=34 alignment="0" tabsequence=0 border="0" color="0" x="13129" y="0" height="44" width="1381" html.valueishtml="0"  name=codebtorfirstname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=35 alignment="0" tabsequence=0 border="0" color="0" x="14510" y="0" height="44" width="2784" html.valueishtml="0"  name=codebtorlastname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=36 alignment="0" tabsequence=0 border="0" color="0" x="17294" y="0" height="44" width="2299" html.valueishtml="0"  name=codebtoremail visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=37 alignment="0" tabsequence=0 border="0" color="0" x="19593" y="0" height="44" width="347" html.valueishtml="0"  name=codebtorhomephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=38 alignment="0" tabsequence=0 border="0" color="0" x="19941" y="0" height="44" width="347" html.valueishtml="0"  name=codebtorofficephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=39 alignment="0" tabsequence=0 border="0" color="0" x="20288" y="0" height="44" width="347" html.valueishtml="0"  name=codebtorcellphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=40 alignment="0" tabsequence=0 border="0" color="0" x="20635" y="0" height="44" width="23" html.valueishtml="0"  name=codebtorotherphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=41 alignment="0" tabsequence=0 border="0" color="0" x="20658" y="0" height="44" width="23" html.valueishtml="0"  name=codebtorfax visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=42 alignment="0" tabsequence=0 border="0" color="0" x="20681" y="0" height="44" width="2299" html.valueishtml="0"  name=codebtoraddress visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=43 alignment="0" tabsequence=0 border="0" color="0" x="22981" y="0" height="44" width="23" html.valueishtml="0"  name=codebtorsuiteapt visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=44 alignment="0" tabsequence=0 border="0" color="0" x="23003" y="0" height="44" width="1381" html.valueishtml="0"  name=codebtorcity visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=45 alignment="0" tabsequence=0 border="0" color="0" x="24384" y="0" height="44" width="114" html.valueishtml="0"  name=codebtorstate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=46 alignment="0" tabsequence=0 border="0" color="0" x="24498" y="0" height="44" width="114" html.valueishtml="0"  name=codebtorzip visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=47 alignment="0" tabsequence=0 border="0" color="0" x="24613" y="0" height="44" width="23" html.valueishtml="0"  name=codebtordateofbirth visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=48 alignment="0" tabsequence=0 border="0" color="0" x="24635" y="0" height="44" width="690" html.valueishtml="0"  name=codebtorssn visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=49 alignment="0" tabsequence=0 border="0" color="0" x="25326" y="0" height="44" width="690" html.valueishtml="0"  name=codebtorein visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=50 alignment="0" tabsequence=0 border="0" color="0" x="26016" y="0" height="44" width="23" html.valueishtml="0"  name=codebtordriverslicensestate visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=51 alignment="0" tabsequence=0 border="0" color="0" x="26039" y="0" height="44" width="923" html.valueishtml="0"  name=codebtordriverslicensenumber visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=52 alignment="0" tabsequence=0 border="0" color="0" x="26962" y="0" height="44" width="3451" html.valueishtml="0"  name=reference1firstname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=53 alignment="0" tabsequence=0 border="0" color="0" x="30414" y="0" height="44" width="23" html.valueishtml="0"  name=reference1lastname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=54 alignment="0" tabsequence=0 border="0" color="0" x="30437" y="0" height="44" width="23" html.valueishtml="0"  name=reference1relationship visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=55 alignment="0" tabsequence=0 border="0" color="0" x="30459" y="0" height="44" width="23" html.valueishtml="0"  name=reference1email visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=56 alignment="0" tabsequence=0 border="0" color="0" x="30482" y="0" height="44" width="23" html.valueishtml="0"  name=reference1homephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=57 alignment="0" tabsequence=0 border="0" color="0" x="30505" y="0" height="44" width="23" html.valueishtml="0"  name=reference1officephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=58 alignment="0" tabsequence=0 border="0" color="0" x="30528" y="0" height="44" width="23" html.valueishtml="0"  name=reference1cellphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=59 alignment="0" tabsequence=0 border="0" color="0" x="30551" y="0" height="44" width="23" html.valueishtml="0"  name=reference1otherphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=60 alignment="0" tabsequence=0 border="0" color="0" x="30574" y="0" height="44" width="23" html.valueishtml="0"  name=reference1fax visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=61 alignment="0" tabsequence=0 border="0" color="0" x="30597" y="0" height="44" width="23" html.valueishtml="0"  name=reference1address visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=62 alignment="0" tabsequence=0 border="0" color="0" x="30619" y="0" height="44" width="23" html.valueishtml="0"  name=reference1suiteapt visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=63 alignment="0" tabsequence=0 border="0" color="0" x="30642" y="0" height="44" width="23" html.valueishtml="0"  name=reference1city visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=64 alignment="0" tabsequence=0 border="0" color="0" x="30665" y="0" height="44" width="23" html.valueishtml="0"  name=reference1state visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=65 alignment="0" tabsequence=0 border="0" color="0" x="30688" y="0" height="44" width="23" html.valueishtml="0"  name=reference1zip visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=66 alignment="0" tabsequence=0 border="0" color="0" x="30711" y="0" height="44" width="23" html.valueishtml="0"  name=reference2firstname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=67 alignment="0" tabsequence=0 border="0" color="0" x="30734" y="0" height="44" width="23" html.valueishtml="0"  name=reference2lastname visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=68 alignment="0" tabsequence=0 border="0" color="0" x="30757" y="0" height="44" width="23" html.valueishtml="0"  name=reference2relationship visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=69 alignment="0" tabsequence=0 border="0" color="0" x="30779" y="0" height="44" width="23" html.valueishtml="0"  name=reference2email visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=70 alignment="0" tabsequence=0 border="0" color="0" x="30802" y="0" height="44" width="23" html.valueishtml="0"  name=reference2homephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=71 alignment="0" tabsequence=0 border="0" color="0" x="30825" y="0" height="44" width="23" html.valueishtml="0"  name=reference2officephone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=72 alignment="0" tabsequence=0 border="0" color="0" x="30848" y="0" height="44" width="23" html.valueishtml="0"  name=reference2cellphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=73 alignment="0" tabsequence=0 border="0" color="0" x="30871" y="0" height="44" width="23" html.valueishtml="0"  name=reference2otherphone visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=74 alignment="0" tabsequence=0 border="0" color="0" x="30894" y="0" height="44" width="23" html.valueishtml="0"  name=reference2fax visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=75 alignment="0" tabsequence=0 border="0" color="0" x="30917" y="0" height="44" width="23" html.valueishtml="0"  name=reference2address visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=76 alignment="0" tabsequence=0 border="0" color="0" x="30939" y="0" height="44" width="23" html.valueishtml="0"  name=reference2suiteapt visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=77 alignment="0" tabsequence=0 border="0" color="0" x="30962" y="0" height="44" width="23" html.valueishtml="0"  name=reference2city visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=78 alignment="0" tabsequence=0 border="0" color="0" x="30985" y="0" height="44" width="23" html.valueishtml="0"  name=reference2state visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=79 alignment="0" tabsequence=0 border="0" color="0" x="31008" y="0" height="44" width="23" html.valueishtml="0"  name=reference2zip visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

@@ -1,0 +1,25 @@
+﻿$PBExportHeader$fn_check_user_role.srf
+global type fn_check_user_role from function_object
+end type
+
+forward prototypes
+global function integer fn_check_user_role (string p_role)
+end prototypes
+
+global function integer fn_check_user_role (string p_role);long ll_cont
+
+SELECT count(*)
+INTO :ll_cont
+FROM dba.SEC_USER_GROUP
+WHERE ID_GROUP = :p_role
+AND ID_USER = :gs_cashier;
+	  
+if ll_cont > 0 then
+	return 1
+else
+	return 0
+	
+end if
+
+end function
+

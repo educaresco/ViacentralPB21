@@ -1,0 +1,58 @@
+﻿$PBExportHeader$dw_confirmed_deposits.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="536870912" )
+summary(height=4 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=52 color="536870912~t/*IF(MOD(GETROW(),2)=0,RGB(102,153,255),RGB(255,255,255)) */RGB(255,255,255)"  height.autosize=yes)
+table(column=(type=decimal(0) updatewhereclause=yes key=yes name=id_ad dbname="agent_deposit.id_ad" )
+ column=(type=char(10) updatewhereclause=yes name=id_branch dbname="agent_deposit.id_branch" )
+ column=(type=decimal(4) updatewhereclause=yes name=trans_amount dbname="agent_deposit.trans_amount" )
+ column=(type=datetime updatewhereclause=yes name=deposit_date dbname="agent_deposit.deposit_date" )
+ column=(type=datetime updatewhereclause=yes name=deposit_time dbname="agent_deposit.deposit_time" )
+ column=(type=char(30) updatewhereclause=yes name=createad_by dbname="agent_deposit.createad_by" )
+ column=(type=char(1) updatewhereclause=yes name=received_ack dbname="agent_deposit.received_ack" )
+ column=(type=char(40) updatewhereclause=yes name=acc_bankname dbname="agent_deposit.acc_bankname" )
+ column=(type=char(4) updatewhereclause=yes name=acc_lastdigits dbname="agent_deposit.acc_lastdigits" )
+ column=(type=char(200) updatewhereclause=yes name=dep_description dbname="agent_deposit.dep_description" )
+ column=(type=char(30) updatewhereclause=yes name=dep_timeaprox dbname="agent_deposit.dep_timeaprox" )
+ column=(type=char(2) updatewhereclause=yes name=id_proc dbname="agent_deposit.id_proc" )
+ column=(type=char(30) updatewhereclause=yes name=fecha dbname="fecha" )
+ column=(type=char(20) updatewhereclause=yes name=id_banco dbname="agent_deposit.ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=id_cuenta_banco dbname="agent_deposit.ID_CUENTA_BANCO" )
+ retrieve="SELECT     dba.agent_deposit.id_ad ,
+           dba.agent_deposit.id_branch ,
+           dba.agent_deposit.trans_amount ,
+           dba.agent_deposit.deposit_date ,
+           dba.agent_deposit.deposit_time ,
+           dba.agent_deposit.createad_by ,
+           dba.agent_deposit.received_ack ,
+           dba.agent_deposit.acc_bankname ,
+           dba.agent_deposit.acc_lastdigits ,
+           dba.agent_deposit.dep_description ,
+           dba.agent_deposit.dep_timeaprox ,
+           dba.agent_deposit.id_proc ,
+           convert(varchar,dba.agent_deposit.deposit_date,101) fecha,
+           dba.agent_deposit.ID_BANCO ,
+           dba.agent_deposit.ID_CUENTA_BANCO     
+FROM       dba.agent_deposit      
+WHERE      dba.agent_deposit.id_branch = :arg_grupo 
+and        dba.agent_deposit.id_proc   = 'N'    " update="dba.agent_deposit" updatewhere=0 updatekeyinplace=no arguments=(("arg_grupo", string)) )
+group(level=1 header.height=0 trailer.height=0 by=("" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Account" border="2" color="0" x="1262" y="8" height="56" width="233" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+text(band=header alignment="2" text="Bank Name" border="2" color="0" x="686" y="8" height="56" width="558" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+text(band=header alignment="2" text="Time" border="2" color="0" x="302" y="8" height="56" width="366" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+text(band=header alignment="2" text="Amount" border="2" color="0" x="1513" y="8" height="56" width="306" html.valueishtml="0"  name=t_9 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+text(band=header alignment="2" text="Date" border="2" color="0" x="9" y="8" height="56" width="274" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="0" x="1513" y="4" height="40" width="306" format="[currency]" html.valueishtml="0"  name=trans_amount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="0" x="1262" y="4" height="40" width="233" format="[general]" html.valueishtml="0"  name=acc_lastdigits visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="686" y="4" height="40" width="558" format="[general]" html.valueishtml="0"  name=acc_bankname visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="302" y="4" height="40" width="366" format="[general]" html.valueishtml="0"  name=dep_timeaprox visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="4" height="40" width="274" format="[general]" html.valueishtml="0"  name=fecha visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Description" border="2" color="0" x="1838" y="8" height="56" width="864" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="1838" y="4" height="40" width="864" format="[general]" html.valueishtml="0"  name=dep_description visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

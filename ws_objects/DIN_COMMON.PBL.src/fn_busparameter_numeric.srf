@@ -1,0 +1,18 @@
+﻿$PBExportHeader$fn_busparameter_numeric.srf
+global type fn_busparameter_numeric from function_object
+end type
+
+forward prototypes
+global function decimal fn_busparameter_numeric (string p_id)
+end prototypes
+
+global function decimal fn_busparameter_numeric (string p_id);decimal ls_numericvalue
+
+select numericvalue
+into :ls_numericvalue
+from dba.parameters
+where idparameter = :p_id;
+
+return ls_numericvalue
+end function
+

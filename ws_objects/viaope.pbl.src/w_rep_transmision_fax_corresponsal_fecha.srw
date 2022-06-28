@@ -1,0 +1,206 @@
+﻿$PBExportHeader$w_rep_transmision_fax_corresponsal_fecha.srw
+forward
+global type w_rep_transmision_fax_corresponsal_fecha from wb_report_fechas
+end type
+type em_hora from u_em within w_rep_transmision_fax_corresponsal_fecha
+end type
+type st_3 from statictext within w_rep_transmision_fax_corresponsal_fecha
+end type
+end forward
+
+global type w_rep_transmision_fax_corresponsal_fecha from wb_report_fechas
+em_hora em_hora
+st_3 st_3
+end type
+global w_rep_transmision_fax_corresponsal_fecha w_rep_transmision_fax_corresponsal_fecha
+
+on w_rep_transmision_fax_corresponsal_fecha.create
+int iCurrent
+call super::create
+this.em_hora=create em_hora
+this.st_3=create st_3
+iCurrent=UpperBound(this.Control)
+this.Control[iCurrent+1]=this.em_hora
+this.Control[iCurrent+2]=this.st_3
+end on
+
+on w_rep_transmision_fax_corresponsal_fecha.destroy
+call super::destroy
+if IsValid(MenuID) then destroy(MenuID)
+destroy(this.em_hora)
+destroy(this.st_3)
+end on
+
+event open;call super::open;em_hora.text = String(Now())
+end event
+
+type dw_1 from wb_report_fechas`dw_1 within w_rep_transmision_fax_corresponsal_fecha
+int Y=160
+int Height=1536
+boolean BringToTop=true
+string DataObject="dw_rep_envio_transmitir_fechas"
+end type
+
+type em_fecha1 from wb_report_fechas`em_fecha1 within w_rep_transmision_fax_corresponsal_fecha
+int X=599
+boolean BringToTop=true
+end type
+
+type st_1 from wb_report_fechas`st_1 within w_rep_transmision_fax_corresponsal_fecha
+int X=233
+boolean BringToTop=true
+end type
+
+type st_2 from wb_report_fechas`st_2 within w_rep_transmision_fax_corresponsal_fecha
+int X=1147
+boolean BringToTop=true
+end type
+
+type em_fecha2 from wb_report_fechas`em_fecha2 within w_rep_transmision_fax_corresponsal_fecha
+int X=1513
+boolean BringToTop=true
+end type
+
+event em_fecha2::modified;return 0
+end event
+
+type em_hora from u_em within w_rep_transmision_fax_corresponsal_fecha
+int X=2199
+int Y=32
+int Width=366
+int Height=96
+int TabOrder=20
+boolean BringToTop=true
+Alignment Alignment=Center!
+string Mask="hh:mm:ss"
+MaskDataType MaskDataType=TimeMask!
+boolean AutoSkip=true
+boolean Spin=true
+string MinMax=""
+FontCharSet FontCharSet=Ansi!
+end type
+
+event modified;Date		ld_fecha1, ld_fecha2
+time		lt_hora
+
+ld_fecha1 = Date(em_fecha1.text)
+
+ld_fecha2 = Date(em_fecha2.text)
+
+
+lt_hora	= time(em_hora.text)
+
+
+dw_1.retrieve(ld_Fecha1,ld_Fecha2,lt_hora)
+dw_1.setfocus()
+end event
+
+event losefocus;Date		ld_fecha1, ld_fecha2
+time		lt_hora
+
+string	ls_grupo, ls_branch
+long		ll_rows, ll_i, ll_ref, ll_fila
+Double	ld_referencia, ld_receiver
+
+ld_fecha1 = Date(em_fecha1.text)
+
+ld_fecha2 = RelativeDate(Date(em_fecha2.text),1)
+
+
+
+
+lt_hora	= time(em_hora.text)
+
+
+ll_rows = dw_1.retrieve(ld_Fecha1,ld_Fecha2,lt_hora)
+dw_1.setfocus()
+
+
+
+
+///////////////////////////////////////////////////////////
+
+if ll_rows > 0 then
+	if messagebox("Reference,","Do you Want to Generate the Reference or Transfer",Question!,yesno!) = 1 then
+		///////////////////////////// Generar la Referencia //////////////////////		
+		setpointer(hourglass!)
+		
+		
+	ll_i = 1	
+
+	DO WHILE ll_i <= ll_rows
+	
+		ls_grupo = dw_1.getitemstring(ll_i,"main_branch")
+	
+		ll_ref		= dw_1.getitemnumber(ll_i,"referencia")
+		
+		if ll_ref = 0 Then
+	
+			SELECT MAX(dba.receiver.ref_receiver)  
+    		INTO :ld_referencia  
+    		FROM dba.branch,   
+      		   dba.group_branch,   
+        			dba.receiver  
+   		WHERE ( dba.group_branch.id_main_branch = dba.branch.id_main_branch ) and  
+         		( dba.receiver.branch_pay_receiver = dba.branch.id_branch ) and  
+         		( ( dba.group_branch.id_main_branch = :ls_grupo ) )   ;
+				
+			If Isnull(ld_referencia) Then
+				ld_referencia = 1
+			else
+				ld_referencia = ld_referencia + 1
+			End if
+		end if
+			
+		ls_branch 	= dw_1.getitemstring(ll_i,"receiver_id_branch")
+		ld_receiver = dw_1.getitemnumber(ll_i,"receiver_id_receiver")
+		ll_ref		= dw_1.getitemnumber(ll_i,"referencia")
+		
+		UPDATE dba.receiver  
+     	  SET   	dba.receiver.trans_receiver = 'T'  
+   	  WHERE ( dba.receiver.id_branch = :ls_branch ) AND  
+              ( dba.receiver.id_receiver = :ld_receiver )   ;
+				
+		if ll_ref = 0 then
+			
+		  UPDATE dba.receiver  
+     	  SET dba.receiver.ref_receiver = :ld_referencia,
+			 	dba.receiver.id_flag_receiver = 'T',   
+         	dba.receiver.trans_receiver = 'T'  
+   	  WHERE ( dba.receiver.id_branch = :ls_branch ) AND  
+              ( dba.receiver.id_receiver = :ld_receiver )   ;
+						
+			dw_1.setitem(ll_i,"referencia", ld_referencia)
+		end if
+	ll_i = ll_i + 1
+	
+	
+	LOOP
+else
+		return
+	end if
+end if
+	setpointer(Arrow!)	
+commit	;
+dw_1.setfocus()
+end event
+
+type st_3 from statictext within w_rep_transmision_fax_corresponsal_fecha
+int X=2021
+int Y=32
+int Width=174
+int Height=64
+boolean Enabled=false
+boolean BringToTop=true
+string Text="Hora :"
+boolean FocusRectangle=false
+long TextColor=8388608
+long BackColor=67108864
+int TextSize=-8
+int Weight=700
+string FaceName="MS Sans Serif"
+FontCharSet FontCharSet=Ansi!
+FontFamily FontFamily=Swiss!
+FontPitch FontPitch=Variable!
+end type
+

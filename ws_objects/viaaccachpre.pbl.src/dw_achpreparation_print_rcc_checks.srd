@@ -1,0 +1,91 @@
+﻿$PBExportHeader$dw_achpreparation_print_rcc_checks.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 2 print.margin.left = 0 print.margin.right = 0 print.margin.top = 0 print.margin.bottom = 0 print.paper.source = 0 print.paper.size = 1 print.canusedefaultprinter=no print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=no print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" height.autosize=yes )
+footer(height=0 color="536870912" height.autosize=yes )
+detail(height=1196 color="536870912" height.autosize=yes )
+table(column=(type=decimal(0) update=yes updatewhereclause=yes name=batch_id dbname="ACH_BATCH_DETAIL_BRANCH.BATCH_ID" dbalias=".BATCH_ID" )
+ column=(type=char(4) update=yes updatewhereclause=yes name=id_main_branch dbname="ACH_BATCH_DETAIL_BRANCH.ID_MAIN_BRANCH" dbalias=".ID_MAIN_BRANCH" )
+ column=(type=char(10) update=yes updatewhereclause=yes name=id_branch dbname="ACH_BATCH_DETAIL_BRANCH.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=acctypeid dbname="ACH_BATCH_DETAIL_BRANCH.ACCTYPEID" dbalias=".ACCTYPEID" )
+ column=(type=char(9) update=yes updatewhereclause=yes name=accrouting dbname="ACH_BATCH_DETAIL_BRANCH.ACCROUTING" dbalias=".ACCROUTING" )
+ column=(type=char(20) update=yes updatewhereclause=yes name=accnumber dbname="ACH_BATCH_DETAIL_BRANCH.ACCNUMBER" dbalias=".ACCNUMBER" )
+ column=(type=decimal(2) update=yes updatewhereclause=yes identity=yes name=amount dbname="AMOUNT" )
+ column=(type=char(10) updatewhereclause=yes name=branch_namebranch dbname="BRANCH.namebranch" dbalias=".namebranch" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=type_ach dbname="ACH_BATCH_DETAIL_BRANCH.TYPE_ACH" dbalias=".TYPE_ACH" )
+ column=(type=datetime updatewhereclause=yes name=today dbname="today" )
+ column=(type=char(40) updatewhereclause=yes name=name_city dbname="ACH_BATCH_DETAIL_BRANCH.name_city" dbalias=".name_city" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_state dbname="BRANCH.id_state" dbalias=".id_state" )
+ column=(type=char(60) updatewhereclause=yes name=address_branch dbname="ACH_BATCH_DETAIL_BRANCH.address_branch" dbalias=".address_branch" )
+ column=(type=char(60) updatewhereclause=yes name=fullname_branch dbname="ACH_BATCH_DETAIL_BRANCH.fullname_branch" dbalias=".fullname_branch" )
+ column=(type=char(7) updatewhereclause=yes name=zip_code dbname="zip_code" )
+ column=(type=char(50) updatewhereclause=yes name=bankname dbname="BankName" )
+ column=(type=decimal(0) updatewhereclause=yes name=checknumber dbname="ACH_BATCH_DETAIL_BRANCH.checknumber" dbalias=".checknumber" )
+ retrieve="SELECT dba.ACH_BATCH_DETAIL_BRANCH.BATCH_ID,   
+dba.ACH_BATCH_DETAIL_BRANCH.ID_MAIN_BRANCH,   
+dba.ACH_BATCH_DETAIL_BRANCH.ID_BRANCH,   
+dba.ACH_BATCH_DETAIL_BRANCH.ACCTYPEID,   
+dba.ACH_BATCH_DETAIL_BRANCH.ACCROUTING,   
+dba.ACH_BATCH_DETAIL_BRANCH.ACCNUMBER,   
+convert(numeric(14,2),dba.ACH_BATCH_DETAIL_BRANCH.AMOUNT) AS AMOUNT,   
+dba.branch.id_branch as namebranch,   
+dba.ACH_BATCH_DETAIL_BRANCH.TYPE_ACH,
+getdate() as today,
+name_city,
+dba.branch.id_state,
+address_branch,
+name_branch as fullname_branch,
+dba.sfGetFullZip(zip_branch) as zip_code,
+dba.sfGetBankFromRouting(dba.ACH_BATCH_DETAIL_BRANCH.ACCROUTING) as BankName,
+ID_ED as checknumber
+FROM dba.ACH_BATCH_DETAIL_BRANCH, dba.branch, dba.city  
+WHERE  dba.ACH_BATCH_DETAIL_BRANCH.id_branch = dba.branch.id_branch
+AND dba.branch.id_city = dba.city.id_city
+AND dba.branch.id_state = dba.city.id_state
+AND dba.branch.id_country = dba.city.id_country
+AND dba.ACH_BATCH_DETAIL_BRANCH.BATCH_ID = :p_batchid   
+ORDER BY 8 ASC   " arguments=(("p_batchid", string)) )
+group(level=1 header.height=32 header.height.autosize=yes trailer.height=68 trailer.height.autosize=yes by=("batch_id" , "id_main_branch" , "amount" , "accnumber" ) header.color="536870912" trailer.color="536870912" )
+rectangle(band=detail x="2789" y="512" height="120" width="631"  name=r_2 visible="1" brush.hatch="7" brush.color="553648127" pen.style="0" pen.width="5" pen.color="16777215"  background.mode="1" background.color="553648127" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="2830" y="540" height="80" width="498" format="[currency]" html.valueishtml="0"  name=amount visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="82" y="172" height="60" width="1381" html.valueishtml="0"  name=address_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="name_city +~", ~"+ branch_id_state +~" ~" +  zip_code "border="0" color="0" x="82" y="228" height="60" width="1161" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="16777215" x="82" y="116" height="72" width="1605" html.valueishtml="0"  name=fullname_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=20 border="0" color="0" x="1518" y="116" height="72" width="1079" html.valueishtml="0"  name=bankname visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Century" font.height="-7" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="1" tabsequence=30 border="0" color="0" x="2990" y="216" height="80" width="334" html.valueishtml="0"  name=checknumber visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Rockwell" font.height="-12" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="1" tabsequence=10 border="0" color="0" x="2981" y="348" height="72" width="338" format="mm/dd/yyyy" html.valueishtml="0"  name=today visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Century" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="1" text="Check No:" border="0" color="0" x="2610" y="216" height="60" width="352" html.valueishtml="0"  name=t_7 visible="1"  font.face="Rockwell" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="1" text="Date:" border="0" color="0" x="2610" y="356" height="60" width="352" html.valueishtml="0"  name=t_2 visible="1"  font.face="Rockwell" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Pay to the 
+order of:" border="0" color="0" x="119" y="352" height="120" width="439" html.valueishtml="0"  name=t_1 visible="1"  font.face="Rockwell" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Viamericas Corporation" border="0" color="0" x="466" y="380" height="64" width="745" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="~"***** ~" + upper(fn_spellnumber(string(  amount ) ) ) + ~" *****~""border="0" color="0" x="439" y="548" height="60" width="2368" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=detail x1="384" y1="628" x2="2821" y2="628"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+line(band=detail x1="384" y1="464" x2="2062" y2="464"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+text(band=header.1 alignment="0" text="A~tIF(MOD(GETROW()+2,3)=0,~"~",string(getrow()))" border="0" color="16777215" x="654" y="0" height="92" width="1070" html.valueishtml="0"  name=t_6 visible="1"  slideup=allabove  font.face="Tahoma" font.height="-14" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912"  height.autosize=yes)
+line(band=detail x1="2286" y1="956" x2="3442" y2="956"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+text(band=detail alignment="0" text="Memo:" border="0" color="0" x="119" y="800" height="60" width="247" html.valueishtml="0"  name=t_8 visible="1"  font.face="Rockwell" font.height="-10" font.weight="700"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="2" expression="~"A~" +  accrouting + ~"A  C~" +  accnumber + ~"C ~" + String(checknumber)"border="0" color="33554432" x="110" y="1128" height="68" width="2994" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="MICR" font.height="-12" font.weight="400"  font.family="0" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="18" y1="60" x2="3547" y2="60"  name=l_4 visible="1~tIF(MOD(GETROW(),3)=0,0,1)"  slideup=allabove pen.style="3" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=trailer.1 alignment="0" text="A~tIF(MOD(GETROW()+2,3)=0,~"~",string(getrow()))" border="0" color="16777215" x="448" y="0" height="64" width="1070" html.valueishtml="0"  name=t_12 visible="1"  slideup=allabove  font.face="Tahoma" font.height="-11" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912"  height.autosize=yes)
+text(band=detail alignment="0" text="PRE-AUTHORIZED CHECK" border="0" color="16777215" x="2464" y="888" height="64" width="795" html.valueishtml="0"  name=t_4 visible="1"  font.face="Century" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=detail alignment="2" text="No Signature Required" border="0" color="16777215" x="2441" y="964" height="60" width="795" html.valueishtml="0"  name=t_5 visible="1"  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=detail alignment="0" text="Customer Service (800) 401-7626 x 201" border="0" color="16777215" x="366" y="804" height="60" width="1006" html.valueishtml="0"  name=t_11 visible="1"  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=detail alignment="0" text="Batch ID: " border="0" color="16777215" x="366" y="864" height="60" width="242" html.valueishtml="0"  name=t_9 visible="1"  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="0" color="16777215" x="622" y="864" height="64" width="274" format="[general]" html.valueishtml="0"  name=batch_id visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Customer Number: " border="0" color="16777215" x="366" y="924" height="60" width="471" html.valueishtml="0"  name=t_10 visible="1"  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="16777215" x="864" y="924" height="64" width="251" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="16777215" x="1074" y="924" height="64" width="201" format="[general]" html.valueishtml="0"  name=id_main_branch visible="1" edit.limit=4 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Century" font.height="-8" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Viamericas Corporation" border="0" color="0" x="78" y="108" height="64" width="745" html.valueishtml="0"  name=t_13 visible="1"  font.face="Century" font.height="-10" font.weight="400"  font.family="1" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

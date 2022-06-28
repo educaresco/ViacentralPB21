@@ -1,0 +1,13 @@
+﻿$PBExportHeader$dw_branch_network_central.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=80269524 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="BRANCH_INSTALACION.ID_BRANCH" )
+ column=(type=char(10) updatewhereclause=yes name=tipo_transmision_agencia_id_branch dbname="TIPO_TRANSMISION_AGENCIA.ID_BRANCH" )
+ column=(type=char(1) updatewhereclause=yes name=tipo_transmision_agencia_tipo_transmisio dbname="TIPO_TRANSMISION_AGENCIA.TIPO_TRANSMISION" )
+ column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.BRANCH_INSTALACION~" )  TABLE(NAME=~"DBA.BRANCH~" )  TABLE(NAME=~"DBA.TIPO_TRANSMISION_AGENCIA~" ) COLUMN(NAME=~"DBA.BRANCH_INSTALACION.ID_BRANCH~") COLUMN(NAME=~"DBA.TIPO_TRANSMISION_AGENCIA.ID_BRANCH~") COLUMN(NAME=~"DBA.TIPO_TRANSMISION_AGENCIA.TIPO_TRANSMISION~") COLUMN(NAME=~"DBA.BRANCH.ID_BRANCH~")    JOIN (LEFT=~"DBA.BRANCH.ID_BRANCH~"    OP =~"=~"RIGHT=~"DBA.BRANCH_INSTALACION.ID_BRANCH~" )    JOIN (LEFT=~"DBA.BRANCH.ID_BRANCH~"    OP =~"=~"RIGHT=~"DBA.TIPO_TRANSMISION_AGENCIA.ID_BRANCH~" )WHERE(    EXP1 =~"( ( DBA.BRANCH.ID_FLAG_BRANCH~"   OP =~"=~"    EXP2 =~"'A' )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"( DBA.BRANCH.ID_TYPE_BRANCH~"   OP =~"<>~"    EXP2 =~"'P' ) )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"( DBA.BRANCH.ID_FLAG_BRANCH~"   OP =~"=~"    EXP2 =~"'A' )~" ) ) " )
+column(band=detail id=1 alignment="2" tabsequence=10 border="0" color="0" x="9" y="4" height="60" width="928" format=""  name=id_branch dddw.name=dddw_branch_network_filtrado dddw.displaycolumn=name_branch dddw.datacolumn=id_branch dddw.percentwidth=150 dddw.lines=30 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.hscrollbar=yes dddw.vscrollbar=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

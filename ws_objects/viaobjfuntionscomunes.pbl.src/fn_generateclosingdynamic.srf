@@ -1,0 +1,339 @@
+﻿$PBExportHeader$fn_generateclosingdynamic.srf
+global type fn_generateclosingdynamic from function_object
+end type
+
+forward prototypes
+global subroutine fn_generateclosingdynamic (string ps_idbranch, date pd_date1, date pd_date2)
+end prototypes
+
+global subroutine fn_generateclosingdynamic (string ps_idbranch, date pd_date1, date pd_date2);SetPointer(HourGlass!)
+
+// ---------------------------------------------------------------------------------------
+// Variables de la Instancia
+//
+// is_idbranch --> Branch id
+// id_date1    --> Date From
+// id_date2    --> Date to
+// ---------------------------------------------------------------------------------------
+
+String ls_mascara = "$#,##0.00;$(#,##0.00)"
+
+String ls_filename, ls_htmlcode
+Integer i, li_FileNum
+datetime id_date1, id_date2
+string is_idbranch
+string ls_b1col1, ls_b1col2, ls_b1col3, ls_b1col4, ls_b1col5, ls_b1col6, ls_b1col7, ls_b1col8, ls_b1col9, ls_b1col10, ls_b1col11
+string ls_b2col1, ls_b2col2, ls_b2col3, ls_b2col4, ls_b2col5
+double ld_b2col6, ld_b2col7, ld_b2col8
+string ls_b3col1, ls_b3col2
+double ld_b3col3
+string ls_b4col1
+double ld_b4col2	
+string ls_b5col1
+double ld_b5col2
+
+id_date1 = DATETIME(pd_date1,time('00:00:00'))
+id_date2 = DATETIME(pd_date2,time('23:59:59'))
+
+is_idbranch = Trim(ps_idbranch)
+
+DELETE FROM dba.TMP_REP_CLOSING_BLOCK1;
+DELETE FROM dba.TMP_REP_CLOSING_BLOCK2;
+DELETE FROM dba.TMP_REP_CLOSING_BLOCK3;
+DELETE FROM dba.TMP_REP_CLOSING_BLOCK4;
+DELETE FROM dba.TMP_REP_CLOSING_BLOCK5;
+
+// =========================================================================================
+// SECCION INICIAL
+// Variables
+
+String ls_namebranch, ls_phone_branch, ls_fax_branch
+Double ld_previous_amt, ld_payments_amt, ld_past_due, ld_net_amt_sent, ld_trans_fee, ld_commissions, &
+       ld_subtotal, ld_total_amt_due
+
+STRING	ls_grupo
+
+SELECT dba.BRANCH.ID_MAIN_BRANCH, dba.BRANCH.FAX_BRANCH, dba.BRANCH.NAME_BRANCH, dba.BRANCH.PHONE1_BRANCH
+INTO :LS_GRUPO, :ls_fax_branch, :ls_namebranch, :ls_phone_branch
+FROM dba.BRANCH  
+WHERE dba.BRANCH.ID_BRANCH = :is_idbranch   ;
+  
+///// PREVIOUS BALANCE \\\
+Double		TotalFee, CompanyFee, AgencyFee, TotalReceiver, NetAmount, AmountDue, TotalCredits, PreBal, TotalDebits
+
+SELECT Sum(DBA.RECEIVER.telex_receiver + DBA.RECEIVER.exchange_receiver), 
+	Sum(DBA.RECEIVER.telex_company + DBA.RECEIVER.exchange_company) , 
+	Sum(DBA.RECEIVER.total_receiver) , 
+	Sum(DBA.RECEIVER.net_amount_receiver) 
+INTO :TotalFee, :CompanyFee, :TotalReceiver, :NetAmount 	
+FROM DBA.receiver WHERE DBA.RECEIVER.ID_BRANCH = : is_idbranch AND DBA.receiver.date_receiver < :id_date1   ;
+
+AmountDue = TotalReceiver - AgencyFee
+
+Select isnull(sum(DBA.TRANSACCION_DIARIA_PAYEE.credit_trans_diaria),0)
+into :TotalCredits
+from DBA.TRANSACCION_DIARIA_PAYEE 
+WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND 
+DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria  < :id_date1 AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :LS_GRUPO ;
+
+
+Select isnull(sum(DBA.TRANSACCION_DIARIA_PAYEE.Debit_trans_diaria),0)
+into :TotalDebits
+from DBA.TRANSACCION_DIARIA_PAYEE WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria < :id_date1 AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :LS_GRUPO   ;
+
+PreBal = NetAmount + CompanyFee + TotalDebits - TotalCredits	  
+
+ld_previous_amt = PreBal
+
+
+SELECT   sum(dba.TRANSACCION_DIARIA_PAYEE.credit_TRANS_DIARIA) - SUM(dba.TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA )  
+		into	:ld_payments_amt
+       FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE in ('DA','AC','CC','AVO','ACH')  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1   AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2    ;
+	
+	if isnull(ld_payments_amt) then ld_payments_amt = 0
+	
+DOUBLE	LD_COMISION_COMP	
+	
+	SELECT 	SUM(DBA.RECEIVER.NET_AMOUNT_RECEIVER),
+			SUM(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO),
+			SUM(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+	INTO :ld_net_amt_sent,:ld_trans_fee,:LD_COMISION_COMP
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) ;					
+			
+if isnull(ld_net_amt_sent) 	then ld_net_amt_sent  = 0	
+if isnull(ld_trans_fee) 		then ld_trans_fee     = 0	
+if isnull(LD_COMISION_COMP) 	then LD_COMISION_COMP = 0	
+
+ld_payments_amt= ld_payments_amt * -1
+ld_past_due = ld_previous_amt + ld_payments_amt
+ld_commissions = (ld_trans_fee - LD_COMISION_COMP) * -1
+ld_subtotal = ld_net_amt_sent + ld_trans_fee + ld_commissions
+ld_total_amt_due = ld_past_due + ld_subtotal
+
+ls_b1col1 = ls_namebranch
+ls_b1col2 = "Phone: "+ls_phone_branch+" Fax: "+ls_fax_branch
+ls_b1col3 = String(ld_previous_amt,ls_mascara)
+ls_b1col4 = string(ld_payments_amt,ls_mascara)
+ls_b1col5 = string(ld_past_due,ls_mascara)
+ls_b1col6 = string(ld_net_amt_sent,ls_mascara)
+ls_b1col7 = string(ld_trans_fee,ls_mascara)
+ls_b1col8 = string(ld_commissions,ls_mascara)
+ls_b1col9 = string(ld_subtotal,ls_mascara)
+ls_b1col10 = string(ld_total_amt_due,ls_mascara)
+ls_b1col11 = "Invoice Date: "+String(id_date1,"mm/dd/yyyy")+" to "+String(id_date2,"mm/dd/yyyy hh:mm:ss AM/PM")
+
+insert into dba.TMP_REP_CLOSING_BLOCK1 (id_branch, COL1, COL2, COL3, COL4, COL5, COL6, COL7, COL8, COL9, COL10, COL11)
+values (:is_idbranch,:ls_b1col1, :ls_b1col2, :ls_b1col3, :ls_b1col4, :ls_b1col5, :ls_b1col6, :ls_b1col7, :ls_b1col8, :ls_b1col9, :ls_b1col10, :ls_b1col11);
+
+// ======================================================================================================
+// Ciclo de Invoices:
+
+String ls_invoice_number, ls_cashier,ls_namereceiver,ls_namecountry
+Double ld_amount, ld_fee, ld_commission
+DateTime ld_datereceiver
+
+DECLARE CUR_INVOICES CURSOR FOR  
+		 SELECT dba.RECEIVER.ID_RECEIVER,
+		   dba.RECEIVER.DATE_RECEIVER,
+         dba.RECEIVER.NAME_RECEIVER,   
+         dba.RECEIVER.ID_COUNTRY_RECEIVER,   
+			DBA.RECEIVER.NET_AMOUNT_RECEIVER,
+			(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO),
+			(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) )   
+			ORDER BY DBA.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA ASC,     
+						DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA ASC,
+						DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA ASC,
+						DBA.RECEIVER.ID_RECEIVER ASC;
+
+Double	ld_receiver, ld_fee_agent, ld_fee_comp
+String	ls_idcountry
+
+Open  CUR_INVOICES;
+Fetch  CUR_INVOICES into :ld_receiver, :ld_datereceiver, :ls_namereceiver, :ls_idcountry, :ld_amount, :ld_fee_agent, :ld_fee_comp ;
+DO WHILE SQLCA.SQLCODE = 0
+
+	ls_namereceiver = trim(LEFT(ls_namereceiver,25))
+	IF LEN(ls_namereceiver)=25 THEN ls_namereceiver = ls_namereceiver + "..."
+	ls_namecountry = trim(LEFT(ls_namecountry,10))
+	IF LEN(ls_namecountry)=10 THEN ls_namecountry = ls_namecountry + "..."	
+	
+	ls_invoice_number = is_idbranch + '-' + string(ld_receiver)
+	ls_cashier = 'CASHIER'
+	ls_namecountry = ls_idcountry
+
+	ls_b2col1 = String(ld_datereceiver,"mm/dd/yyyy hh:mm")
+	ls_b2col2 = ls_invoice_number
+	ls_b2col3 = ls_cashier
+	ls_b2col4 = ls_namereceiver
+	ls_b2col5 = ls_namecountry
+	ld_b2col6 = ld_amount
+	ld_b2col7 = ld_fee_agent
+	ld_b2col8 = round((ld_fee_agent - ld_fee_comp),2)
+	
+	insert into dba.TMP_REP_CLOSING_BLOCK2 (id_branch, COL1, COL2, COL3, COL4, COL5, COL6, COL7, COL8)
+	values (:is_idbranch,:ls_b2col1, :ls_b2col2, :ls_b2col3, :ls_b2col4, :ls_b2col5, :ld_b2col6, :ld_b2col7, :ld_b2col8);
+
+	Fetch  CUR_INVOICES into :ld_receiver, :ld_datereceiver, :ls_namereceiver, :ls_idcountry, :ld_amount, :ld_fee_agent, :ld_fee_comp ;
+LOOP
+Close  CUR_INVOICES;
+// ======================================================================================================
+
+
+// ======================================================================================================
+// Ciclo de Ajustments:
+
+Datetime ld_effectivedate
+String ls_comment
+Double ld_debito, ld_credito, ld_amount_aju
+
+  DECLARE CUR_AJUSTE CURSOR FOR  
+  SELECT dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA  
+       FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE in ('DA','AC','CC','AVO','ACH')  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1   AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2    
+ORDER BY cons_trans_diaria;
+
+Open CUR_AJUSTE;
+Fetch  CUR_AJUSTE into :ld_effectivedate, :ls_comment, :ld_debito, :ld_credito ;
+DO WHILE SQLCA.SQLCODE = 0
+	
+	if isnull(ld_debito)  then ld_debito  = 0
+	if isnull(ld_credito) then ld_credito = 0
+	if isnull(ls_comment) then ls_comment = ''
+	
+	ld_amount_aju = ld_credito - ld_debito
+
+	ls_b3col1 = String(ld_effectivedate,"mm/dd/yyyy")
+	ls_b3col2 = ls_comment
+	ld_b3col3 = round(ld_amount_aju,2)
+	
+	insert into dba.TMP_REP_CLOSING_BLOCK3 (id_branch, COL1, COL2, COL3)
+	values (:is_idbranch,:ls_b3col1, :ls_b3col2, :ld_b3col3);
+	
+	Fetch  CUR_AJUSTE into :ld_effectivedate, :ls_comment, :ld_debito, :ld_credito ;
+LOOP
+Close CUR_AJUSTE;
+
+// ======================================================================================================
+// ======================================================================================================
+// ======================================================================================================
+
+// Ciclo de Deposits:
+//+++++++++++
+// PENDIENTE: Cargar en un cursor
+Datetime ld_effectivedate_dep, ld_inicio_mes
+Double ld_amount_dep
+
+ld_effectivedate_dep = datetime(today(),now())
+ld_amount=0
+
+ld_inicio_mes = dateTIME(dATE((string(id_date2,"YYYY-MM-")+string('1'))),tIME('00:00:00'))
+
+DECLARE RECON CURSOR FOR  
+  SELECT dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA  
+    FROM dba.TRANSACCION_DIARIA_BANCO_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :ld_inicio_mes ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE IN ('DA','ACH') ) ) 
+ORDER BY dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA ASC ;
+
+
+Open RECON ;
+fetch RECON 	iNTO :ld_effectivedate_dep, :ld_amount_dep ; 
+DO WHILE sqlca.sqlcode = 0
+	
+	ls_b4col1 = String(ld_effectivedate_dep,"mm/dd/yyyy")
+	ld_b4col2 = ld_amount_dep
+	
+	insert into dba.TMP_REP_CLOSING_BLOCK4 (id_branch, COL1, COL2)
+	values (:is_idbranch,:ls_b4col1, :ld_b4col2);
+
+	fetch RECON 	iNTO :ld_effectivedate_dep, :ld_amount_dep ; 
+LOOP
+
+Close	RECON ;
+
+// ======================================================================================================
+// ======================================================================================================
+// Ciclo de Commissions:
+
+Date ld_effectivedate_com
+Double ld_amount_com
+
+// Pendiente: Cargar Cursor y llenar las variables
+Date		ld_ciclo
+Datetime	ld_fecha_ciclo1, ld_fecha_ciclo2
+
+int li_day, li_maxday
+
+li_maxday = integer(string(id_date2,"dd"))
+
+FOR li_day = 1 TO li_maxday
+
+	ld_ciclo = date(string(id_date2,"YYYY-MM-")+string(li_day))
+	ld_fecha_ciclo1 = Datetime(ld_ciclo,time('00:00:00'))
+	ld_fecha_ciclo2 = Datetime(ld_ciclo,time('23:59:59'))
+
+	SELECT SUM(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO) - SUM(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+	INTO :ld_amount_com
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :ld_fecha_ciclo1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :ld_fecha_ciclo2 ) ;		
+
+	if isnull(ld_amount_com) then ld_amount_com = 0
+
+	ld_effectivedate_com  = ld_ciclo
+	
+	ls_b5col1 = String(ld_effectivedate_com,"mm/dd/yyyy")
+	ld_b5col2 = ld_amount_com
+	
+	insert into dba.TMP_REP_CLOSING_BLOCK5 (id_branch, COL1, COL2)
+	values (:is_idbranch,:ls_b5col1, :ld_b5col2);
+
+NEXT
+
+SetPointer(Arrow!)
+end subroutine
+

@@ -1,0 +1,256 @@
+﻿$PBExportHeader$fn_exptransactions_branch.srf
+global type fn_exptransactions_branch from function_object
+end type
+
+forward prototypes
+global subroutine fn_exptransactions_branch (string ps_idbranch)
+end prototypes
+
+global subroutine fn_exptransactions_branch (string ps_idbranch);// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  Publishes Agency Balance File
+//  Reviewed 01/30/2015 (Ebernal)
+//  Added connection to RPT database
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+string ls_agencia,ls_output,ls_tbranch,ls_cadena,ls_group_branch, ls_agencyfolder, ls_file_name
+long li_FileNum
+string ls_id_group_trans_diaria,ls_id_concepto_contable,ls_des_trans_diaria,ls_referencia,ls_banco,ls_cuenta,ls_branch
+datetime ld_date_trans_diaria,ld_tdate
+datetime lt_hour_trans_diaria
+double ld_debit_trans_diaria,ld_credit_trans_diaria,ld_balance_trans_diaria,ld_treceiver, ll_cons_trans_diaria
+Double ld_comision_comp, ld_feet_comp, ld_delivery
+
+string ls_id_group_trans_diariac,ls_id_concepto_contablec,ls_des_trans_diariac,ls_id_cashierc,ls_checkno,ls_accno
+double ll_cons_trans_diariac,ld_debit_trans_diariac,ld_credit_trans_diariac,ld_balance_trans_diariac,ld_rtn_number,ld_cons_balance
+datetime ld_date_trans_diariac
+datetime lt_hour_trans_diariac
+
+ls_tbranch=''
+ls_cadena = ''
+ld_treceiver=0
+
+SetPointer(HourGlass!)
+
+
+SELECT dba.parametros.dir_output  
+INTO :ls_output  
+FROM dba.parametros WITH (NOLOCK);
+
+ls_output  = trim(ls_output)
+
+ls_agencia = TRIM(ps_idbranch)
+ls_branch = ls_agencia
+
+
+// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+// RPT Server Connection
+n_tr SQLCA_RPT
+SQLCA_RPT = Create n_tr
+SQLCA_RPT.DBMS = "SNC SQL Native Client(OLE DB)"
+SQLCA_RPT.DBParm = "Database='"+gs_db_rpt+"'" + ",TrustedConnection=1,TrimSpaces=1,Secure=1"
+SQLCA_RPT.ServerName = gs_servername_rpt
+if SQLCA_RPT.of_connect() <> 0 then
+	Messagebox("Error","Error trying connection to Reporting Database"+char(13)+char(10)+SQLCA_RPT.SQLErrText,StopSign!)
+	return
+end if
+// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SELECT dba.branch.id_main_branch
+INTO :ls_group_branch
+FROM dba.branch
+WHERE dba.branch.id_branch = :ls_agencia USING SQLCA_RPT;
+
+ls_group_branch = TRIM(ls_group_branch)
+
+DECLARE cur_diaria_payee CURSOR FOR		
+SELECT dba.transaccion_diaria_payee.cons_trans_diaria,   
+dba.transaccion_diaria_payee.id_group_trans_diaria,   
+dba.transaccion_diaria_payee.date_trans_diaria,   
+dba.transaccion_diaria_payee.hour_trans_diaria,   
+dba.transaccion_diaria_payee.id_concepto_contable,   
+dba.transaccion_diaria_payee.des_trans_diaria,   
+dba.transaccion_diaria_payee.debit_trans_diaria,   
+dba.transaccion_diaria_payee.credit_trans_diaria,   
+dba.transaccion_diaria_payee.balance_trans_diaria 
+FROM dba.transaccion_diaria_payee WITH (NOLOCK)
+WHERE dba.transaccion_diaria_payee.id_group_trans_diaria  =	:ls_group_branch
+AND dba.transaccion_diaria_payee.id_concepto_contable not in ('PB','CPC') USING SQLCA_RPT;
+
+OPEN cur_diaria_payee;
+
+FETCH cur_diaria_payee INTO :ll_cons_trans_diaria,:ls_id_group_trans_diaria,:ld_date_trans_diaria,:lt_hour_trans_diaria,:ls_id_concepto_contable,&   
+		:ls_des_trans_diaria,:ld_debit_trans_diaria,:ld_credit_trans_diaria,:ld_balance_trans_diaria;
+
+ls_agencyfolder = ''
+if fileexists(ls_output+trim(ls_agencia)) then ls_agencyfolder = trim(ls_agencia) + '\'
+
+ls_file_name = ls_output + ls_agencyfolder + "CDA"+FILL('0',10 - LEN(ls_agencia))+ls_agencia+".sql"
+li_FileNum = FileOpen(ls_file_name, LineMode!, Write!, LockWrite!, Append!)
+
+filewrite(li_FileNum,'SET option on_error = CONTINUE;')
+
+// BORRA PORQUE LOS VA A PUBLICAR TODOS!
+filewrite(li_FileNum,'DELETE FROM transaccion_diaria_payee;')	
+filewrite(li_FileNum,'DELETE FROM relacion_invoices_payee;')
+filewrite(li_FileNum,'DELETE FROM transaccion_diaria_payee;')
+filewrite(li_FileNum,'DELETE FROM relacion_invoices_payee;')	
+	
+// _______________________________________
+
+String ls_id_concepto, ls_desc_concepto	
+DECLARE cur_conceptos CURSOR FOR  
+SELECT dba.CONCEPTO_CONTABLE.ID_CONCEPTO_CONTABLE,   
+dba.CONCEPTO_CONTABLE.NAME_CONCEPTO_CONTABLE  
+FROM dba.CONCEPTO_CONTABLE  WITH (NOLOCK)
+USING SQLCA_RPT;
+	
+OPEN cur_conceptos;
+FETCH cur_conceptos INTO :ls_id_concepto, :ls_desc_concepto;
+DO WHILE SQLCA_RPT.SQLCODE = 0
+	filewrite(li_FileNum,"INSERT INTO concepto_contable VALUES ('"+TRIM(ls_id_concepto)+"','"+TRIM(ls_desc_concepto)+"');")		
+	FETCH cur_conceptos INTO :ls_id_concepto, :ls_desc_concepto;
+LOOP
+CLOSE cur_conceptos;
+
+filewrite(li_FileNum,"DELETE FROM transaccion_diaria_payee WHERE id_concepto_contable in ('PB','CPC');")	
+// _______________________________________
+	
+ls_cadena = "UPDATE receiver SET fee_rate = 0 WHERE fee_rate is NULL;"
+
+filewrite(li_FileNum,ls_cadena)
+
+DO WHILE SQLCA_RPT.SQLCODE = 0
+	if isnull(ls_referencia) then
+		ls_referencia =' '
+	end if
+	
+	if isnull(ls_des_trans_diaria) then ls_des_trans_diaria = ''
+			
+	ls_id_group_trans_diaria	= TRIM(ls_id_group_trans_diaria)
+	ls_des_trans_diaria 			= TRIM(ls_des_trans_diaria)
+	ls_id_concepto_contable 	= TRIM(ls_id_concepto_contable)
+	
+	ls_cadena ="INSERT INTO transaccion_diaria_payee ( cons_trans_diaria, id_group_trans_diaria, date_trans_diaria,"   
+	ls_cadena = ls_cadena + "hour_trans_diaria,id_concepto_contable,des_trans_diaria,debit_trans_diaria,"
+	ls_cadena = ls_cadena + "credit_trans_diaria,balance_trans_diaria ) VALUES ( "
+	ls_cadena = ls_cadena + string(ll_cons_trans_diaria) + ",'" + ls_id_group_trans_diaria + "','"
+	ls_cadena = ls_cadena + string(ld_date_trans_diaria,"yyyy-mm-dd") + "','" + string(lt_hour_trans_diaria,"HH:MM:SS") + "','"
+	ls_cadena = ls_cadena + ls_id_concepto_contable + "','" + fn_replace(ls_des_trans_diaria,"'","") + "'," + string(ld_debit_trans_diaria) + ","
+	ls_cadena = ls_cadena + string(ld_credit_trans_diaria) + "," + string(ld_balance_trans_diaria)  + ");"
+
+	filewrite(li_FileNum,ls_cadena)
+			
+	DECLARE DETALLE CURSOR FOR  
+	SELECT dba.receiver.id_branch,   
+	dba.receiver.id_receiver,  
+	dba.receiver.exchange_company,   
+	dba.receiver.telex_company,   
+	dba.receiver.total_modo_pago_comp 
+	FROM dba.receiver WITH (NOLOCK),   
+	dba.relacion_invoices_payee WITH (NOLOCK)
+	WHERE dba.receiver.id_branch = dba.relacion_invoices_payee.id_branch_invoice
+	AND dba.receiver.id_receiver = dba.relacion_invoices_payee.id_receiver
+	AND dba.relacion_invoices_payee.cons_trans_diaria = :ll_cons_trans_diaria USING SQLCA_RPT;		 	
+
+	OPEN  DETALLE ;
+
+	FETCH DETALLE INTO :ls_tbranch,:ld_treceiver,:ld_comision_comp,:ld_feet_comp,:ld_delivery ;
+
+	DO WHILE SQLCA_RPT.sqlcode = 0
+
+		ls_tbranch = TRIM(ls_tbranch)
+
+		ls_cadena = "INSERT INTO relacion_invoices_payee (cons_trans_diaria,id_branch_invoice,id_receiver,date_relacion_diaria,id_concepto_contable)"
+		ls_cadena = ls_cadena + "values (" + string(ll_cons_trans_diaria) + ",'" + ls_branch + "'," + string(ld_treceiver) + ",'" + string(ld_date_trans_diaria,"yyyy-mm-dd") + "','"+ls_id_concepto_contable+"');"
+		filewrite(li_FileNum,ls_cadena)
+		ls_cadena = 'UPDATE receiver SET exchange_company = '+string(ld_comision_comp)+' ,telex_company = '+string(ld_feet_comp)+' ,total_modo_pago_comp = '+string(ld_delivery)
+		ls_cadena = ls_cadena + " WHERE ( id_branch = '"+string(ls_tbranch)+"' ) AND ( id_receiver = "+string(ld_treceiver)+' )   ;'
+		filewrite(li_FileNum,ls_cadena)			
+
+		FETCH  DETALLE INTO :ls_tbranch,:ld_treceiver,:ld_comision_comp,:ld_feet_comp,:ld_delivery ;
+				
+	LOOP
+
+	CLOSE DETALLE;		
+
+	//Cierre de Comisiones
+	DECLARE cur_diaria_comm 	CURSOR FOR		
+	SELECT dba.transaccion_diaria_payee_comm.cons_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.id_group_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.date_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.hour_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.id_concepto_contable,   
+	dba.transaccion_diaria_payee_comm.des_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.debit_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.credit_trans_diaria,   
+	dba.transaccion_diaria_payee_comm.balance_trans_diaria,
+	dba.transaccion_diaria_payee_comm.id_cashier,
+	dba.transaccion_diaria_payee_comm.rtn_number,
+	dba.transaccion_diaria_payee_comm.check_number,
+	dba.transaccion_diaria_payee_comm.acc_number,
+	dba.transaccion_diaria_payee_comm.CONS_BALANCE
+	FROM dba.transaccion_diaria_payee_comm WITH (NOLOCK)
+	WHERE dba.transaccion_diaria_payee_comm.CONS_BALANCE = :ll_cons_trans_diaria	
+	AND dba.transaccion_diaria_payee_comm.id_group_trans_diaria = :ls_id_group_trans_diaria USING SQLCA_RPT;
+	
+	OPEN cur_diaria_comm;
+	FETCH cur_diaria_comm INTO :ll_cons_trans_diariac,:ls_id_group_trans_diariac,:ld_date_trans_diariac,   &
+										:lt_hour_trans_diariac,:ls_id_concepto_contablec, :ls_des_trans_diariac,    &
+										:ld_debit_trans_diariac,:ld_credit_trans_diariac,:ld_balance_trans_diariac, &
+										:ls_id_cashierc,:ld_rtn_number,:ls_checkno,:ls_accno,:ld_cons_balance;
+										
+	DO WHILE SQLCA_RPT.sqlcode = 0
+		
+		
+		if isnull(ls_des_trans_diariac) 		then ls_des_trans_diariac 		= ''
+		if isnull(ld_debit_trans_diariac) 	then ld_debit_trans_diariac 	= 0
+		if isnull(ld_credit_trans_diariac) 	then ld_credit_trans_diariac 	= 0
+		if isnull(ld_balance_trans_diariac) then ld_balance_trans_diariac = 0
+		if isnull(ls_id_cashierc) 				then ls_id_cashierc 				= 'ADM'
+		if isnull(ld_rtn_number) 				then ld_rtn_number 				= 0
+		if isnull(ls_checkno) 					then ls_checkno 					= ''
+		if isnull(ls_accno) 						then ls_accno 						= ''
+		
+					
+		ls_cadena ="INSERT INTO transaccion_diaria_payee_comm (cons_trans_diaria,id_group_trans_diaria,"
+		ls_cadena = ls_cadena + "date_trans_diaria,hour_trans_diaria,id_concepto_contable,des_trans_diaria,debit_trans_diaria,credit_trans_diaria,"
+		ls_cadena = ls_cadena + "balance_trans_diaria,id_cashier,rtn_number,check_number,acc_number,cons_balance)  VALUES ( "
+		ls_cadena = ls_cadena + string(ll_cons_trans_diariac) + ",'" + ls_id_group_trans_diariac+ "','"
+		ls_cadena = ls_cadena + string(ld_date_trans_diariac,"yyyy-mm-dd") + "','" + string(lt_hour_trans_diariac,"HH:MM:SS") + "','"
+		ls_cadena = ls_cadena + ls_id_concepto_contablec + "','" + fn_replace(ls_des_trans_diariac,"'","") + "'," + string(ld_debit_trans_diariac) + ","
+		ls_cadena = ls_cadena + string(ld_credit_trans_diariac) + "," + string(ld_balance_trans_diariac) +",'"+ls_id_cashierc +"',"+string(ld_rtn_number)+",'"+ls_checkno + "','" +ls_accno +"',"+string(ld_cons_balance)+" );"
+			  
+			
+		filewrite(li_FileNum,ls_cadena)
+	
+	
+		fetch cur_diaria_comm INTO :ll_cons_trans_diariac,:ls_id_group_trans_diariac,:ld_date_trans_diariac,   &
+											:lt_hour_trans_diariac,:ls_id_concepto_contablec, :ls_des_trans_diariac,    &
+											:ld_debit_trans_diariac,:ld_credit_trans_diariac,:ld_balance_trans_diariac, &
+											:ls_id_cashierc,:ld_rtn_number,:ls_checkno,:ls_accno,:ld_cons_balance;
+	
+	LOOP
+	CLOSE cur_diaria_comm;
+
+	FETCH cur_diaria_payee INTO :ll_cons_trans_diaria,:ls_id_group_trans_diaria,:ld_date_trans_diaria,:lt_hour_trans_diaria,:ls_id_concepto_contable,&   
+		:ls_des_trans_diaria,:ld_debit_trans_diaria,:ld_credit_trans_diaria,:ld_balance_trans_diaria;
+LOOP
+CLOSE cur_diaria_payee;
+
+filewrite(li_FileNum,'COMMIT;')
+
+fileclose(li_FileNum)
+
+// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+// RPT Server Disconnection
+SQLCA_RPT.of_disconnect()
+destroy SQLCA_RPT
+// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+SetPointer(Arrow!)
+
+
+
+
+end subroutine
+

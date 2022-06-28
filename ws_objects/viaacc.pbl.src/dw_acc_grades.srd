@@ -1,0 +1,45 @@
+﻿$PBExportHeader$dw_acc_grades.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=264 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes key=yes name=id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=fin_cat_viacheck dbname="GROUP_BRANCH.FIN_CAT_VIACHECK" values="A	A/B	B/C	C/" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=fin_cat_credit dbname="GROUP_BRANCH.FIN_CAT_CREDIT" values="A	A/B	B/C	C/" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=fin_cat_cartera dbname="GROUP_BRANCH.FIN_CAT_CARTERA" values="A	A/B	B/C	C/" )
+ retrieve="  SELECT dba.GROUP_BRANCH.ID_MAIN_BRANCH,   
+         dba.GROUP_BRANCH.FIN_CAT_VIACHECK,   
+         dba.GROUP_BRANCH.FIN_CAT_CREDIT,   
+         dba.GROUP_BRANCH.FIN_CAT_CARTERA  
+    FROM dba.GROUP_BRANCH   
+   WHERE dba.GROUP_BRANCH.ID_MAIN_BRANCH = :p_id_group    
+" update="dba.GROUP_BRANCH" updatewhere=1 updatekeyinplace=no arguments=(("p_id_group", string)) )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="32" y="220" height="64" width="114" format="[general]" html.valueishtml="0"  name=id_main_branch visible="1" edit.limit=4 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Accounting Grade:" border="0" color="33554432" x="18" y="12" height="52" width="471" html.valueishtml="0"  name=fin_cat_cartera_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Credit Grade:" border="0" color="33554432" x="18" y="80" height="52" width="407" html.valueishtml="0"  name=fin_cat_credit_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="ViaCheck Grade:" border="0" color="33554432" x="18" y="148" height="52" width="416" html.valueishtml="0"  name=fin_cat_viacheck_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=10 border="0" color="33554432" x="535" y="12" height="52" width="169" format="[general]" html.valueishtml="0"  name=fin_cat_cartera visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( fin_cat_cartera = 'A', RGB(0,128,0), 
+if ( fin_cat_cartera = 'B', RGB(255,255,0), 
+if ( fin_cat_cartera = 'C', RGB(255,0,0), 
+RGB(255,255,255))))" )
+column(band=detail id=3 alignment="0" tabsequence=20 border="0" color="33554432" x="535" y="80" height="52" width="169" format="[general]" html.valueishtml="0"  name=fin_cat_credit visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif (  fin_cat_credit  = 'A', RGB(0,128,0), 
+if ( fin_cat_credit  = 'B', RGB(255,255,0), 
+if ( fin_cat_credit  = 'C', RGB(255,0,0), 
+RGB(255,255,255))))" )
+column(band=detail id=2 alignment="0" tabsequence=30 border="0" color="33554432" x="535" y="148" height="52" width="169" format="[general]" html.valueishtml="0"  name=fin_cat_viacheck visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( fin_cat_viacheck = 'A', RGB(0,128,0), 
+if ( fin_cat_viacheck = 'B', RGB(255,255,0), 
+if ( fin_cat_viacheck = 'C', RGB(255,0,0), 
+RGB(255,255,255))))" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

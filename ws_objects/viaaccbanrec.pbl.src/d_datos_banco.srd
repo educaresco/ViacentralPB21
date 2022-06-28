@@ -1,0 +1,62 @@
+﻿$PBExportHeader$d_datos_banco.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=120 color="536870912" )
+summary(height=88 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=datetime updatewhereclause=yes name=date_transaction dbname="BANK_STATEMENT.DATE_TRANSACTION" dbalias=".DATE_TRANSACTION" )
+ column=(type=char(10) updatewhereclause=yes name=deposit_code dbname="BANK_STATEMENT.DEPOSIT_CODE" dbalias=".DEPOSIT_CODE" )
+ column=(type=char(100) updatewhereclause=yes name=des_trans_corta dbname="BANK_STATEMENT.DES_TRANS_CORTA" dbalias=".DES_TRANS_CORTA" )
+ column=(type=decimal(2) updatewhereclause=yes name=total_amount dbname="BANK_STATEMENT.TOTAL_AMOUNT" dbalias=".TOTAL_AMOUNT" )
+ column=(type=char(1) updatewhereclause=yes name=flag_reconciliation dbname="BANK_STATEMENT.FLAG_RECONCILIATION" dbalias=".FLAG_RECONCILIATION" )
+ column=(type=long updatewhereclause=yes identity=yes name=c_num_registro dbname="C_NUM_REGISTRO" )
+ column=(type=char(1) updatewhereclause=yes name=flag_sugerencia dbname="Flag_sugerencia" )
+ column=(type=char(500) updatewhereclause=yes name=des_trans_larga dbname="BANK_STATEMENT.DES_TRANS_LARGA" dbalias=".DES_TRANS_LARGA" )
+ column=(type=char(20) updatewhereclause=yes name=id_banco dbname="BANK_STATEMENT.ID_BANCO" dbalias=".ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=additional1 dbname="BANK_STATEMENT.ADDITIONAL1" dbalias=".ADDITIONAL1" )
+ retrieve="SELECT DATE_TRANSACTION,
+				DEPOSIT_CODE,
+				DES_TRANS_CORTA,
+				TOTAL_AMOUNT,
+				FLAG_RECONCILIATION,
+				0 as C_NUM_REGISTRO,
+				'' as Flag_sugerencia,
+				DES_TRANS_LARGA,
+				ID_BANCO,
+				ADDITIONAL1
+		FROM	DBA.BANK_STATEMENT
+		WHERE	FLAG_RECONCILIATION	= 'N' AND
+				ID_CODE_TRANSACTION	= :an_id_code_transaction AND
+				ID_BANCO					= :as_id_banco AND
+				ID_CUENTA_BANCO	 	= :as_id_cuenta_banco AND
+				(DATE_TRANSACTION 	>= :adtm_date_transaction_ini AND
+				DATE_TRANSACTION 		<= :adtm_date_transaction_fin)
+				" arguments=(("as_id_banco", string),("as_id_cuenta_banco", string),("adtm_date_transaction_ini", datetime),("adtm_date_transaction_fin", datetime),("an_id_code_transaction", number))  sort="date_transaction A total_amount A deposit_code D " )
+text(band=header alignment="2" text="FechaDepósito" border="2" color="0" x="14" y="8" height="104" width="261" html.valueishtml="0"  name=fecha_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="CódigoDepósito" border="2" color="0" x="293" y="8" height="104" width="439" html.valueishtml="0"  name=codigodeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="DescripciónDepósito" border="2" color="0" x="750" y="8" height="104" width="814" html.valueishtml="0"  name=descdeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="ValorDepósito" border="2" color="0" x="1582" y="8" height="104" width="398" html.valueishtml="0"  name=valordeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="5" color="33554432" x="1582" y="4" height="64" width="398" format="#,##0.00" html.valueishtml="0"  name=total_amount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), IF (flag_reconciliation='V', RGB(182,182,133), RGB(255,255,255))))))" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="5" color="33554432" x="750" y="4" height="64" width="814" format="[general]" html.valueishtml="0"  name=des_trans_corta visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), IF (flag_reconciliation='V', RGB(182,182,133), RGB(255,255,255))))))" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="5" color="33554432" x="293" y="4" height="64" width="439" format="[general]" html.valueishtml="0"  name=deposit_code visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), IF (flag_reconciliation='V', RGB(182,182,133), RGB(255,255,255))))))" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="5" color="33554432" x="9" y="4" height="64" width="261" format="mm/dd/yyyy" html.valueishtml="0"  name=date_transaction visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), IF (flag_reconciliation='V', RGB(182,182,133), RGB(255,255,255))))))" )
+text(band=summary alignment="1" text="Total -->" border="0" color="0" x="750" y="16" height="64" width="814" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+compute(band=summary alignment="1" expression="sum(  total_amount  for all )"border="0" color="0" x="1582" y="16" height="64" width="398" format="#,##0.00" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+line(band=summary x1="0" y1="4" x2="1984" y2="4"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=0 border="0" color="33554432" x="2002" y="8" height="52" width="462" html.valueishtml="0"  name=additional1 visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="2473" y="4" height="68" width="64" format="[general]" html.valueishtml="0"  name=flag_sugerencia visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_sugerencia= 'S', RGB(149,210,89), if( flag_sugerencia= 'H', RGB(21,134,166), if( flag_sugerencia= 'G', RGB(161,240,235) ,  if( flag_sugerencia= 'B', RGB(223,222,98), RGB(255,255,255)))))" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="2555" y="4" height="64" width="96" format="[general]" html.valueishtml="0"  name=c_num_registro visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="2670" y="0" height="68" width="87" format="[general]" html.valueishtml="0"  name=flag_reconciliation visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="case(  flag_reconciliation  when 'S' then 1 when 'H' then 2 when 'G'  then 3 when 'B' then 4 when 'V' then 5 else 6)"border="0" color="0" x="2779" y="4" height="60" width="233" format="[GENERAL]" html.valueishtml="0"  name=c_sort_color visible="0"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="65280" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,58 @@
+﻿$PBExportHeader$f_frmwrk_fecha_larga.srf
+global type f_frmwrk_fecha_larga from function_object
+end type
+
+forward prototypes
+global function string f_frmwrk_fecha_larga (date ad_fecha)
+end prototypes
+
+global function string f_frmwrk_fecha_larga (date ad_fecha);INTEGER	li_ano, li_mes, li_dia
+STRING	ls_mes	
+
+li_ano = Year(ad_fecha)
+li_mes = Month(ad_fecha)
+li_dia = Day(ad_fecha)
+
+CHOOSE CASE li_mes
+
+	CASE 1
+		ls_mes = 'Enero'
+
+	CASE 2
+		ls_mes = 'Febrero'
+
+	CASE 3
+		ls_mes = 'Marzo'
+
+	CASE 4
+		ls_mes = 'Abril'
+
+	CASE 5
+		ls_mes = 'Mayo'
+
+	CASE 6
+		ls_mes = 'Junio'
+
+	CASE 7
+		ls_mes = 'Julio' 
+
+	CASE 8
+		ls_mes = 'Agosto'
+
+	CASE 9
+		ls_mes = 'Septiembre'
+
+	CASE 10
+		ls_mes = 'Octubre'
+
+	CASE 11
+		ls_mes = 'Noviembre'
+
+	CASE 12
+		ls_mes = 'Diciembre'
+
+END CHOOSE
+
+Return ls_mes + ' ' + String(li_dia) + ' de ' + String(li_ano)
+end function
+

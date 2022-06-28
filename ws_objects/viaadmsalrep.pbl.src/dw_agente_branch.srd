@@ -1,0 +1,38 @@
+﻿$PBExportHeader$dw_agente_branch.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_agent dbname="BRANCH_AGENT.ID_AGENT" dbalias=".ID_AGENT" )
+ column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_branch dbname="BRANCH_AGENT.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=datetime update=yes updatewhereclause=yes name=date_begin dbname="BRANCH_AGENT.DATE_BEGIN" dbalias=".DATE_BEGIN" initial="Today" )
+ column=(type=char(3) updatewhereclause=yes name=cate_begin dbname="" values="YES	YES/NO	NO/" )
+ retrieve="  SELECT DBA.BRANCH_AGENT.ID_AGENT,   
+         DBA.BRANCH_AGENT.ID_BRANCH,   
+         DBA.BRANCH_AGENT.DATE_BEGIN,   
+         isnull(DBA.BRANCH_AGENT.SPECIAL_BRANCH,'NO')  
+    FROM DBA.BRANCH_AGENT  
+ORDER BY DBA.BRANCH_AGENT.ID_AGENT ASC,   
+         DBA.BRANCH_AGENT.ID_BRANCH ASC   
+" update="DBA.BRANCH_AGENT" updatewhere=1 updatekeyinplace=no )
+text(band=header alignment="2" text="Date Begin" border="2" color="0" x="2048" y="12" height="56" width="274" html.valueishtml="0"  name=date_begin_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text=" Branch" border="2" color="0" x="896" y="12" height="56" width="1134" html.valueishtml="0"  name=id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Agent" border="2" color="0" x="137" y="12" height="56" width="741" html.valueishtml="0"  name=id_agent_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="0" x="137" y="8" height="60" width="741" format="[general]" html.valueishtml="0"  name=id_agent visible="1" dddw.name=dddw_agente dddw.displaycolumn=name_agent dddw.datacolumn=id_agent dddw.percentwidth=110 dddw.lines=20 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="5" color="0" x="896" y="8" height="60" width="1134" format="[general]" html.valueishtml="0"  name=id_branch visible="1" dddw.name=dddw_branch_receptor_all dddw.displaycolumn=name_branch dddw.datacolumn=id_branch dddw.percentwidth=120 dddw.lines=30 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Special" border="2" color="0" x="2341" y="12" height="52" width="274" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=3 alignment="2" tabsequence=30 border="5" color="0" x="2048" y="8" height="60" width="274" format="[general]" html.valueishtml="0"  name=date_begin visible="1" edit.name="MM/DD/YYYY" editmask.mask="MM/DD/YYYY" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=40 border="5" color="0" x="2341" y="8" height="60" width="274" html.valueishtml="0"  name=cate_begin visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

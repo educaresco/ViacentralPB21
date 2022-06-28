@@ -1,0 +1,25 @@
+﻿$PBExportHeader$fn_manager_branch.srf
+global type fn_manager_branch from function_object
+end type
+
+forward prototypes
+global function string fn_manager_branch (string ls_branch)
+end prototypes
+
+global function string fn_manager_branch (string ls_branch);string	ls_manager = ""
+
+
+	SELECT dba.branch_manager.name_manager  
+    INTO :ls_manager  
+    FROM dba.branch_manager  
+   WHERE dba.branch_manager.id_branch = :ls_branch   ;
+
+
+
+	Return ls_manager  ;
+
+
+
+
+end function
+

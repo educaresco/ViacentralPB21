@@ -1,0 +1,50 @@
+﻿$PBExportHeader$dw_dormant_selection.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" dbalias="A.ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" dbalias="B.NAME_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=agent_name_agent dbname="AGENT.NAME_AGENT" dbalias="D.NAME_AGENT" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_state dbname="BRANCH.ID_STATE" dbalias="B.ID_STATE" )
+ column=(type=datetime updatewhereclause=yes name=branch_date_cre_branch dbname="BRANCH.DATE_CRE_BRANCH" dbalias="B.DATE_CRE_BRANCH" )
+ column=(type=char(3) updatewhereclause=yes name=branch_agent_special_branch dbname="BRANCH_AGENT.SPECIAL_BRANCH" dbalias="C.SPECIAL_BRANCH" )
+ column=(type=char(1) updatewhereclause=yes name=dormant dbname="dormant" values="	Y/	N" )
+ retrieve="SELECT  A.ID_BRANCH, B.NAME_BRANCH, D.NAME_AGENT, B.ID_STATE, B.DATE_CRE_BRANCH, C.SPECIAL_BRANCH, ' ' as dormant 
+FROM DBA.RECEIVER A, DBA.BRANCH B, DBA.BRANCH_AGENT C, DBA.AGENT D
+WHERE A.ID_BRANCH = B.ID_BRANCH 
+AND A.ID_BRANCH = C.ID_BRANCH
+AND C.ID_AGENT = D.ID_AGENT
+AND DATEDIFF(DAY,(SELECT MAX(DATE_RECEIVER)FROM DBA.RECEIVER WHERE ID_BRANCH = A.ID_BRANCH ) , GETDATE())> :d_time
+AND B.ID_STATUS_BRANCH = 'O'
+AND B.ID_TYPE_BRANCH <> 'P'
+AND A.ID_BRANCH NOT IN (SELECT ID_BRANCH FROM DBA.BRANCH_DORMANT WHERE DATE_TO > GETDATE())
+GROUP BY A.ID_BRANCH, B.NAME_BRANCH, D.NAME_AGENT, B.ID_STATE, B.DATE_CRE_BRANCH, C.SPECIAL_BRANCH
+ORDER BY  A.ID_BRANCH" arguments=(("d_time", number)) )
+text(band=header alignment="2" text="Created Date" border="2" color="33554432" x="3136" y="12" height="52" width="466" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Name Branch" border="2" color="33554432" x="325" y="12" height="52" width="1381" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Sales Representative" border="2" color="33554432" x="1719" y="12" height="52" width="923" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="State" border="2" color="33554432" x="2656" y="12" height="52" width="466" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id Branch" border="2" color="33554432" x="37" y="12" height="52" width="274" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Agency Type" border="2" color="33554432" x="3616" y="12" height="52" width="466" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Dormant" border="2" color="33554432" x="4096" y="12" height="52" width="466" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="325" y="0" height="52" width="1381" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1719" y="0" height="52" width="923" format="[general]" html.valueishtml="0"  name=agent_name_agent visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="2656" y="0" height="52" width="466" format="[general]" html.valueishtml="0"  name=branch_id_state visible="1" dddw.name=dddw_state dddw.displaycolumn=name_state dddw.datacolumn=id_state dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.showlist=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="37" y="4" height="64" width="274" format="[general]" html.valueishtml="0"  name=receiver_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="3136" y="0" height="52" width="466" format="mm/dd/yyyy" html.valueishtml="0"  name=branch_date_cre_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="if( branch_agent_special_branch = 'YES','SPECIAL','NORMAL')"border="0" color="33554432" x="3616" y="0" height="52" width="466" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=10 border="0" color="33554432" x="4302" y="8" height="52" width="110" format="[general]" html.valueishtml="0"  name=dormant visible="1" checkbox.text="" checkbox.on="Y" checkbox.off="N" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

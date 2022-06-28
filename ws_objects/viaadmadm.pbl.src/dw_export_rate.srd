@@ -1,0 +1,52 @@
+﻿$PBExportHeader$dw_export_rate.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=60 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=id_country dbname="RATE.ID_COUNTRY" dbalias=".ID_COUNTRY" )
+ column=(type=datetime updatewhereclause=yes name=date_begin_rate dbname="RATE.DATE_BEGIN_RATE" dbalias=".DATE_BEGIN_RATE" )
+ column=(type=datetime updatewhereclause=yes name=date_end_rate dbname="RATE.DATE_END_RATE" dbalias=".DATE_END_RATE" )
+ column=(type=char(2) updatewhereclause=yes name=id_curreny dbname="RATE.ID_CURRENY" dbalias=".ID_CURRENY" )
+ column=(type=decimal(4) updatewhereclause=yes name=rate dbname="RATE.RATE" dbalias=".RATE" )
+ column=(type=decimal(4) updatewhereclause=yes name=limit_send_rate dbname="RATE.LIMIT_SEND_RATE" dbalias=".LIMIT_SEND_RATE" )
+ column=(type=decimal(4) updatewhereclause=yes name=limit_inf_rate dbname="RATE.LIMIT_INF_RATE" dbalias=".LIMIT_INF_RATE" )
+ column=(type=decimal(4) updatewhereclause=yes name=limit_sup_rate dbname="RATE.LIMIT_SUP_RATE" dbalias=".LIMIT_SUP_RATE" )
+ retrieve="  SELECT DBA.RATE.ID_COUNTRY,   
+         DBA.RATE.DATE_BEGIN_RATE,   
+         DBA.RATE.DATE_END_RATE,   
+         DBA.RATE.ID_CURRENY,   
+         DBA.RATE.RATE,   
+         DBA.RATE.LIMIT_SEND_RATE,   
+         DBA.RATE.LIMIT_INF_RATE,   
+         DBA.RATE.LIMIT_SUP_RATE  
+    FROM DBA.RATE   with (nolock)
+" )
+text(band=header alignment="2" text="Id Country" border="0" color="0" x="5" y="4" height="52" width="219" html.valueishtml="0"  name=id_country_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date Begin Rate" border="0" color="0" x="229" y="4" height="52" width="357" html.valueishtml="0"  name=date_begin_rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date End Rate" border="0" color="0" x="590" y="4" height="52" width="320" html.valueishtml="0"  name=date_end_rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Curreny" border="0" color="0" x="914" y="4" height="52" width="224" html.valueishtml="0"  name=id_curreny_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Rate" border="0" color="0" x="1143" y="4" height="52" width="238" html.valueishtml="0"  name=rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Limit Send Rate" border="0" color="0" x="1385" y="4" height="52" width="352" html.valueishtml="0"  name=limit_send_rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Limit Inf Rate" border="0" color="0" x="1737" y="4" height="52" width="320" html.valueishtml="0"  name=limit_inf_rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Limit Sup Rate" border="0" color="0" x="2062" y="4" height="52" width="325" html.valueishtml="0"  name=limit_sup_rate_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="5" y="4" height="64" width="119" format="[general]" html.valueishtml="0"  name=id_country visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="229" y="4" height="64" width="238" format="[general]" html.valueishtml="0"  name=date_begin_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="590" y="4" height="64" width="238" format="[general]" html.valueishtml="0"  name=date_end_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=40 border="0" color="0" x="914" y="4" height="64" width="59" format="[general]" html.valueishtml="0"  name=id_curreny visible="1" edit.limit=2 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=50 border="0" color="0" x="1143" y="4" height="64" width="238" format="[general]" html.valueishtml="0"  name=rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=60 border="0" color="0" x="1385" y="4" height="64" width="238" format="[general]" html.valueishtml="0"  name=limit_send_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=70 border="0" color="0" x="1737" y="4" height="48" width="320" format="[General]" html.valueishtml="0"  name=limit_inf_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=80 border="0" color="0" x="2062" y="4" height="48" width="320" format="[General]" html.valueishtml="0"  name=limit_sup_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,16 @@
+﻿$PBExportHeader$fn_sample_report_calls.srf
+global type fn_sample_report_calls from function_object
+end type
+
+forward prototypes
+global subroutine fn_sample_report_calls ()
+end prototypes
+
+global subroutine fn_sample_report_calls ();
+
+//OpenSheetWithParm(w2_dynamic_report_agency, "dw_rep_agency_commissions/Agency Commissions Report", w_principal, 2, Original!)
+
+
+//OpenSheetwithparm(w2_dynamic_report_dates_agency,'dw_agency_inactivation_report/'+this.text+'/ALL',w_principal, 4, Original!)
+end subroutine
+

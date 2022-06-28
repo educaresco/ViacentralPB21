@@ -1,0 +1,27 @@
+﻿$PBExportHeader$fn_consecutivo_sender.srf
+global type fn_consecutivo_sender from function_object
+end type
+
+forward prototypes
+global function double fn_consecutivo_sender (string is_branch_insta)
+end prototypes
+
+global function double fn_consecutivo_sender (string is_branch_insta);Double	ld_sender
+  
+  
+   SELECT Max(dba.sender.id_sender) + 1 
+    INTO :ld_sender  
+    FROM dba.sender 
+	Where dba.sender.id_branch = :is_branch_insta  ;
+
+	If isnull(ld_sender) Then
+		ld_sender = 1
+	end if
+	
+	Return ld_sender
+
+
+
+
+end function
+

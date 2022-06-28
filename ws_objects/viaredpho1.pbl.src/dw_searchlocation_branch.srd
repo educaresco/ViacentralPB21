@@ -1,0 +1,72 @@
+﻿$PBExportHeader$dw_searchlocation_branch.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address_branch dbname="BRANCH.ADDRESS_BRANCH" )
+ column=(type=char(1) updatewhereclause=yes name=branch_currency_pay_branch dbname="BRANCH.CURRENCY_PAY_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(2) updatewhereclause=yes name=modo_pago dbname="MODO_PAGO_BRANCH.MODO_PAGO" )
+ retrieve=" SELECT DBA.BRANCH.ID_BRANCH,   
+        DBA.BRANCH.NAME_BRANCH,   
+        DBA.BRANCH.ADDRESS_BRANCH,   
+        DBA.BRANCH.CURRENCY_PAY_BRANCH,   
+        DBA.GROUP_BRANCH.NAME_MAIN_BRANCH,   
+		  DBA.MODO_PAGO_BRANCH.MODO_PAGO AS MODO_PAGO
+   FROM DBA.BRANCH,   
+        DBA.CUBRIMIENTO_BRANCH,   
+        DBA.MODO_PAGO_BRANCH,   
+        DBA.GROUP_BRANCH  
+  WHERE ( DBA.CUBRIMIENTO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH )
+    AND ( DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.BRANCH.ID_MAIN_BRANCH )
+    AND ( DBA.MODO_PAGO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH )
+    AND ( DBA.BRANCH.ID_FLAG_BRANCH = 'A')
+    AND ( DBA.CUBRIMIENTO_BRANCH.ID_CITY = :p_city )
+	 AND ( DBA.MODO_PAGO_BRANCH.MODO_PAGO = :p_modopago )
+    AND ( DBA.BRANCH.ID_TYPE_BRANCH IN ('P','A') )
+	 AND ( :p_cubrimiento <> 'N' )
+
+UNION
+
+ SELECT DBA.BRANCH.ID_BRANCH,   
+        DBA.BRANCH.NAME_BRANCH,   
+        DBA.BRANCH.ADDRESS_BRANCH,   
+        DBA.BRANCH.CURRENCY_PAY_BRANCH,   
+        DBA.GROUP_BRANCH.NAME_MAIN_BRANCH,   
+		  DBA.MODO_PAGO_BRANCH.MODO_PAGO AS MODO_PAGO
+   FROM DBA.BRANCH,   
+        DBA.MODO_PAGO_BRANCH,   
+        DBA.GROUP_BRANCH,
+		  DBA.CITY  
+  WHERE ( DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.BRANCH.ID_MAIN_BRANCH )
+    AND ( DBA.MODO_PAGO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH )
+    AND ( DBA.BRANCH.ID_FLAG_BRANCH = 'A')
+    AND ( DBA.BRANCH.ID_COUNTRY = DBA.CITY.ID_COUNTRY )
+    AND ( DBA.CITY.ID_CITY = :p_city )
+	 AND ( DBA.MODO_PAGO_BRANCH.MODO_PAGO = :p_modopago )
+    AND ( DBA.BRANCH.ID_TYPE_BRANCH IN ('P','A') )
+	 AND ( :p_cubrimiento = 'N' )
+ORDER BY DBA.BRANCH.NAME_BRANCH ASC   
+" arguments=(("p_city", string),("p_modopago", string),("p_cubrimiento", string))  sort="modo_pago A branch_name_branch A " )
+text(band=header alignment="2" text="Local   Dollar" border="2" color="16777215" x="9" y="8" height="52" width="384" html.valueishtml="0"  name=branch_currency_pay_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+rectangle(band=detail x="64" y="0" height="72" width="96"  name=r_1 visible="1" brush.hatch="7" brush.color="553648127" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="16777215" )
+rectangle(band=detail x="229" y="0" height="72" width="96"  name=r_2 visible="1" brush.hatch="7" brush.color="553648127" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="16777215" )
+compute(band=detail alignment="2" expression="if (branch_currency_pay_branch <> 'N','ü','')"border="0" color="33554432" x="238" y="8" height="56" width="78" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Wingdings" font.height="-11" font.weight="400"  font.family="0" font.pitch="2" font.charset="2" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="2" expression="if (branch_currency_pay_branch <> 'D','ü','')"border="0" color="33554432" x="73" y="8" height="56" width="78" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Wingdings" font.height="-11" font.weight="400"  font.family="0" font.pitch="2" font.charset="2" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Payer" border="2" color="16777215" x="407" y="8" height="52" width="713" html.valueishtml="0"  name=group_branch_name_main_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="407" y="8" height="60" width="713" format="[general]" html.valueishtml="0"  name=group_branch_name_main_branch visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Pay Mode" border="2" color="16777215" x="3168" y="8" height="52" width="475" html.valueishtml="0"  name=modo_pago_branch_modo_pago_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Address" border="2" color="16777215" x="2144" y="8" height="52" width="1010" html.valueishtml="0"  name=branch_address_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="3168" y="8" height="60" width="475" format="[general]" html.valueishtml="0"  name=modo_pago visible="1" dddw.name=dddw_modo_pago dddw.displaycolumn=nom_modo_pago dddw.datacolumn=id_modo_pago dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="2144" y="8" height="60" width="1010" format="[general]" html.valueishtml="0"  name=branch_address_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name" border="2" color="16777215" x="1134" y="8" height="52" width="997" html.valueishtml="0"  name=branch_name_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="1134" y="8" height="60" width="997" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

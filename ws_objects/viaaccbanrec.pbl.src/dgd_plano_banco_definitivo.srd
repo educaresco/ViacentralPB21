@@ -1,0 +1,71 @@
+﻿$PBExportHeader$dgd_plano_banco_definitivo.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=1 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no grid.lines=0 )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=80 color="536870912" height.autosize=yes )
+table(column=(type=datetime updatewhereclause=yes name=date_transaction dbname="BANK_STATEMENT.DATE_TRANSACTION" dbalias=".DATE_TRANSACTION" )
+ column=(type=decimal(0) updatewhereclause=yes name=id_code_transaction dbname="BANK_STATEMENT.ID_CODE_TRANSACTION" dbalias=".ID_CODE_TRANSACTION" )
+ column=(type=char(100) updatewhereclause=yes name=des_trans_corta dbname="BANK_STATEMENT.DES_TRANS_CORTA" dbalias=".DES_TRANS_CORTA" )
+ column=(type=char(500) updatewhereclause=yes name=des_trans_larga dbname="BANK_STATEMENT.DES_TRANS_LARGA" dbalias=".DES_TRANS_LARGA" )
+ column=(type=decimal(2) updatewhereclause=yes name=total_amount dbname="BANK_STATEMENT.TOTAL_AMOUNT" dbalias=".TOTAL_AMOUNT" )
+ column=(type=char(10) updatewhereclause=yes name=deposit_code dbname="BANK_STATEMENT.DEPOSIT_CODE" dbalias=".DEPOSIT_CODE" )
+ column=(type=char(20) updatewhereclause=yes name=additional1 dbname="BANK_STATEMENT.ADDITIONAL1" dbalias=".ADDITIONAL1" )
+ column=(type=char(20) updatewhereclause=yes name=additional2 dbname="BANK_STATEMENT.ADDITIONAL2" dbalias=".ADDITIONAL2" )
+ column=(type=char(20) updatewhereclause=yes name=additional3 dbname="BANK_STATEMENT.ADDITIONAL3" dbalias=".ADDITIONAL3" )
+ column=(type=char(20) updatewhereclause=yes name=id_banco dbname="BANK_STATEMENT.ID_BANCO" dbalias=".ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=id_cuenta_banco dbname="BANK_STATEMENT.ID_CUENTA_BANCO" dbalias=".ID_CUENTA_BANCO" )
+ column=(type=char(1) updatewhereclause=yes name=flag_reconciliation dbname="BANK_STATEMENT.FLAG_RECONCILIATION" dbalias=".FLAG_RECONCILIATION" values="SI	S/NO	N/" )
+ retrieve="SELECT  dba.BANK_STATEMENT.DATE_TRANSACTION ,
+           dba.BANK_STATEMENT.ID_CODE_TRANSACTION ,
+           dba.BANK_STATEMENT.DES_TRANS_CORTA ,
+           dba.BANK_STATEMENT.DES_TRANS_LARGA ,
+           dba.BANK_STATEMENT.TOTAL_AMOUNT ,
+           dba.BANK_STATEMENT.DEPOSIT_CODE ,
+           dba.BANK_STATEMENT.ADDITIONAL1 ,
+           dba.BANK_STATEMENT.ADDITIONAL2 ,
+           dba.BANK_STATEMENT.ADDITIONAL3 ,
+           dba.BANK_STATEMENT.ID_BANCO ,
+           dba.BANK_STATEMENT.ID_CUENTA_BANCO ,
+           dba.BANK_STATEMENT.FLAG_RECONCILIATION     
+        FROM dba.BANK_STATEMENT    
+WHERE   dba.BANK_STATEMENT.FLAG_RECONCILIATION ='N'
+AND dba.BANK_STATEMENT.DATE_TRANSACTION >= :adt_date_transaction
+AND  dba.BANK_STATEMENT.ID_BANCO = :as_id_banco
+AND dba.BANK_STATEMENT.ID_CUENTA_BANCO = :as_id_cuenta_banco" arguments=(("as_id_banco", string),("as_id_cuenta_banco", string),("adt_date_transaction", date))  sort="date_transaction A id_code_transaction A total_amount A " )
+text(band=header alignment="2" text="Descripción corta" border="0" color="0" x="891" y="8" height="60" width="773" html.valueishtml="0"  name=des_trans_corta_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Descripción larga" border="0" color="0" x="1673" y="8" height="60" width="1381" html.valueishtml="0"  name=des_trans_larga_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Cantidad" border="0" color="0" x="3063" y="8" height="60" width="293" html.valueishtml="0"  name=total_amount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Código Deposito" border="0" color="0" x="3365" y="8" height="60" width="407" html.valueishtml="0"  name=deposit_code_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Adicional 1" border="0" color="0" x="3781" y="8" height="60" width="480" html.valueishtml="0"  name=additional1_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Adicional 2" border="0" color="0" x="4270" y="8" height="60" width="480" html.valueishtml="0"  name=additional2_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Adicional 3" border="0" color="0" x="4759" y="8" height="60" width="480" html.valueishtml="0"  name=additional3_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id. Banco" border="0" color="0" x="5248" y="8" height="60" width="480" html.valueishtml="0"  name=id_banco_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="ID Cuenta Banco" border="0" color="0" x="5737" y="8" height="60" width="480" html.valueishtml="0"  name=id_cuenta_banco_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Reconciliado" border="0" color="0" x="6226" y="8" height="60" width="288" html.valueishtml="0"  name=flag_reconciliation_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Código transaccioón" border="0" color="0" x="439" y="8" height="60" width="443" html.valueishtml="0"  name=id_code_transaction_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Fecha transacción" border="0" color="0" x="9" y="8" height="60" width="421" html.valueishtml="0"  name=date_transaction_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="8" height="64" width="421" format="mm/dd/yyyy" html.valueishtml="0"  name=date_transaction  tag="Fecha" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="0" x="439" y="8" height="64" width="443" format="[general]" html.valueishtml="0"  name=id_code_transaction  tag="codigo transaccion" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="891" y="8" height="64" width="773" format="[general]" html.valueishtml="0"  name=des_trans_corta visible="1" height.autosize=yes edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="1673" y="8" height="64" width="1381" format="[general]" html.valueishtml="0"  name=des_trans_larga visible="1" height.autosize=yes edit.limit=500 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="3063" y="8" height="64" width="293" format="[general]" html.valueishtml="0"  name=total_amount  tag="cantidad" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="3365" y="8" height="64" width="407" format="[general]" html.valueishtml="0"  name=deposit_code visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="3781" y="8" height="64" width="480" format="[general]" html.valueishtml="0"  name=additional1 visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="4270" y="8" height="64" width="480" format="[general]" html.valueishtml="0"  name=additional2 visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="4759" y="8" height="64" width="480" format="[general]" html.valueishtml="0"  name=additional3 visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="5248" y="8" height="64" width="480" format="[general]" html.valueishtml="0"  name=id_banco visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="5737" y="8" height="64" width="480" format="[general]" html.valueishtml="0"  name=id_cuenta_banco visible="1" edit.limit=20 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="2" tabsequence=32766 border="0" color="0" x="6226" y="8" height="64" width="288" format="[general]" html.valueishtml="0"  name=flag_reconciliation visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

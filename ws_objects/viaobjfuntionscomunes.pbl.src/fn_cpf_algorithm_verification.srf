@@ -1,0 +1,126 @@
+﻿$PBExportHeader$fn_cpf_algorithm_verification.srf
+global type fn_cpf_algorithm_verification from function_object
+end type
+
+forward prototypes
+global function boolean fn_cpf_algorithm_verification (string ls_cpf)
+end prototypes
+
+global function boolean fn_cpf_algorithm_verification (string ls_cpf);string ls_cpfnumberreceived, ls_validnumber
+double ld_lencpf, ld_pos, ld_total_value, ld_valuepos1, ld_valuepos2, ld_valuepos3, ld_valuepos4, ld_valuepos5, ld_valuepos6, ld_valuepos7, ld_valuepos8, ld_valuepos9, ld_valuepos10
+double ld_value1, ld_value2, ld_residual
+boolean lb_return
+
+
+
+ls_cpfnumberreceived = trim(ls_CPF)
+
+ld_lencpf = len(ls_cpfnumberreceived)
+
+
+
+ld_total_value = 0
+
+for ld_pos=1  to ld_lencpf
+	
+	if isnumber(mid(ls_cpfnumberreceived,ld_pos,1)) then
+		
+		ls_validnumber = ls_validnumber + mid(ls_cpfnumberreceived,ld_pos,1) 
+		
+	end if
+	
+next
+
+
+	
+	
+	
+		
+		ld_valuepos1 = double(mid(ls_validnumber,1,1)) * 10
+		ld_valuepos2 = double(mid(ls_validnumber,2,1)) * 9
+		ld_valuepos3 = double(mid(ls_validnumber,3,1) )* 8
+		ld_valuepos4 = double(mid(ls_validnumber,4,1) )* 7
+		ld_valuepos5 = double(mid(ls_validnumber,5,1) )* 6
+		ld_valuepos6 = double(mid(ls_validnumber,6,1) )* 5
+		ld_valuepos7 = double(mid(ls_validnumber,7,1) )* 4
+		ld_valuepos8 = double(mid(ls_validnumber,8,1) )* 3
+		ld_valuepos9 = double(mid(ls_validnumber,9,1) )* 2
+			
+		
+	
+	ld_total_value = ld_valuepos1 + ld_valuepos2 + ld_valuepos3 + ld_valuepos4 + ld_valuepos5 + ld_valuepos6 + ld_valuepos7 + ld_valuepos8 + ld_valuepos9
+	
+
+
+ld_residual = mod(ld_total_value,11)
+
+if ld_residual >= 2 then
+	
+	ld_value1 = 11 - ld_residual
+	
+	
+else
+	
+	ld_value1 = 0
+	
+end if
+
+if double(mid(ls_validnumber,10,1)) = ld_value1 then
+	
+	lb_return = true
+	
+else
+	lb_return = false
+	
+	return lb_return
+	
+end if
+
+ld_total_value = 0 
+ld_residual = 0
+
+		ld_valuepos1 = double(mid(ls_validnumber,1,1) )* 11
+		ld_valuepos2 = double(mid(ls_validnumber,2,1) )* 10
+		ld_valuepos3 = double(mid(ls_validnumber,3,1) )* 9
+		ld_valuepos4 = double(mid(ls_validnumber,4,1) )* 8
+		ld_valuepos5 = double(mid(ls_validnumber,5,1) )* 7
+		ld_valuepos6 = double(mid(ls_validnumber,6,1) )* 6
+		ld_valuepos7 = double(mid(ls_validnumber,7,1) )* 5
+		ld_valuepos8 = double(mid(ls_validnumber,8,1) )* 4
+		ld_valuepos9 = double(mid(ls_validnumber,9,1) )* 3
+		ld_valuepos10 = double(mid(ls_validnumber,10,1)) * 2
+
+
+ld_total_value = ld_valuepos1 + ld_valuepos2 + ld_valuepos3 + ld_valuepos4 + ld_valuepos5 + ld_valuepos6 + ld_valuepos7 + ld_valuepos8 + ld_valuepos9 + ld_valuepos10
+
+
+ld_residual = mod(ld_total_value,11)
+
+if ld_residual >= 2 then
+	
+	ld_value2 = 11 - ld_residual
+	
+	
+else
+	
+	ld_value2 = 0
+	
+end if
+
+if double(mid(ls_validnumber,11,1)) = ld_value2 then
+	
+	lb_return = true
+	
+	return lb_return
+	
+else
+	lb_return = false
+	
+	return lb_return
+	
+end if								
+					
+	
+	
+end function
+

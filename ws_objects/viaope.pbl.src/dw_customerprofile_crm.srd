@@ -1,0 +1,38 @@
+﻿$PBExportHeader$dw_customerprofile_crm.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=84 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" height.autosize=yes )
+table(column=(type=decimal(0) updatewhereclause=yes key=yes identity=yes name=id_case dbname="SENDER_CRM_CASES.ID_CASE" )
+ column=(type=datetime updatewhereclause=yes name=date_case dbname="SENDER_CRM_CASES.DATE_CASE" initial="today" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=type_case dbname="SENDER_CRM_CASES.TYPE_CASE" values="CREDIT REVIEW	CR/CREDIT SCORE	CS/NOTE	NT/FRAUD ATTEMPT	FA/" )
+ column=(type=char(1000) update=yes updatewhereclause=yes name=text_case dbname="SENDER_CRM_CASES.TEXT_CASE" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=id_sender_global dbname="SENDER_CRM_CASES.ID_SENDER_GLOBAL" )
+ column=(type=char(30) updatewhereclause=yes name=db_user_name dbname="SENDER_CRM_CASES.DB_USER_NAME" )
+ retrieve="SELECT ID_CASE, DATE_CASE, TYPE_CASE, TEXT_CASE, ID_SENDER_GLOBAL, DB_USER_NAME
+FROM  dba.SENDER_CRM_CASES
+WHERE ID_SENDER_GLOBAL = :p_customer_id
+" update="dba.SENDER_CRM_CASES" updatewhere=0 updatekeyinplace=yes arguments=(("p_customer_id", number))  sort="date_case D " )
+text(band=header alignment="2" text="Date" border="2" color="33554432" x="14" y="20" height="52" width="384" html.valueishtml="0"  name=date_case_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="User" border="2" color="33554432" x="2121" y="20" height="52" width="361" html.valueishtml="0"  name=id_case_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Category" border="2" color="33554432" x="416" y="20" height="52" width="421" html.valueishtml="0"  name=type_case_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+text(band=header alignment="2" text="Text Case" border="2" color="33554432" x="850" y="20" height="52" width="1061" html.valueishtml="0"  name=text_case_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="14" y="4" height="56" width="384" format="[shortdate] hh:mm" html.valueishtml="0"  name=date_case visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=10 border="2" color="33554432" x="416" y="4" height="56" width="421" format="[general]" html.valueishtml="0" protect="0~tif ( isRowNew(), 0,1)"  name=type_case visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( isRowNew(), RGB(255,255,255),RGB(240,240,240))" )
+column(band=detail id=4 alignment="0" tabsequence=20 border="2" color="33554432" x="850" y="4" height="56" width="1257" format="[general]" html.valueishtml="0" protect="0~tif ( isRowNew(), 0,1)"  name=text_case visible="1" height.autosize=yes editmask.mask="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" editmask.focusrectangle=no  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( isRowNew(), RGB(255,255,255),RGB(240,240,240))" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="2" color="33554432" x="2121" y="8" height="48" width="361" format="[general]" html.valueishtml="0"  name=db_user_name visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+button(band=header text="" defaultpicture=yes enabled=yes action="12" border="0" color="0" x="1925" y="12" height="68" width="87" vtextalign="0" htextalign="0"  name=b_new visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=header text="" defaultpicture=yes enabled=yes action="13" border="0" color="0" x="2021" y="12" height="68" width="87" vtextalign="0" htextalign="0"  name=b_save visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

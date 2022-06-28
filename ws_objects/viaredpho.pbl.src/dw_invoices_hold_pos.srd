@@ -1,0 +1,60 @@
+﻿$PBExportHeader$dw_invoices_hold_pos.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(40) updatewhereclause=yes name=receiver_name_receiver dbname="RECEIVER.NAME_RECEIVER" dbalias=".NAME_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_net_amount_receiver dbname="RECEIVER.NET_AMOUNT_RECEIVER" dbalias=".NET_AMOUNT_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_id_receiver dbname="RECEIVER.ID_RECEIVER" dbalias=".ID_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=receiver_date_receiver dbname="RECEIVER.DATE_RECEIVER" dbalias=".DATE_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=receiver_time_receiver dbname="RECEIVER.TIME_RECEIVER" dbalias=".TIME_RECEIVER" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_id_sender dbname="RECEIVER.ID_SENDER" dbalias=".ID_SENDER" )
+ column=(type=char(40) updatewhereclause=yes name=sender_name_sender dbname="SENDER.NAME_SENDER" dbalias=".NAME_SENDER" )
+ column=(type=decimal(0) updatewhereclause=yes name=sender_id_sender dbname="SENDER.ID_SENDER" dbalias=".ID_SENDER" )
+ column=(type=char(10) updatewhereclause=yes name=sender_id_branch dbname="SENDER.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=char(2) updatewhereclause=yes name=sender_id_type_id_sender dbname="SENDER.ID_TYPE_ID_SENDER" dbalias=".ID_TYPE_ID_SENDER" )
+ column=(type=char(15) updatewhereclause=yes name=sender_number_id_sender dbname="SENDER.NUMBER_ID_SENDER" dbalias=".NUMBER_ID_SENDER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_id_country_receiver dbname="RECEIVER.ID_COUNTRY_RECEIVER" dbalias=".ID_COUNTRY_RECEIVER" )
+ retrieve="  SELECT DISTINCT 
+			DBA.RECEIVER.NAME_RECEIVER,   
+         DBA.RECEIVER.NET_AMOUNT_RECEIVER,   
+         DBA.RECEIVER.ID_BRANCH,   
+         DBA.RECEIVER.ID_RECEIVER,   
+         DBA.RECEIVER.DATE_RECEIVER,   
+         DBA.RECEIVER.TIME_RECEIVER,   
+         DBA.RECEIVER.ID_SENDER,   
+         dba.SENDER.NAME_SENDER,   
+         dba.SENDER.ID_SENDER,   
+         dba.SENDER.ID_BRANCH,   
+         dba.SENDER.ID_TYPE_ID_SENDER,   
+         dba.SENDER.NUMBER_ID_SENDER,   
+         DBA.RECEIVER.ID_COUNTRY_RECEIVER  
+    FROM DBA.RECEIVER,   
+         dba.SENDER,   
+         dba.MOTIVO_HOLD  
+   WHERE ( dba.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER ) and  
+         ( DBA.RECEIVER.ID_BRANCH = dba.SENDER.ID_BRANCH ) and  
+         ( dba.MOTIVO_HOLD.ID_SENDER = DBA.RECEIVER.ID_SENDER ) and  
+         ( DBA.RECEIVER.ID_BRANCH = dba.MOTIVO_HOLD.ID_BRANCH ) and  
+         ( dba.MOTIVO_HOLD.ID_RECEIVER = DBA.RECEIVER.ID_RECEIVER ) and  
+         ( DBA.RECEIVER.ID_FLAG_RECEIVER = 'H' ) AND  
+         ( dba.MOTIVO_HOLD.TYPE_MOTIVO_HOLD = '71' ) AND
+         (date_receiver < getdate()-0.8)
+ORDER BY DBA.RECEIVER.ID_BRANCH ASC,   
+         DBA.RECEIVER.ID_RECEIVER ASC   " )
+compute(band=detail alignment="0" expression="trim( receiver_id_branch )+~"-~"+string( receiver_id_receiver )"border="0" color="33554432" x="32" y="8" height="56" width="370" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="416" y="8" height="56" width="370" format="[shortdate]" html.valueishtml="0"  name=receiver_date_receiver visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

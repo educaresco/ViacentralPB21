@@ -1,0 +1,120 @@
+﻿$PBExportHeader$dw_rep_closing_agent_fechas_balance_all.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=192 color="536870912" )
+summary(height=92 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912"  height.autosize=yes)
+table(column=(type=decimal(0) updatewhereclause=yes name=receiver_id_receiver dbname="RECEIVER.id_receiver" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_name_receiver dbname="RECEIVER.name_receiver" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_net_amount_receiver dbname="RECEIVER.net_amount_receiver" )
+ column=(type=decimal(0) updatewhereclause=yes name=cons dbname="TRANSACCION_DIARIA_PAYEE.cons_trans_diaria" )
+ column=(type=char(4) updatewhereclause=yes name=group dbname="TRANSACCION_DIARIA_PAYEE.id_group_trans_diaria" )
+ column=(type=datetime updatewhereclause=yes name=date dbname="TRANSACCION_DIARIA_PAYEE.date_trans_diaria" )
+ column=(type=datetime updatewhereclause=yes name=transaccion_diaria_payee_hour_trans_diar dbname="TRANSACCION_DIARIA_PAYEE.hour_trans_diaria" )
+ column=(type=char(5) updatewhereclause=yes name=transaccion_diaria_payee_id_concepto_con dbname="TRANSACCION_DIARIA_PAYEE.id_concepto_contable" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_des_trans_diari dbname="TRANSACCION_DIARIA_PAYEE.des_trans_diaria" )
+ column=(type=decimal(4) updatewhereclause=yes name=transaccion_diaria_payee_credit_trans_di dbname="TRANSACCION_DIARIA_PAYEE.credit_trans_diaria" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_diference dbname="RECEIVER.total_diference" initial="0" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_commission_payee dbname="RECEIVER.commission_payee" )
+ column=(type=char(10) updatewhereclause=yes name=relacion_invoices_payee_id_branch_invoic dbname="RELACION_INVOICES_PAYEE.id_branch_invoice" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_ref_receiver dbname="RECEIVER.ref_receiver" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_exchange_company dbname="RECEIVER.exchange_company" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_telex_company dbname="RECEIVER.telex_company" )
+ column=(type=decimal(4) updatewhereclause=yes name=transaccion_diaria_payee_debit_trans_dia dbname="TRANSACCION_DIARIA_PAYEE.debit_trans_diaria" )
+ column=(type=decimal(4) updatewhereclause=yes name=total_modo_pago_comp dbname="RECEIVER.total_modo_pago_comp" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_fee_rate dbname="RECEIVER.fee_rate" )
+ retrieve="SELECT  
+dba.receiver.id_receiver ,           
+dba.receiver.name_receiver ,           
+dba.receiver.net_amount_receiver ,           
+dba.transaccion_diaria_payee.cons_trans_diaria ,           
+dba.transaccion_diaria_payee.id_group_trans_diaria ,           
+dba.transaccion_diaria_payee.date_trans_diaria ,           
+dba.transaccion_diaria_payee.hour_trans_diaria ,           
+dba.transaccion_diaria_payee.id_concepto_contable ,           
+dba.transaccion_diaria_payee.des_trans_diaria ,           
+dba.transaccion_diaria_payee.credit_trans_diaria ,           
+dba.receiver.total_diference ,           
+dba.receiver.commission_payee ,           
+dba.relacion_invoices_payee.id_branch_invoice ,           
+dba.receiver.ref_receiver ,           
+dba.receiver.exchange_company ,           
+dba.receiver.telex_company ,           
+dba.transaccion_diaria_payee.debit_trans_diaria ,           
+dba.receiver.total_modo_pago_comp ,           
+dba.receiver.fee_rate     
+FROM 
+dba.receiver ,           
+dba.relacion_invoices_payee ,           
+dba.transaccion_diaria_payee ,           
+dba.branch     
+WHERE 
+( dba.receiver.id_receiver = dba.relacion_invoices_payee.id_receiver ) and          
+( dba.transaccion_diaria_payee.cons_trans_diaria = dba.relacion_invoices_payee.cons_trans_diaria ) and          
+( dba.relacion_invoices_payee.id_branch_invoice = dba.receiver.id_branch ) and          
+( dba. branch.id_branch = dba.receiver.id_branch ) and          
+( dba.transaccion_diaria_payee.date_trans_diaria >= :arg_fecha1 ) and          
+( dba.transaccion_diaria_payee.date_trans_diaria <= :arg_fecha2 ) and          
+( dba.relacion_invoices_payee.id_concepto_contable = 'TD' )  
+ORDER BY 
+dba.transaccion_diaria_payee.cons_trans_diaria          ASC,           
+dba.transaccion_diaria_payee.id_group_trans_diaria          ASC,           
+dba.transaccion_diaria_payee.date_trans_diaria          ASC " arguments=(("arg_fecha1", date),("arg_fecha2", date)) )
+group(level=1 header.height=372 trailer.height=28 by=("group" ) newpage=yes header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=76 trailer.height=76 by=("cons" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="183" y="20" height="52" width="283" format="mm/dd/yyyy"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Closing of Group With Balance"border="0" color="0" x="882" y="8" height="92" width="1527"  font.face="Arial" font.height="-14" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2715" y="20" height="52" width="411" format="[general]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header id=5 alignment="2" tabsequence=32766 border="0" color="0" x="640" y="96" height="92" width="1993" format="[general]"  name=group dddw.name=dddw_group_branch dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Reference"border="0" color="0" x="155" y="216" height="52" width="261"  name=cons_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Date "border="0" color="0" x="439" y="216" height="52" width="279"  name=date_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Hour "border="0" color="0" x="731" y="216" height="52" width="251"  name=hour_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Concept"border="0" color="0" x="1001" y="216" height="52" width="544"  name=id_concepto_contable_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Description"border="0" color="0" x="1563" y="216" height="52" width="1111"  name=des_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Amount"border="0" color="0" x="2702" y="216" height="52" width="347"  name=credit_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=4 alignment="2" tabsequence=32766 border="0" color="0" x="155" y="292" height="56" width="261" format="[general]"  name=cons edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=6 alignment="0" tabsequence=32766 border="0" color="0" x="439" y="292" height="56" width="279" format="[general]"  name=date editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=7 alignment="0" tabsequence=32766 border="0" color="0" x="731" y="292" height="56" width="251" format="[time]"  name=transaccion_diaria_payee_hour_trans_diar edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=8 alignment="0" tabsequence=32766 border="0" color="0" x="1001" y="292" height="56" width="544" format="[general]"  name=transaccion_diaria_payee_id_concepto_con dddw.name=dddw_concepo_contable dddw.displaycolumn=name_concepto_contable dddw.datacolumn=id_concepto_contable dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=9 alignment="0" tabsequence=32766 border="0" color="0" x="1563" y="292" height="56" width="1111" format="[general]"  name=transaccion_diaria_payee_des_trans_diari edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=17 alignment="1" tabsequence=32766 border="0" color="0" x="2702" y="292" height="56" width="347" format="[currency]"  name=transaccion_diaria_payee_debit_trans_dia edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+report(band=header.1 dataobject="dw_rep_despliegue_trans_with_balance_all" x="41" y="16" height="184" width="2990" border="0"  height.autosize=yes criteria="" nest_arguments=(("group")) trail_footer = yes  slideup=directlyabove )
+line(band=header.2 x1="169" y1="0" x2="2880" y2="0" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="1" text="Ref. Inv."border="0" color="0" x="5" y="20" height="52" width="247"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="No. Invoice"border="0" color="0" x="265" y="20" height="52" width="439"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Name Receiver"border="0" color="0" x="718" y="20" height="52" width="709"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Net Amount"border="0" color="0" x="1445" y="20" height="52" width="297"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Total "border="0" color="0" x="2683" y="20" height="52" width="366"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Exchange"border="0" color="0" x="1765" y="20" height="52" width="224"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Telex"border="0" color="0" x="2002" y="20" height="52" width="201"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Delivery"border="0" color="0" x="2222" y="20" height="52" width="210"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=header.2 alignment="2" text="Rate Fee"border="0" color="0" x="2450" y="20" height="52" width="219"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="1" tabsequence=32766 border="0" color="0" x="5" y="12" height="60" width="247" format="[general]"  name=receiver_ref_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="2" expression=" relacion_invoices_payee_id_branch_invoic  +' - '+ receiver_id_receiver "border="0" color="0" x="265" y="12" height="60" width="439" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="718" y="12" height="60" width="709" format="[general]"  name=receiver_name_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="0" x="1449" y="12" height="60" width="297" format="[currency]"  name=receiver_net_amount_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" receiver_net_amount_receiver  +  receiver_exchange_company  +  receiver_telex_company  + total_modo_pago_comp +  receiver_fee_rate "border="0" color="0" x="2683" y="12" height="60" width="366" format="[currency]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="1" tabsequence=32766 border="0" color="0" x="1765" y="12" height="60" width="224" format="[currency]"  name=receiver_exchange_company edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="553648127" )
+column(band=detail id=16 alignment="1" tabsequence=32766 border="0" color="0" x="2002" y="12" height="60" width="201" format="[currency]"  name=receiver_telex_company edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="1" tabsequence=32766 border="0" color="0" x="2222" y="12" height="60" width="210" format="[currency]"  name=total_modo_pago_comp edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="1" tabsequence=32766 border="0" color="0" x="2450" y="12" height="60" width="219" format="[currency]"  name=receiver_fee_rate edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum( receiver_net_amount_receiver  +  receiver_exchange_company  +  receiver_telex_company  + total_modo_pago_comp +  receiver_fee_rate  for group 2) "border="0" color="0" x="2683" y="4" height="60" width="366" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=trailer.2 alignment="1" text="# Invoices :"border="0" color="0" x="818" y="8" height="52" width="343"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="count(receiver_total_diference for group 2)"border="0" color="0" x="1179" y="4" height="60" width="206" format="[General]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression=" sum(total_modo_pago_comp for group 2) "border="0" color="0" x="2222" y="4" height="60" width="210" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(receiver_telex_company for group 2)"border="0" color="0" x="2002" y="4" height="60" width="201" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(receiver_fee_rate for group 2)"border="0" color="0" x="2450" y="4" height="60" width="219" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(receiver_net_amount_receiver for group 2)"border="0" color="0" x="1449" y="4" height="60" width="297" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(receiver_exchange_company for group 2)"border="0" color="0" x="1765" y="4" height="60" width="224" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="169" y1="4" x2="2880" y2="4" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="169" y1="16" x2="2880" y2="16" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum( receiver_net_amount_receiver  +  receiver_exchange_company  +  receiver_telex_company  +  total_modo_pago_comp +  receiver_fee_rate  for group 1)"border="0" color="0" x="2683" y="8" height="60" width="366" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="# Invoices :"border="0" color="0" x="818" y="12" height="52" width="343"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="count(receiver_total_diference for all)"border="0" color="0" x="1179" y="12" height="60" width="206" format="[General]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(total_modo_pago_comp for group 1) "border="0" color="0" x="2222" y="8" height="60" width="210" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_telex_company for group 1)"border="0" color="0" x="2002" y="8" height="60" width="201" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_fee_rate for group 1)"border="0" color="0" x="2450" y="8" height="60" width="219" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_net_amount_receiver for group 1)"border="0" color="0" x="1449" y="8" height="60" width="297" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_exchange_company for group 1)"border="0" color="0" x="1765" y="8" height="60" width="224" format="[currency]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="553648127" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

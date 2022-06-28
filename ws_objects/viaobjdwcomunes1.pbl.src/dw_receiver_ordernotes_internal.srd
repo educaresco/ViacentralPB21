@@ -1,0 +1,45 @@
+﻿$PBExportHeader$dw_receiver_ordernotes_internal.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=84 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" height.autosize=yes )
+table(column=(type=datetime update=yes updatewhereclause=yes key=yes name=date_message dbname="RECEIVER_INTERNAL_MESSAGE.DATE_MESSAGE" initial="today" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=type_message dbname="RECEIVER_INTERNAL_MESSAGE.TYPE_MESSAGE" )
+ column=(type=char(32766) update=yes updatewhereclause=no name=message_text dbname="RECEIVER_INTERNAL_MESSAGE.MESSAGE_TEXT" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=message_by dbname="RECEIVER_INTERNAL_MESSAGE.MESSAGE_BY" )
+ column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_branch dbname="RECEIVER_INTERNAL_MESSAGE.id_branch" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=id_receiver dbname="RECEIVER_INTERNAL_MESSAGE.id_receiver" )
+ retrieve="SELECT dba.RECEIVER_INTERNAL_MESSAGE.DATE_MESSAGE,   
+dba.RECEIVER_INTERNAL_MESSAGE.TYPE_MESSAGE,   
+dba.RECEIVER_INTERNAL_MESSAGE.MESSAGE_TEXT,   
+dba.RECEIVER_INTERNAL_MESSAGE.MESSAGE_BY,
+dba.RECEIVER_INTERNAL_MESSAGE.id_branch,
+dba.RECEIVER_INTERNAL_MESSAGE.id_receiver  
+FROM dba.RECEIVER_INTERNAL_MESSAGE  
+WHERE dba.RECEIVER_INTERNAL_MESSAGE.ID_BRANCH = :p_id_branch
+AND  dba.RECEIVER_INTERNAL_MESSAGE.ID_RECEIVER = :p_id_receiver
+" update="dba.RECEIVER_INTERNAL_MESSAGE" updatewhere=0 updatekeyinplace=no arguments=(("p_id_branch", string),("p_id_receiver", number))  sort="date_message A " )
+text(band=header alignment="2" text="Date" border="2" color="0" x="14" y="8" height="60" width="402" html.valueishtml="0"  name=date_not_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Type" border="2" color="0" x="430" y="8" height="60" width="910" html.valueishtml="0"  name=payer_not_code_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Note" border="2" color="0" x="1353" y="8" height="60" width="1751" html.valueishtml="0"  name=not_text_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="User" border="2" color="0" x="3118" y="8" height="60" width="215" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+button(band=header text="New" enabled=yes action="0" border="0" color="0" x="3346" y="4" height="68" width="142" vtextalign="0" htextalign="0"  name=b_new visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=header text="Save" enabled=yes action="13" border="0" color="0" x="3493" y="4" height="68" width="142" vtextalign="0" htextalign="0"  name=b_save visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="3122" y="4" height="52" width="494" format="[general]" html.valueishtml="0"  name=message_by visible="1~tif ( isRowNew(), 0,1)" dddw.name=dddw_cashier dddw.displaycolumn=name_cashier dddw.datacolumn=id_cashier dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0~tif ( isRowNew(), 2,0)" color="33554432" x="14" y="4" height="52" width="402" format="mm/dd/yyyy hh:mm" html.valueishtml="0"  name=date_message visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( isRowNew(), RGB(255,255,180),RGB(240,240,240))" )
+button(band=detail text="Cancel" enabled=yes action="10" border="0" color="0" x="3118" y="0" height="68" width="215" vtextalign="0" htextalign="0"  name=b_cancel visible="1~tif ( isRowNew(), 1,0)"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="0~tif ( isRowNew(), 2,0)" color="33554432" x="430" y="4" height="52" width="910" format="[general]" html.valueishtml="0" protect="0~tif ( isRowNew(), 0,1)"  name=type_message visible="1" height.autosize=yes dddw.name=dddw_type_internal_message dddw.displaycolumn=desc_message dddw.datacolumn=type_message dddw.percentwidth=200 dddw.lines=20 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( isRowNew(), RGB(255,255,180),RGB(240,240,240))" )
+column(band=detail id=3 alignment="0" tabsequence=20 border="0~tif ( isRowNew(), 2,0)" color="33554432" x="1353" y="4" height="52" width="1751" format="[general]" html.valueishtml="0" protect="0~tif ( isRowNew(), 0,1)"  name=message_text visible="1" height.autosize=yes editmask.mask="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="536870912~tif ( isRowNew(), RGB(255,255,180),RGB(240,240,240))" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

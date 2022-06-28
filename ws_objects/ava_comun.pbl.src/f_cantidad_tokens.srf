@@ -1,0 +1,27 @@
+﻿$PBExportHeader$f_cantidad_tokens.srf
+global type f_cantidad_tokens from function_object
+end type
+
+forward prototypes
+global function integer f_cantidad_tokens (string p_string, string p_delimiter)
+end prototypes
+
+global function integer f_cantidad_tokens (string p_string, string p_delimiter);integer 	i, li_pos
+string 	ls_cadena
+integer	li_tokens
+
+li_tokens = 1
+ls_cadena = p_string
+	
+li_pos = Pos(ls_cadena, p_delimiter, 1)
+
+do while li_pos <> 0
+	li_pos = Pos(ls_cadena, p_delimiter, li_pos + 1)
+	li_tokens++
+loop
+
+return li_tokens
+
+
+end function
+

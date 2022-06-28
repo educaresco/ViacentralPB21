@@ -1,0 +1,47 @@
+﻿$PBExportHeader$dw_match_deposit.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1090519039 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="21004031" )
+summary(height=96 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912~tIF(MOD(GETROW(),2)=0,RGB(240,240,240),RGB(255,255,255))"  height.autosize=yes)
+table(column=(type=decimal(0) updatewhereclause=yes key=yes name=cons_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA" )
+ column=(type=datetime updatewhereclause=yes name=fecha dbname="fecha" )
+ column=(type=char(50) updatewhereclause=yes name=des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=credit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=link_reference dbname="TRANSACCION_DIARIA_PAYEE.LINK_REFERENCE" )
+ column=(type=char(4) updatewhereclause=yes name=id_group_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA" )
+ column=(type=char(30) updatewhereclause=yes name=date_trans_diaria dbname="DATE_TRANS_DIARIA" )
+ column=(type=datetime updatewhereclause=yes name=hour_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.HOUR_TRANS_DIARIA" )
+ retrieve="  SELECT CONS_TRANS_DIARIA,   
+			DATE_TRANS_DIARIA as 'fecha',
+			DES_TRANS_DIARIA,   
+			CREDIT_TRANS_DIARIA,   
+         LINK_REFERENCE , 
+         ID_GROUP_TRANS_DIARIA,   
+			convert(varchar,DATE_TRANS_DIARIA,101) AS 'DATE_TRANS_DIARIA'   ,
+         HOUR_TRANS_DIARIA           
+    FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ID_GROUP_TRANS_DIARIA = :ARG_GROUP  
+   
+" update="dba.TRANSACCION_DIARIA_PAYEE" updatewhere=0 updatekeyinplace=no arguments=(("ARG_GROUP", string)) )
+text(band=header alignment="2" text="Ref" border="0" color="0" x="64" y="12" height="44" width="297" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Description" border="0" color="0" x="635" y="12" height="44" width="814" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Credit" border="0" color="0" x="1463" y="12" height="44" width="274" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Date" border="0" color="0" x="379" y="12" height="44" width="238" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Bank" border="0" color="0" x="1755" y="12" height="44" width="215" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Link" border="0" color="0" x="1984" y="12" height="44" width="274" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="553648127" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="64" y="8" height="52" width="297" format="[general]" html.valueishtml="0"  name=cons_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="379" y="8" height="52" width="238" format="[general]" html.valueishtml="0"  name=date_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="635" y="8" height="52" width="814" format="[general]" html.valueishtml="0"  name=des_trans_diaria visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="1467" y="8" height="52" width="274" format="[currency]" html.valueishtml="0"  name=credit_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="fn_banco_deposito ( cons_trans_diaria )"border="0" color="0" x="1801" y="8" height="52" width="169" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="1984" y="8" height="52" width="274" format="[general]" html.valueishtml="0"  name=link_reference visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=summary x1="0" y1="8" x2="3241" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(credit_trans_diaria for all)"border="0" color="0" x="1371" y="24" height="52" width="370" format="[currency]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total:" border="0" color="0" x="1234" y="24" height="44" width="128" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

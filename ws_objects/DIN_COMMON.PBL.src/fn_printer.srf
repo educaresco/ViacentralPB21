@@ -1,0 +1,68 @@
+﻿$PBExportHeader$fn_printer.srf
+global type fn_printer from function_object
+end type
+
+forward prototypes
+global function string fn_printer (string arg_nombre)
+end prototypes
+
+global function string fn_printer (string arg_nombre);integer nret
+string	as_impresora, ls_default, ls_valores, ls_key, ls_driver,ls_port, ls_config, ls_printer
+
+as_impresora = arg_nombre
+if isnull(as_impresora) then 
+	return "error"
+end if
+
+environment env
+GetEnvironment(env)
+if env.OSType = WindowsNT! then
+	//Obtener la impresora actual comp predeterminada
+	RegistryGet("HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Windows", "Device", ls_default)
+	ls_default=mid(ls_default,1,pos(ls_default,",") -1)	//impresora instalada como predeterminada
+	if upper(ls_default) = upper(as_impresora) then
+		return ls_default
+	end if
+	//Obtiene los valores de la impresora a poner
+	RegistryGet("HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Devices", as_impresora, ls_valores)
+	nret = RegistrySet("HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Windows", "Device", as_impresora+","+ls_valores)
+	if nret <> 1 then
+		//	Messagebox("Error...", "No se pudo cambiar la impresora predeterminada.")
+		return "error"
+	end if
+	//Devuelve el nombre de la impresora que estaba predeterminada
+	//return (ls_default)
+	return ls_default
+end if
+
+if env.OSType = Windows! then
+	RegistryGet("HKEY_LOCAL_MACHINE\Config\0001\System\CurrentControlSet\Control\Print\Printers", "default", ls_default)
+	if upper(ls_default) = upper(as_impresora) then
+		return ls_default
+	end if
+	//Obtiene los valores de la impresora a poner
+	nret = RegistrySet("HKEY_LOCAL_MACHINE\Config\0001\System\CurrentControlSet\Control\Print\Printers", "default", as_impresora)
+	if nret <> 1 then
+		return "error"
+	end if
+	//Poner el driver y el nombre de la impresora en WIN.INI
+	ls_key = "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Print\Printers\"+as_impresora
+	RegistryGet(ls_key, "Printer Driver", ls_driver)	//obtener driver
+	RegistryGet(ls_key, "Port", ls_port)					//obtener puerto
+	ls_config = ls_driver + "," + ls_port
+	ls_printer = as_impresora + "," + ls_Config
+	nret = SetProfileString("c:\windows\win.ini", "Windows", "device",ls_printer)
+	if nret <> 1 then
+		return "error"
+	end if
+	return ls_default
+end if
+//return true
+
+
+
+
+
+
+end function
+

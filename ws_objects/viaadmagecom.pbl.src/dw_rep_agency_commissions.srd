@@ -1,0 +1,161 @@
+﻿$PBExportHeader$dw_rep_agency_commissions.srd
+release 11;
+datawindow(units=0 timer_interval=60000 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 2 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=380 color="536870912" )
+summary(height=4 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=52 color="536870912" height.autosize=yes )
+table(column=(type=long updatewhereclause=yes name=compute_0001 dbname="compute_0001" )
+ column=(type=char(19) updatewhereclause=yes name=comtype dbname="ComType" )
+ column=(type=char(72) updatewhereclause=yes name=comdesc dbname="ComDesc" )
+ column=(type=char(40) updatewhereclause=yes name=id_country dbname="COMISION_FREE_GENERAL.id_country" )
+ column=(type=char(1) updatewhereclause=yes name=mod_pay_currency dbname="COMISION_FREE_GENERAL.mod_pay_currency" values="DOLLAR	D/NATIONAL	N/" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_begin dbname="COMISION_FREE_GENERAL.range_begin" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_end dbname="COMISION_FREE_GENERAL.range_end" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_comision dbname="COMISION_FREE_GENERAL.feet_comision" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_comision_comp dbname="feet_comision_comp" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_comision dbname="COMISION_FREE_GENERAL.porcent_comision" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_company_comision dbname="porcent_company_comision" )
+ column=(type=char(3) updatewhereclause=yes name=pay_mode dbname="pay_mode" )
+ column=(type=char(40) updatewhereclause=yes name=payer dbname="payer" )
+ column=(type=char(50) updatewhereclause=yes name=id_branch dbname="id_branch" )
+ retrieve="SELECT 1,
+  	 'AGENCY             ' as ComType,
+	    '????????????????????????????????????????????????????????????????????????' as ComDesc,
+  	      NAME_COUNTRY AS id_country,
+         dba.comision_free_general.mod_pay_currency,
+         dba.comision_free_general.range_begin,
+         dba.comision_free_general.range_end,
+         dba.comision_free_general.feet_comision,
+         00000.00 as feet_comision_comp,
+         dba.comision_free_general.porcent_comision,
+	      00000.00 as porcent_company_comision,
+			'ANY' as pay_mode,
+         'UNKNOWN PAYER-----------' as payer,
+			convert(varchar(50),:P_ID_BRANCH) as id_branch
+    FROM dba.comision_free_general, DBA.COUNTRY
+   WHERE dba.comision_free_general.id_country = DBA.COUNTRY.ID_COUNTRY
+UNION        
+    SELECT 2,
+         'AGENCY' as ComType,
+			'PREFERENCIALES OTROS PAGADORES '+:P_ID_BRANCH as ComDesc,
+         NAME_COUNTRY AS id_country,
+         dba.comision.mod_pay_currency as mod_pay_currency,
+         dba.comision.range_begin_comision as range_begin,
+         dba.comision.range_end_comision as range_end,
+         dba.comision.feet_comision as feet_comision,
+         dba.comision.feet_comision_comp as feet_comision_comp,
+         dba.comision.porcent_costumer_comision as porcent_comision,   
+         dba.comision.porcent_company_comision as porcent_company_comision,
+			'ANY' as pay_mode,
+         'OTROS PAGADORES' as payer,
+			:P_ID_BRANCH as id_branch
+    FROM dba.comision, DBA.COUNTRY
+   WHERE dba.comision.id_country = DBA.COUNTRY.ID_COUNTRY
+   and dba.comision.id_branch = :P_ID_BRANCH
+	 
+UNION   
+     SELECT 3,
+			'GENERAL',
+			'GENERALES' as ComDesc,
+			NAME_COUNTRY AS id_country,
+			dba.standar.mod_pay_currency,
+			dba.standar.range_begin_comision,
+			dba.standar.range_end_comision,
+			dba.standar.feet_comision,
+			dba.standar.feet_comision_comp,
+			dba.standar.porcent_costumer_comision,
+			dba.standar.porcent_company_comision,
+			'ANY' as moneda,
+         'OTROS PAGADORES' as payer,
+			:P_ID_BRANCH as id_branch
+    FROM dba.standar, DBA.COUNTRY
+   WHERE dba.standar.id_country = DBA.COUNTRY.ID_COUNTRY
+UNION
+
+SELECT -1,
+ 	 	  'AGENCY/PAYER' as ComType,
+		  'PREFERENCIALES '+:P_ID_BRANCH as ComDesc,
+			NAME_COUNTRY AS id_country,
+			MOD_PAY_CURRENCY,
+			RANGE_BEGIN_COMISION_PAY,
+			RANGE_END_COMISION_PAY,
+			FEET_COMISION_AGENTE,
+			FEET_COMISION_COMP,
+			PORCENT_COMISION_AGENTE,
+			PORCENT_COMISION_COMP,
+			ID_MODO_PAGO as pay_mode,
+         NAME_MAIN_BRANCH as payer,
+			:P_ID_BRANCH as id_branch
+			FROM dba.COMISION_AGENT_MODO_PAGO_GRUPO,
+         dba.group_branch, DBA.COUNTRY
+   WHERE dba.COMISION_AGENT_MODO_PAGO_GRUPO.id_country = DBA.COUNTRY.ID_COUNTRY	 
+     and dba.COMISION_AGENT_MODO_PAGO_GRUPO.id_branch = :P_ID_BRANCH
+     and dba.COMISION_AGENT_MODO_PAGO_GRUPO.ID_MAIN_BRANCH = dba.group_branch.ID_MAIN_BRANCH 
+UNION
+
+SELECT 0,
+  	 'PAYER' as ComType,
+    'GENERALES' as ComDesc,
+  	      NAME_COUNTRY AS id_country,
+			MOD_PAY_CURRENCY,
+			RANGE_BEGIN,
+			RANGE_END,
+			FEET_AGENTE,
+			FEET_COMP,
+			PORCENT_AGENTE,
+			PORCENT_COMP,
+			ID_MODO_PAGO,
+			NAME_MAIN_BRANCH,
+			:P_ID_BRANCH as id_branch
+    FROM dba.comision_delivery, dba.group_branch, DBA.COUNTRY
+    where dba.comision_delivery.id_country = DBA.COUNTRY.ID_COUNTRY
+	 AND dba.comision_delivery.ID_MAIN_BRANCH = dba.group_branch.ID_MAIN_BRANCH
+
+" arguments=(("P_ID_BRANCH", string))  sort="id_country A compute_0001 A payer A pay_mode A mod_pay_currency A range_begin A " )
+group(level=1 header.height=144 trailer.height=0 by=("id_country" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=160 trailer.height=0 by=("comdesc" ) header.color="536870912" trailer.color="536870912" )
+line(band=header x1="9" y1="368" x2="3465" y2="368"  name=l_7 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="TABLA DE COMISIONES" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header id=14 alignment="2" tabsequence=32766 border="0" color="0" x="1006" y="104" height="76" width="2464" format="[general]" html.valueishtml="0"  name=id_branch visible="1" dddw.name=dddw_branch dddw.displaycolumn=name_branch dddw.datacolumn=id_branch dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=4 alignment="0" tabsequence=32766 border="0" color="0" x="50" y="36" height="88" width="2610" format="[general]" html.valueishtml="0"  name=id_country visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.1 x1="27" y1="24" x2="3451" y2="24"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header.1 x1="27" y1="16" x2="3451" y2="16"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=header.2 id=3 alignment="0" tabsequence=32766 border="0" color="0" x="169" y="52" height="64" width="1646" format="[general]" html.valueishtml="0"  name=comdesc visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.2 x1="105" y1="152" x2="3273" y2="152"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header.2 alignment="2" text="Rango" border="2" color="33554432" x="1870" y="32" height="52" width="530" html.valueishtml="0"  name=comision_range_begin_comision_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.2 alignment="2" text="Comision Cliente" border="2" color="33554432" x="2414" y="32" height="52" width="416" html.valueishtml="0"  name=comision_feet_comision_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.2 alignment="2" text="Fija" border="2" color="33554432" x="2414" y="88" height="52" width="206" html.valueishtml="0"  name=comision_range_end_comision_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.2 alignment="2" text="%" border="2" color="33554432" x="2624" y="88" height="52" width="206" html.valueishtml="0"  name=comision_feet_comision_comp_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.2 alignment="2" text="Fija" border="2" color="33554432" x="2843" y="88" height="52" width="206" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header.2 alignment="2" text="Ganancia Agencia" border="2" color="33554432" x="2843" y="32" height="52" width="416" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+text(band=header.2 alignment="2" text="%" border="2" color="33554432" x="3054" y="88" height="52" width="206" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12639424" )
+line(band=detail x1="2405" y1="0" x2="2405" y2="76"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="2414" y="0" height="64" width="178" format="[currency]" html.valueishtml="0"  name=feet_comision visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="2" tabsequence=32766 border="0" color="0" x="2624" y="0" height="64" width="197" format="0.00%" html.valueishtml="0"  name=porcent_comision visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=detail x1="2834" y1="0" x2="2834" y2="76"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression=" feet_comision - feet_comision_comp "border="0" color="0" x="2848" y="0" height="64" width="178" format="[currency]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="2" expression=" porcent_comision - porcent_company_comision "border="0" color="0" x="3058" y="0" height="64" width="197" format="0.00%" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=detail x1="3269" y1="0" x2="3269" y2="76"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="0" x="256" y="4" height="52" width="773" format="[general]" html.valueishtml="0"  name=payer visible="1" dddw.name=dddw_group_branch dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="1893" y="0" height="64" width="206" format="[currency]" html.valueishtml="0"  name=range_begin visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=detail alignment="2" text="-" border="0" color="0" x="2107" y="0" height="44" width="27" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="2139" y="0" height="64" width="206" format="[currency]" html.valueishtml="0"  name=range_end visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="1065" y="4" height="52" width="439" format="[general]" html.valueishtml="0"  name=pay_mode visible="1" dddw.name=dddw_modo_pago dddw.displaycolumn=nom_modo_pago dddw.datacolumn=id_modo_pago dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="1536" y="0" height="64" width="343" format="[general]" html.valueishtml="0"  name=mod_pay_currency visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="" border="0" color="0" x="9" y="316" height="40" width="969" html.valueishtml="0"  name=t_report_data_line1 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="" border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_report_address_line visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+bitmap(band=header filename="" x="9" y="8" height="252" width="969" border="0"  name=logo visible="1" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="296" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="228" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,2 @@
+UPDATE receiver SET id_flag_receiver = 'A', net_amount_receiver = 0, rate_change_receiver = 0, telex_receiver = 0, exchange_receiver = 0, handling_receiver = 0, total_receiver = 0, porc_comision_receiver = 0, total_pay_receiver = 0, exchange_company = 0,  telex_company = 0, total_diference = 0, fee_rate = 0 WHERE id_branch = 'A09143' AND id_receiver = 66 ;
+UPDATE receiver SET state_tax = 0, AGENT_COMM_PROFIT = 0 WHERE id_branch = 'A09143' AND id_receiver = 66 ;

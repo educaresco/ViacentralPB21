@@ -1,0 +1,25 @@
+﻿$PBExportHeader$fn_branch_instalacion.srf
+global type fn_branch_instalacion from function_object
+end type
+
+forward prototypes
+global function string fn_branch_instalacion ()
+end prototypes
+
+global function string fn_branch_instalacion ();string	ls_branch_insta
+  
+  
+  SELECT dba.branch_instalacion.id_branch  
+    INTO :ls_branch_insta  
+    FROM dba.branch_instalacion  ;
+
+IF SQLCA.SQLCODE<>0 THEN
+	Return ''
+ELSE
+	Return ls_branch_insta
+END IF
+
+
+
+end function
+

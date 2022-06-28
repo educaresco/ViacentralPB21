@@ -1,0 +1,106 @@
+﻿$PBExportHeader$fn_valbranchpay.srf
+global type fn_valbranchpay from function_object
+end type
+
+forward prototypes
+global function string fn_valbranchpay (string ls_branch_pay)
+end prototypes
+
+global function string fn_valbranchpay (string ls_branch_pay);// ********************************************************************************
+// Determina si el envio debe ser redireccionado a otro punto de pago equivalente
+// ********************************************************************************
+
+String ls_branch_pay_equivalente
+Long ll_cont
+
+ls_branch_pay_equivalente = ls_branch_pay
+
+SELECT count(*)
+  INTO :ll_cont
+  FROM dba.BRANCH
+ WHERE ( dba.BRANCH.ID_BRANCH = :ls_branch_pay )
+   AND ( dba.BRANCH.USE_ALTERNATIVE = 'Y' )
+   AND ALTERNATIVE_ID_BRANCH is not null
+   AND ALTERNATIVE_ID_BRANCH <> '';
+
+if ll_cont = 1 then
+
+	// Selecciona la equivalencia
+	SELECT dba.BRANCH.ALTERNATIVE_ID_BRANCH  
+	  INTO :ls_branch_pay_equivalente
+	  FROM dba.BRANCH  
+	 WHERE ( dba.BRANCH.ID_BRANCH = :ls_branch_pay ) 
+	   AND ( dba.BRANCH.USE_ALTERNATIVE = 'Y' );
+	  
+	// Prueba si la equivalencia esta activa
+	SELECT count(*) 
+	  INTO :ll_cont
+	  FROM dba.BRANCH  
+	 WHERE ( dba.BRANCH.ID_BRANCH = :ls_branch_pay_equivalente ) 
+	   AND ( dba.BRANCH.ID_FLAG_BRANCH = 'A' );
+
+  	if ll_cont <> 1 then
+		// La equivalencia esta inactiva
+		fn_email_notification("appdev@viamericas.com","NOTIFICACION - ViaImport: Equivalencia Inactiva ","La Equivalencia ("+ls_branch_pay_equivalente+") para el punto de pago "+ls_branch_pay+" esta inactiva.","DUMMY","Y")
+		ls_branch_pay_equivalente = ls_branch_pay
+	else
+
+		// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// Prueba el redireccionador por porcentaje:
+		// Cuando alternative_count = alternative_top se redirecciona el giro, 
+		// sino solamente se incrementa el count.
+		// Cuando se redirecciona un giro el count vuelve a 0.
+		// Usar TOP = 0 para FULL Redireccion.
+		
+		String ls_original_payer_group
+		long ll_count, ll_top
+		
+		SELECT id_main_branch
+		  INTO :ls_original_payer_group
+		  FROM dba.branch
+		 WHERE id_branch = :ls_branch_pay;
+		 
+		SELECT ALTERNATIVE_COUNT, ALTERNATIVE_TOP
+		  INTO :ll_count, :ll_top
+		  FROM dba.group_branch
+		 WHERE id_main_branch = :ls_original_payer_group;
+		 
+		if isnull(ll_count) then ll_count = 0
+		if isnull(ll_top) then ll_top = 0
+		
+		if ll_count >= ll_top then
+			// Hay redireccion!
+			UPDATE dba.group_branch
+			   SET ALTERNATIVE_COUNT = 0
+			 WHERE id_main_branch = :ls_original_payer_group;
+			 
+			 //fn_email_notification("ebernal@viamericas.com","TESTING "+string(ll_count)+"/"+string(ll_top)+ " REDIRECCIONADO!","-","DUMMY","Y")
+			
+		else
+			
+			// No hay redireccion, se cuenta uno mas
+			
+			ls_branch_pay_equivalente = ls_branch_pay
+			
+			UPDATE dba.group_branch
+			   SET ALTERNATIVE_COUNT = ALTERNATIVE_COUNT + 1
+			 WHERE id_main_branch = :ls_original_payer_group;			 
+			 
+			//fn_email_notification("ebernal@viamericas.com","TESTING "+string(ll_count)+"/"+string(ll_top)+ " NO DIRECCIONADO!","-","DUMMY","Y")
+			 
+		end if		
+		
+		// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
+		
+	end if
+
+else
+	
+	// No hay equivalencia
+	ls_branch_pay_equivalente = ls_branch_pay
+	
+end if
+
+return ls_branch_pay_equivalente
+end function
+

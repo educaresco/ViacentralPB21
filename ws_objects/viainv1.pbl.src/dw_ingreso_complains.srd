@@ -1,0 +1,48 @@
+﻿$PBExportHeader$dw_ingreso_complains.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=96 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_branch dbname="RECEIVER.id_branch" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes key=yes name=id_receiver dbname="RECEIVER.id_receiver" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_receiver dbname="RECEIVER.name_receiver" )
+ column=(type=char(2) update=yes updatewhereclause=yes name=id_flag_receiver dbname="RECEIVER.id_flag_receiver" )
+ column=(type=char(40) updatewhereclause=yes name=sender_name_sender dbname="SENDER.name_sender" )
+ column=(type=datetime update=yes updatewhereclause=yes name=receiver_date_receiver dbname="RECEIVER.date_receiver" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=receiver_ref_receiver dbname="RECEIVER.ref_receiver" )
+ column=(type=decimal(0) updatewhereclause=yes name=id_sender dbname="SENDER.id_sender" )
+ retrieve="  SELECT dba.receiver.id_branch ,           
+			dba.receiver.id_receiver ,           
+			dba.receiver.name_receiver ,           
+			dba.receiver.id_flag_receiver ,           
+			dba.sender.name_sender ,           
+			dba.receiver.date_receiver ,           
+			dba.receiver.ref_receiver ,           
+			dba.sender.id_sender     
+  FROM dba.receiver ,           
+		 dba.sender ,           
+			dba.branch     
+  WHERE ( dba.sender.id_sender = dba.receiver.id_sender ) and          
+	( dba.sender.id_branch = dba.receiver.id_branch ) and          
+	( dba.branch.id_branch = dba.receiver.branch_pay_receiver ) and          
+	( ( dba.branch.id_main_branch = :arg_branch ) and          
+	( dba.receiver.ref_receiver >= :arg_reference ) )  
+  ORDER BY dba.receiver.ref_receiver          ASC  " update="dba.receiver" updatewhere=0 updatekeyinplace=no arguments=(("arg_branch", string),("arg_reference", number)) )
+text(band=header alignment="2" text="Invoice"border="0" color="0" x="142" y="8" height="56" width="366"  name=id_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Sender's Name"border="0" color="0" x="530" y="8" height="56" width="667"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Receiver's Name"border="0" color="0" x="1211" y="8" height="56" width="672"  name=name_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="1" text="Reference"border="0" color="0" x="1906" y="8" height="56" width="302"  name=id_flag_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Date"border="0" color="0" x="2226" y="8" height="56" width="311"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Complain"border="0" color="0" x="2551" y="8" height="56" width="238"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="16777215" x="3785" y="24" height="68" width="251" format="[general]"  name=id_branch edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="16777215" x="3424" y="24" height="68" width="274" format="[general]"  name=id_receiver edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" id_branch +~" - ~"+ id_receiver "border="2" color="0" x="142" y="20" height="68" width="366" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="2" color="0" x="530" y="20" height="68" width="667" format="[general]"  name=sender_name_sender edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="0" x="1211" y="20" height="68" width="672" format="[general]"  name=name_receiver edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="2" color="0" x="1902" y="20" height="68" width="302" format="[general]"  name=receiver_ref_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="2" color="0" x="2226" y="20" height="68" width="311" format=""  name=receiver_date_receiver editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="16777215" x="3072" y="32" height="56" width="146" format="[general]"  name=id_sender edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+button(band=detail text="..."filename=""action="0" border="0" color="0" x="2551" y="16" height="76" width="238" vtextalign="0" htextalign="0"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

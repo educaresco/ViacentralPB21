@@ -1,0 +1,59 @@
+﻿$PBExportHeader$dw_market_rates_prices_cross.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=4 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no  crosstab.dynamic = yes grid.lines=0 grid.columnmove=no selected.mouse=no )
+header[1](height=0 color="536870912" )
+header[2](height=80 color="536870912" )
+header[3](height=60 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=id_country dbname="id_country" )
+ column=(type=decimal(2) updatewhereclause=yes name=amount dbname="amount" )
+ column=(type=decimal(4) updatewhereclause=yes name=rate_value dbname="rate_value" )
+ column=(type=decimal(2) updatewhereclause=yes name=price_standard dbname="price_standard" )
+ column=(type=decimal(2) updatewhereclause=yes name=price_premium dbname="price_premium" )
+ retrieve="  SELECT HISTORY_MARKET_PRICES.DATE_HISTORY,   
+         HISTORY_MARKET_PRICES.ID_COMPANY,   
+         HISTORY_MARKET_PRICES.ID_COUNTRY,   
+         HISTORY_MARKET_PRICES.AMOUNT,   
+         HISTORY_MARKET_PRICES.RATE_VALUE,   
+         HISTORY_MARKET_PRICES.PRICE_STANDARD,   
+         HISTORY_MARKET_PRICES.PRICE_PREMIUM  
+    FROM dba.HISTORY_MARKET_PRICES  as  HISTORY_MARKET_PRICES
+WHERE HISTORY_MARKET_PRICES.DATE_HISTORY = :P_DATE
+" arguments=(("p_date", date))  sort="id_country A amount A " )
+group(level=1 header.height=0 trailer.height=92 by=("id_country" ) header.color="536870912" trailer.color="536870912" )
+text(band=header[2] alignment="2" text="@id_company" border="0" color="33554432" x="608" y="4" height="64" width="923" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="0" text="Amount" border="0" color="33554432" x="297" y="4" height="52" width="302" html.valueishtml="0"  name=amount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="2" text="Rate" border="0" color="33554432" x="608" y="4" height="52" width="338" html.valueishtml="0"  name=rate_value_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="2" text="Standard" border="0" color="33554432" x="955" y="4" height="52" width="247" html.valueishtml="0"  name=price_standard_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[3] alignment="2" text="Premium" border="0" color="33554432" x="1211" y="4" height="52" width="315" html.valueishtml="0"  name=price_premium_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="64" width="279" format="[general]" html.valueishtml="0"  name=id_country visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="297" y="4" height="64" width="302" format="[currency]" html.valueishtml="0"  name=amount visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="33554432" x="608" y="4" height="64" width="338" format="#,##0.0000" html.valueishtml="0"  name=rate_value visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes crosstab.repeat=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="955" y="4" height="64" width="247" format="[currency]" html.valueishtml="0"  name=price_standard visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes crosstab.repeat=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="33554432" x="1211" y="4" height="64" width="315" format="[currency]" html.valueishtml="0"  name=price_premium visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes crosstab.repeat=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=detail x1="1582" y1="0" x2="1582" y2="84"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="2519" y1="0" x2="2519" y2="84"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="3442" y1="0" x2="3442" y2="84"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="672" y1="0" x2="672" y2="88"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="672" y1="108" x2="672" y2="196"  name=l_7 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="avg(rate_value for group 1)"border="0" color="33554432" x="608" y="4" height="64" width="338" format="#,##0.00" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="avg(price_premium for group 1)"border="0" color="33554432" x="1211" y="4" height="64" width="315" format="[currency]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="avg(price_standard for group 1)"border="0" color="33554432" x="955" y="4" height="64" width="247" format="[currency]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="0" expression="id_country + ~" Avg~""border="0" color="33554432" x="9" y="4" height="64" width="279" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="5" y1="0" x2="4389" y2="0"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="12632256"  background.mode="2" background.color="16777215" )
+line(band=trailer.1 x1="9" y1="76" x2="4393" y2="76"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+ crosstab(band = foreground  crosstabonly = yes 
+ columns = "id_company" rows = "id_country, amount" values = "sum(rate_value for crosstab), sum(price_standard for crosstab), sum(price_premium for crosstab)" sourcenames = "date_history, id_company, id_country, amount, rate_value, price_standard, price_premium")
+sparse(names="id_country")htmltable(border="0" cellpadding="1" cellspacing="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

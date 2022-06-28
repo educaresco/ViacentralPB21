@@ -1,0 +1,157 @@
+﻿$PBExportHeader$dw_agency_owner_info_rep.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=380 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=3348 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="BRANCH_OWNER_INFORMATION.ID_BRANCH" )
+ column=(type=char(100) updatewhereclause=yes name=legal_name dbname="BRANCH_OWNER_INFORMATION.LEGAL_NAME" )
+ column=(type=char(60) updatewhereclause=yes name=owner_fname dbname="BRANCH_OWNER_INFORMATION.OWNER_FNAME" )
+ column=(type=char(60) updatewhereclause=yes name=owner_mname dbname="BRANCH_OWNER_INFORMATION.OWNER_MNAME" )
+ column=(type=char(60) updatewhereclause=yes name=owner_lname dbname="BRANCH_OWNER_INFORMATION.OWNER_LNAME" )
+ column=(type=char(60) updatewhereclause=yes name=owner_slname dbname="BRANCH_OWNER_INFORMATION.OWNER_SLNAME" )
+ column=(type=decimal(0) updatewhereclause=yes name=owner_ssn dbname="BRANCH_OWNER_INFORMATION.OWNER_SSN" )
+ column=(type=char(100) updatewhereclause=yes name=owner_address dbname="BRANCH_OWNER_INFORMATION.OWNER_ADDRESS" )
+ column=(type=char(2) updatewhereclause=yes name=id_type dbname="BRANCH_OWNER_INFORMATION.ID_TYPE" )
+ column=(type=char(40) updatewhereclause=yes name=id_number dbname="BRANCH_OWNER_INFORMATION.ID_NUMBER" )
+ column=(type=datetime updatewhereclause=yes name=id_exp_date dbname="BRANCH_OWNER_INFORMATION.ID_EXP_DATE" )
+ column=(type=char(30) updatewhereclause=yes name=tax_id dbname="BRANCH_OWNER_INFORMATION.TAX_ID" )
+ column=(type=char(30) updatewhereclause=yes name=ein dbname="BRANCH_OWNER_INFORMATION.EIN" )
+ column=(type=char(5) updatewhereclause=yes name=zip_code dbname="BRANCH_OWNER_INFORMATION.ZIP_CODE" )
+ column=(type=char(60) updatewhereclause=yes name=name_city dbname="BRANCH_OWNER_INFORMATION.NAME_CITY" )
+ column=(type=char(5) updatewhereclause=yes name=id_state dbname="BRANCH_OWNER_INFORMATION.ID_STATE" )
+ column=(type=char(15) updatewhereclause=yes name=phone_1 dbname="BRANCH_OWNER_INFORMATION.PHONE_1" )
+ column=(type=char(15) updatewhereclause=yes name=phone_2 dbname="BRANCH_OWNER_INFORMATION.PHONE_2" )
+ column=(type=char(15) updatewhereclause=yes name=cellular_number dbname="BRANCH_OWNER_INFORMATION.CELLULAR_NUMBER" )
+ column=(type=datetime updatewhereclause=yes name=time_inbusiness dbname="BRANCH_OWNER_INFORMATION.TIME_INBUSINESS" )
+ column=(type=char(150) updatewhereclause=yes name=cosigner_name dbname="BRANCH_OWNER_INFORMATION.COSIGNER_NAME" )
+ column=(type=char(150) updatewhereclause=yes name=owner2_name dbname="BRANCH_OWNER_INFORMATION.OWNER2_NAME" )
+ column=(type=char(150) updatewhereclause=yes name=owner3_name dbname="BRANCH_OWNER_INFORMATION.OWNER3_NAME" )
+ column=(type=char(150) updatewhereclause=yes name=owner4_name dbname="BRANCH_OWNER_INFORMATION.OWNER4_NAME" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address_branch dbname="BRANCH.ADDRESS_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_city dbname="BRANCH.ID_CITY" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_state dbname="BRANCH.ID_STATE" )
+ column=(type=decimal(0) updatewhereclause=yes name=branch_zip_branch dbname="BRANCH.ZIP_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=phone1_branch dbname="BRANCH.PHONE1_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=phone2_branch dbname="BRANCH.PHONE2_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=branch_fax_branch dbname="BRANCH.FAX_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=branch_owner_information_id_company_type dbname="BRANCH_OWNER_INFORMATION.ID_COMPANY_TYPE" )
+ column=(type=char(7000) updatewhereclause=yes name=letterbody dbname="BRANCH_OWNER_INFORMATION.LetterBody" )
+ retrieve="SELECT dba.BRANCH_OWNER_INFORMATION.ID_BRANCH,   
+dba.BRANCH_OWNER_INFORMATION.LEGAL_NAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_FNAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_MNAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_LNAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_SLNAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_SSN,   
+dba.BRANCH_OWNER_INFORMATION.OWNER_ADDRESS,   
+dba.BRANCH_OWNER_INFORMATION.ID_TYPE,   
+dba.BRANCH_OWNER_INFORMATION.ID_NUMBER,   
+dba.BRANCH_OWNER_INFORMATION.ID_EXP_DATE,   
+dba.BRANCH_OWNER_INFORMATION.TAX_ID,   
+dba.BRANCH_OWNER_INFORMATION.EIN,   
+dba.BRANCH_OWNER_INFORMATION.ZIP_CODE,   
+dba.BRANCH_OWNER_INFORMATION.NAME_CITY,   
+dba.BRANCH_OWNER_INFORMATION.ID_STATE,   
+dba.BRANCH_OWNER_INFORMATION.PHONE_1,   
+dba.BRANCH_OWNER_INFORMATION.PHONE_2,   
+dba.BRANCH_OWNER_INFORMATION.CELLULAR_NUMBER,   
+dba.BRANCH_OWNER_INFORMATION.TIME_INBUSINESS,   
+dba.BRANCH_OWNER_INFORMATION.COSIGNER_NAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER2_NAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER3_NAME,   
+dba.BRANCH_OWNER_INFORMATION.OWNER4_NAME,   
+dba.BRANCH.NAME_BRANCH,   
+dba.BRANCH.ADDRESS_BRANCH,   
+dba.BRANCH.ID_CITY,   
+dba.BRANCH.ID_STATE,   
+dba.BRANCH.ZIP_BRANCH,   
+dba.BRANCH.PHONE1_BRANCH,   
+dba.BRANCH.PHONE2_BRANCH,   
+dba.BRANCH.FAX_BRANCH,   
+dba.BRANCH_OWNER_INFORMATION.ID_COMPANY_TYPE ,
+stringlargevalue as LetterBody
+FROM dba.BRANCH_OWNER_INFORMATION ,   
+dba.BRANCH, dba.PARAMETERS
+WHERE BRANCH.ID_BRANCH = dba.BRANCH_OWNER_INFORMATION.ID_BRANCH
+AND dba.BRANCH_OWNER_INFORMATION.ID_BRANCH = :p_id_branch
+AND IDPARAMETER = ~"LETTER_UPD_CON_BODY~"
+" arguments=(("p_id_branch", string)) )
+text(band=header alignment="2" text="Formato de Verificación y Actualización de Información" border="0" color="33554432" x="1042" y="40" height="76" width="2377" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="228" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="296" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="364" x2="3465" y2="364"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=34 alignment="0" tabsequence=32766 border="0" color="33554432" x="210" y="92" height="908" width="3022" format="[general]" html.valueishtml="0"  name=letterbody visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+rectangle(band=detail x="265" y="1132" height="808" width="2871"  name=r_1 visible="1" brush.hatch="7" brush.color="553648127" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+rectangle(band=detail x="265" y="2056" height="996" width="2871"  name=r_2 visible="1" brush.hatch="7" brush.color="553648127" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+text(band=detail alignment="0" text="Dirección Agencia:" border="0" color="33554432" x="293" y="1448" height="52" width="526" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Nombre Legal:" border="0" color="33554432" x="293" y="1312" height="52" width="526" html.valueishtml="0"  name=legal_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Teléfonos Agencia:" border="0" color="33554432" x="293" y="1584" height="52" width="526" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=32 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1652" height="52" width="347" format="[general]" html.valueishtml="0"  name=branch_fax_branch visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Fax Agencia:" border="0" color="33554432" x="293" y="1652" height="52" width="526" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=20 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1720" height="52" width="503" format="[shortdate] [time]" html.valueishtml="0"  name=time_inbusiness visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1788" height="52" width="709" format="[general]" html.valueishtml="0"  name=tax_id visible="1" edit.limit=30 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Inicio del Negocio:" border="0" color="33554432" x="293" y="1720" height="52" width="526" html.valueishtml="0"  name=time_inbusiness_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1856" height="52" width="709" format="[general]" html.valueishtml="0"  name=ein visible="1" edit.limit=30 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Tax Id:" border="0" color="33554432" x="293" y="1788" height="52" width="526" html.valueishtml="0"  name=tax_id_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="EIN:" border="0" color="33554432" x="293" y="1856" height="52" width="526" html.valueishtml="0"  name=ein_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Nombres:" border="0" color="33554432" x="293" y="2100" height="52" width="526" html.valueishtml="0"  name=owner_lname_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Apellidos:" border="0" color="33554432" x="293" y="2168" height="52" width="526" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Seguro Social:" border="0" color="33554432" x="293" y="2236" height="52" width="526" html.valueishtml="0"  name=owner_ssn_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Identificación:" border="0" color="33554432" x="293" y="2304" height="52" width="526" html.valueishtml="0"  name=id_type_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Dirección:" border="0" color="33554432" x="293" y="2372" height="52" width="526" html.valueishtml="0"  name=owner_address_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="'***-***-'+right(string( owner_ssn ),4)"border="0" color="33554432" x="837" y="2236" height="52" width="379" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2372" height="52" width="1938" format="[general]" html.valueishtml="0"  name=owner_address visible="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2304" height="52" width="581" format="[general]" html.valueishtml="0"  name=id_type visible="1" dddw.name=dddw_type_id dddw.displaycolumn=name_type_id_sender dddw.datacolumn=id_type_id_sender dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="2464" y="2304" height="52" width="503" format="[shortdate]" html.valueishtml="0"  name=id_exp_date visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Teléfonos:" border="0" color="33554432" x="293" y="2508" height="52" width="526" html.valueishtml="0"  name=phone_1_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2576" height="52" width="347" format="[general]" html.valueishtml="0"  name=cellular_number visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Teléfono Mobil:" border="0" color="33554432" x="293" y="2576" height="52" width="526" html.valueishtml="0"  name=cellular_number_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Fiador:" border="0" color="33554432" x="293" y="2676" height="52" width="526" html.valueishtml="0"  name=cosigner_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Otros Propietarios:" border="0" color="33554432" x="293" y="2776" height="52" width="526" html.valueishtml="0"  name=owner2_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=22 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2776" height="52" width="1381" format="[general]" html.valueishtml="0"  name=owner2_name visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=23 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2844" height="52" width="1381" format="[general]" html.valueishtml="0"  name=owner3_name visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2912" height="52" width="1381" format="[general]" html.valueishtml="0"  name=owner4_name visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="2" text="DATOS DEL PROPIETARIO" border="0" color="16777215" x="265" y="2004" height="52" width="2871" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="0" )
+text(band=detail alignment="0" text="#:" border="0" color="33554432" x="1440" y="2304" height="52" width="87" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Exp.:" border="0" color="33554432" x="2318" y="2304" height="52" width="133" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=30 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1584" height="52" width="347" format="[general]" html.valueishtml="0"  name=phone1_branch visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2508" height="52" width="347" format="[general]" html.valueishtml="0"  name=phone_1 visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=31 alignment="0" tabsequence=32766 border="0" color="33554432" x="1298" y="1584" height="52" width="347" format="[general]" html.valueishtml="0"  name=phone2_branch visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="0" tabsequence=32766 border="0" color="33554432" x="1298" y="2508" height="52" width="347" format="[general]" html.valueishtml="0"  name=phone_2 visible="1" editmask.mask="(###) ###-####" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=27 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1516" height="52" width="585" format="[general]" html.valueishtml="0"  name=branch_id_city visible="1" dddw.name=dddw_city dddw.displaycolumn=name_city dddw.datacolumn=id_city dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2440" height="52" width="585" format="[general]" html.valueishtml="0"  name=name_city visible="1" edit.limit=60 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=28 alignment="0" tabsequence=32766 border="0" color="33554432" x="1440" y="1516" height="52" width="114" format="[general]" html.valueishtml="0"  name=branch_id_state visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="33554432" x="1440" y="2440" height="52" width="114" format="[general]" html.valueishtml="0"  name=id_state visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=29 alignment="0" tabsequence=32766 border="0" color="33554432" x="1609" y="1516" height="52" width="256" format="[general]" html.valueishtml="0"  name=branch_zip_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="33554432" x="1609" y="2440" height="52" width="256" format="[general]" html.valueishtml="0"  name=zip_code visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Agencia:" border="0" color="33554432" x="293" y="1176" height="52" width="526" html.valueishtml="0"  name=id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="ID Viamericas:" border="0" color="33554432" x="293" y="1244" height="52" width="526" html.valueishtml="0"  name=t_14 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="2" text="DATOS DE LA AGENCIA" border="0" color="16777215" x="265" y="1080" height="52" width="2871" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="0" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1244" height="52" width="251" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Tipo de Negocio:" border="0" color="33554432" x="293" y="1380" height="52" width="526" html.valueishtml="0"  name=company_type_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=21 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="2676" height="52" width="1381" format="[general]" html.valueishtml="0"  name=cosigner_name visible="1" edit.limit=150 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="owner_lname + ' ' +  if(isnull(owner_slname),'',owner_slname)"border="0" color="33554432" x="837" y="2168" height="52" width="1381" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="owner_fname + ' ' + if(isnull(owner_mname) ,'', owner_mname )"border="0" color="33554432" x="837" y="2100" height="52" width="1381" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=26 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1448" height="52" width="1381" format="[general]" html.valueishtml="0"  name=branch_address_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=33 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1380" height="52" width="1381" format="[general]" html.valueishtml="0"  name=branch_owner_information_id_company_type visible="1" dddw.name=dddw_company_type dddw.displaycolumn=name_company_type dddw.datacolumn=id_company_type dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=25 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1176" height="52" width="1381" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="837" y="1312" height="52" width="1381" format="[general]" html.valueishtml="0"  name=legal_name visible="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="'*********'+right(string( id_number ),4)"border="0" color="33554432" x="1541" y="2304" height="52" width="713" format="[GENERAL]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Favor enviar esta forma revisada y/o corregida a nuestro Departamento de Aplicaciones al número de fax 1 800 859 1305." border="0" color="33554432" x="265" y="3188" height="52" width="2880" html.valueishtml="0"  name=t_16 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="40" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="18" y="264" height="40" width="969" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="18" y="304" height="40" width="969" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

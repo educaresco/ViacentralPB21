@@ -1,0 +1,19 @@
+﻿$PBExportHeader$fn_web_last_invoice.srf
+global type fn_web_last_invoice from function_object
+end type
+
+forward prototypes
+global function double fn_web_last_invoice (string arg_branch)
+end prototypes
+
+global function double fn_web_last_invoice (string arg_branch);DOUBLE	LD_LAST
+
+  SELECT dba.web_last_invoice.id_receiver  
+    INTO :ld_last  
+    FROM dba.web_last_invoice  
+   WHERE dba.web_last_invoice.id_branch = :arg_branch   ;
+
+if isnull(ld_last  ) then ld_last   = 0
+return ld_last  
+end function
+

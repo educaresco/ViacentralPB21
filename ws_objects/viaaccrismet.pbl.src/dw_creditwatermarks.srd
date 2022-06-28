@@ -1,0 +1,82 @@
+﻿$PBExportHeader$dw_creditwatermarks.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=4 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no  crosstab.dynamic = yes grid.lines=0 grid.columnmove=no selected.mouse=no )
+header[1](height=112 color="536870912" )
+header[2](height=112 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=history_balance_idgroup dbname="history_balance_idgroup" )
+ column=(type=char(20) updatewhereclause=yes name=idbranch dbname="idbranch" )
+ column=(type=char(20) updatewhereclause=yes name=namegroup dbname="namegroup" )
+ column=(type=decimal(4) updatewhereclause=yes name=currentcredit dbname="currentcredit" )
+ column=(type=decimal(4) updatewhereclause=yes name=currentcreditwknd dbname="currentcreditwknd" )
+ column=(type=decimal(4) updatewhereclause=yes name=compliantbalance dbname="compliantbalance" )
+ procedure="
+SELECT h.id_main_branch as IdGroup, 
+dba.sfGetGroupChilds(h.id_main_branch) as IdBranch, 
+date_balance as DatBalance, 
+NAME_MAIN_BRANCH as NameGroup, 
+DEBT_LIMIT as CurrentCredit, 
+DEBT_LIMIT_WKND as CurrentCreditWknd, 
+CASE UPPER(LEFT(DATENAME(dw,date_balance),2)) WHEN 'SA' THEN 'WKN' WHEN 'SU' THEN 'WKN' WHEN 'MO' THEN 'WKN' ELSE 'WEEK' END As WeekType,
+max(compliantbalance) as CompliantBalance
+FROM dba.HISTORY_BALANCE h, dba.GROUP_BRANCH g
+WHERE h.id_main_branch = g.id_main_branch
+and date_balance between :p_date1 and :p_date2
+and (g.id_main_branch = :p_group or :p_group = '-ALL-' )
+GROUP BY h.id_main_branch, 
+dba.sfGetGroupChilds(h.id_main_branch), 
+date_balance, 
+NAME_MAIN_BRANCH, 
+DEBT_LIMIT, 
+DEBT_LIMIT_WKND,
+CASE UPPER(LEFT(DATENAME(dw,date_balance),2)) WHEN 'SA' THEN 'WKN' WHEN 'SU' THEN 'WKN' WHEN 'MO' THEN 'WKN' ELSE 'WEEK' END   
+" arguments=(("p_date1", datetime),("p_date2", datetime),("p_group", string))  sort="history_balance_idgroup A idbranch A namegroup A currentcredit A currentcreditwknd A " )
+group(level=1 header.height=0 trailer.height=0 by=("history_balance_idgroup" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=0 trailer.height=0 by=("idbranch" ) header.color="536870912" trailer.color="536870912" )
+group(level=3 header.height=0 trailer.height=0 by=("namegroup" ) header.color="536870912" trailer.color="536870912" )
+group(level=4 header.height=0 trailer.height=0 by=("currentcredit" ) header.color="536870912" trailer.color="536870912" )
+text(band=header[1] alignment="0" text="" border="0" color="33554432" x="9" y="4" height="52" width="329" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[1] alignment="0" text="" border="0" color="33554432" x="347" y="4" height="52" width="485" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="64" width="329" format="[general]" html.valueishtml="0"  name=history_balance_idgroup visible="1" edit.limit=4 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="347" y="4" height="64" width="485" format="[general]" html.valueishtml="0"  name=idbranch visible="1" edit.limit=30 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="841" y="4" height="64" width="937" format="[general]" html.valueishtml="0"  name=namegroup visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression="crosstabmax( 1 )"border="0" color="33554432" x="3195" y="4" height="64" width="686" format="[currency]" html.valueishtml="0"  name=grand_sum_compliantbalance visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="33554432" x="2802" y="4" height="64" width="384" format="[currency]" html.valueishtml="0"  name=compliantbalance visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes crosstab.repeat=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="33554432" x="2194" y="4" height="64" width="599" format="[currency]" html.valueishtml="0"  name=currentcreditwknd visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="1787" y="4" height="64" width="398" format="[currency]" html.valueishtml="0"  name=currentcredit visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.4 alignment="1" expression="currentcredit + ~" Total~""border="0" color="33554432" x="1787" y="4" height="104" width="398" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.4 alignment="1" expression="sum(compliantbalance for group 4)"border="0" color="33554432" x="2802" y="4" height="104" width="384" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.4 alignment="1" expression="sum(grand_sum_compliantbalance for group 4)"border="0" color="33554432" x="3195" y="4" height="104" width="686" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.3 alignment="1" expression="namegroup + ~" Total~""border="0" color="33554432" x="841" y="4" height="104" width="937" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.3 alignment="1" expression="sum(compliantbalance for group 3)"border="0" color="33554432" x="2802" y="4" height="104" width="384" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.3 alignment="1" expression="sum(grand_sum_compliantbalance for group 3)"border="0" color="33554432" x="3195" y="4" height="104" width="686" format="[general]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="idbranch + ~" Total~""border="0" color="33554432" x="347" y="4" height="104" width="485" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(compliantbalance for group 2)"border="0" color="33554432" x="2802" y="4" height="104" width="384" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(grand_sum_compliantbalance for group 2)"border="0" color="33554432" x="3195" y="4" height="104" width="686" format="[general]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="history_balance_idgroup + ~" Total~""border="0" color="33554432" x="9" y="4" height="104" width="329" format="[general]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(compliantbalance for group 1)"border="0" color="33554432" x="2802" y="4" height="104" width="384" format="[general]" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(grand_sum_compliantbalance for group 1)"border="0" color="33554432" x="3195" y="4" height="104" width="686" format="[general]" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="~"Grand Total~""border="0" color="33554432" x="9" y="4" height="104" width="329" format="[general]" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(compliantbalance for all )"border="0" color="33554432" x="2802" y="4" height="104" width="384" format="[general]" html.valueishtml="0"  name=compute_14 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(grand_sum_compliantbalance for all )"border="0" color="33554432" x="3195" y="4" height="104" width="686" format="[general]" html.valueishtml="0"  name=compute_15 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Id Group" border="0" color="33554432" x="9" y="4" height="52" width="329" html.valueishtml="0"  name=history_balance_idgroup_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Id Branch" border="0" color="33554432" x="347" y="4" height="52" width="485" html.valueishtml="0"  name=idbranch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Name Group" border="0" color="33554432" x="841" y="4" height="52" width="937" html.valueishtml="0"  name=namegroup_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Current Credit" border="0" color="33554432" x="1787" y="4" height="52" width="398" html.valueishtml="0"  name=currentcredit_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Current Credit Wknd" border="0" color="33554432" x="2194" y="4" height="52" width="599" html.valueishtml="0"  name=currentcreditwknd_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="@datbalance" border="0" color="33554432" x="2802" y="4" height="52" width="384" html.valueishtml="0"  name=compliantbalance_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header[2] alignment="2" text="Top Credit" border="0" color="33554432" x="3195" y="4" height="52" width="686" html.valueishtml="0"  name=grand_sum_compliantbalance_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+ crosstab(band = foreground  crosstabonly = yes 
+ columns = "datbalance" rows = "history_balance_idgroup, idbranch, namegroup, currentcredit, currentcreditwknd" values = "sum(compliantbalance for crosstab)" sourcenames = "history_balance_idgroup, idbranch, datbalance, namegroup, currentcredit, currentcreditwknd, weektype, compliantbalance")
+sparse(names="history_balance_idgroup	idbranch	namegroup	currentcredit")htmltable(border="0" cellpadding="1" cellspacing="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()

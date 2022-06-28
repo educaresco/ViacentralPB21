@@ -1,0 +1,28 @@
+﻿$PBExportHeader$fn_fill.srf
+global type fn_fill from function_object
+end type
+
+forward prototypes
+global function string fn_fill (string cadena, string posicion, string caracteres, integer tamano)
+end prototypes
+
+global function string fn_fill (string cadena, string posicion, string caracteres, integer tamano);string ls_cadena,ls_posicion,ls_fill
+integer li_tamano
+
+ls_cadena		=	trim(cadena)
+ls_posicion		=	posicion
+ls_fill				=	caracteres
+li_tamano		=	tamano
+
+if (ls_posicion="D") then
+   do while len(ls_cadena) < li_tamano
+	   ls_cadena = ls_cadena + ls_fill
+	loop
+else
+   do while len(ls_cadena) < li_tamano
+	   ls_cadena = ls_fill + ls_cadena 
+	loop
+end if
+return ls_cadena
+end function
+

@@ -1,0 +1,22 @@
+﻿$PBExportHeader$fn_number_string.srf
+global type fn_number_string from function_object
+end type
+
+forward prototypes
+global function integer fn_number_string (string nombre)
+end prototypes
+
+global function integer fn_number_string (string nombre);string ls_nombre        //cadena que llega por parametros
+integer li_num_cadenas
+integer li_cont         //Contador de iteraciones de espacios
+
+ls_nombre=trim(nombre)
+li_num_cadenas=1
+
+do while Pos(ls_nombre," ") <> 0
+	li_num_cadenas=li_num_cadenas+1
+	ls_nombre=trim(mid(ls_nombre,pos(ls_nombre," "),len(ls_nombre)))
+loop
+return li_num_cadenas
+end function
+

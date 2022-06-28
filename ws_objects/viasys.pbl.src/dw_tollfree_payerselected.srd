@@ -1,0 +1,11 @@
+﻿$PBExportHeader$dw_tollfree_payerselected.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=group_branch_id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"dba.TOLLFREE~" )  TABLE(NAME=~"dba.GROUP_BRANCH~" ) COLUMN(NAME=~"dba.GROUP_BRANCH.ID_MAIN_BRANCH~") COLUMN(NAME=~"dba.GROUP_BRANCH.NAME_MAIN_BRANCH~")WHERE(    EXP1 =~"(charindex('*'+rtrim(id_main_branch)+'*',to_payers)~"   OP =~">~"    EXP2 =~"0~"    LOGIC =~"or~" ) WHERE(    EXP1 =~"charindex('*ANY PAYER*',to_payers)~"   OP =~">~"    EXP2 =~"0)~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"dba.TOLLFREE.COD_COMPANY~"   OP =~"=~"    EXP2 =~":cod_company~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"dba.GROUP_BRANCH.FLAG_GRUPO~"   OP =~"=~"    EXP2 =~"'A'~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"dba.GROUP_BRANCH.group_type~"   OP =~"=~"    EXP2 =~"'P'~" ) ) ORDER(NAME=~"dba.GROUP_BRANCH.NAME_MAIN_BRANCH~" ASC=yes ) ARG(NAME = ~"cod_company~" TYPE = string) " arguments=(("cod_company", string)) )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="14" y="4" height="52" width="1280" format=""  name=group_branch_name_main_branch edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

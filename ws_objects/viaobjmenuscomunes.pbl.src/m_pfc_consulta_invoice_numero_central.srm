@@ -1,0 +1,796 @@
+﻿$PBExportHeader$m_pfc_consulta_invoice_numero_central.srm
+forward
+global type m_pfc_consulta_invoice_numero_central from menu
+end type
+type m_actualizar from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_nombre from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_modification from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_statusaudit from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_ordernotes from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_payernotifications from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_hold from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_reclamos from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_customer_profile from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_pay from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_document from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_find from menucascade within m_pfc_consulta_invoice_numero_central
+end type
+type m_first from menu within m_find
+end type
+type m_prior from menu within m_find
+end type
+type m_last from menu within m_find
+end type
+type m_find from menucascade within m_pfc_consulta_invoice_numero_central
+m_first m_first
+m_prior m_prior
+m_last m_last
+end type
+type m_kyc from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_refundrequest from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_imprimir from menu within m_pfc_consulta_invoice_numero_central
+end type
+type m_salir from menu within m_pfc_consulta_invoice_numero_central
+end type
+global type m_pfc_consulta_invoice_numero_central from menu
+m_actualizar m_actualizar
+m_nombre m_nombre
+m_modification m_modification
+m_statusaudit m_statusaudit
+m_ordernotes m_ordernotes
+m_payernotifications m_payernotifications
+m_hold m_hold
+m_reclamos m_reclamos
+m_customer_profile m_customer_profile
+m_pay m_pay
+m_document m_document
+m_find m_find
+m_kyc m_kyc
+m_refundrequest m_refundrequest
+m_imprimir m_imprimir
+m_salir m_salir
+end type
+end forward
+
+global type m_pfc_consulta_invoice_numero_central from menu
+m_actualizar m_actualizar
+m_nombre m_nombre
+m_modification m_modification
+m_statusaudit m_statusaudit
+m_ordernotes m_ordernotes
+m_payernotifications m_payernotifications
+m_hold m_hold
+m_reclamos m_reclamos
+m_customer_profile m_customer_profile
+m_pay m_pay
+m_document m_document
+m_find m_find
+m_kyc m_kyc
+m_refundrequest m_refundrequest
+m_imprimir m_imprimir
+m_salir m_salir
+end type
+global m_pfc_consulta_invoice_numero_central m_pfc_consulta_invoice_numero_central
+
+on m_pfc_consulta_invoice_numero_central.create
+m_pfc_consulta_invoice_numero_central=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_actualizar=create m_actualizar
+this.m_nombre=create m_nombre
+this.m_modification=create m_modification
+this.m_statusaudit=create m_statusaudit
+this.m_ordernotes=create m_ordernotes
+this.m_payernotifications=create m_payernotifications
+this.m_hold=create m_hold
+this.m_reclamos=create m_reclamos
+this.m_customer_profile=create m_customer_profile
+this.m_pay=create m_pay
+this.m_document=create m_document
+this.m_find=create m_find
+this.m_kyc=create m_kyc
+this.m_refundrequest=create m_refundrequest
+this.m_imprimir=create m_imprimir
+this.m_salir=create m_salir
+this.Item[UpperBound(this.Item)+1]=this.m_actualizar
+this.Item[UpperBound(this.Item)+1]=this.m_nombre
+this.Item[UpperBound(this.Item)+1]=this.m_modification
+this.Item[UpperBound(this.Item)+1]=this.m_statusaudit
+this.Item[UpperBound(this.Item)+1]=this.m_ordernotes
+this.Item[UpperBound(this.Item)+1]=this.m_payernotifications
+this.Item[UpperBound(this.Item)+1]=this.m_hold
+this.Item[UpperBound(this.Item)+1]=this.m_reclamos
+this.Item[UpperBound(this.Item)+1]=this.m_customer_profile
+this.Item[UpperBound(this.Item)+1]=this.m_pay
+this.Item[UpperBound(this.Item)+1]=this.m_document
+this.Item[UpperBound(this.Item)+1]=this.m_find
+this.Item[UpperBound(this.Item)+1]=this.m_kyc
+this.Item[UpperBound(this.Item)+1]=this.m_refundrequest
+this.Item[UpperBound(this.Item)+1]=this.m_imprimir
+this.Item[UpperBound(this.Item)+1]=this.m_salir
+end on
+
+on m_pfc_consulta_invoice_numero_central.destroy
+call super::destroy
+destroy(this.m_actualizar)
+destroy(this.m_nombre)
+destroy(this.m_modification)
+destroy(this.m_statusaudit)
+destroy(this.m_ordernotes)
+destroy(this.m_payernotifications)
+destroy(this.m_hold)
+destroy(this.m_reclamos)
+destroy(this.m_customer_profile)
+destroy(this.m_pay)
+destroy(this.m_document)
+destroy(this.m_find)
+destroy(this.m_kyc)
+destroy(this.m_refundrequest)
+destroy(this.m_imprimir)
+destroy(this.m_salir)
+end on
+
+type m_actualizar from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_update")
+end event
+
+on m_actualizar.create
+call super::create
+this.text = "&Update"
+this.toolbaritemname = "save!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_actualizar.destroy
+call super::destroy
+end on
+
+type m_nombre from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+on m_nombre.create
+call super::create
+this.text = "&Name"
+this.microhelp = "Consult by Sender Name"
+this.toolbaritemname = "editdatagrid!"
+this.toolbaritemtext = "Query by Name"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_nombre.destroy
+call super::destroy
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_nombre")
+end event
+
+type m_modification from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_recipientmodification")
+end event
+
+on m_modification.create
+call super::create
+this.text = "Modification"
+this.toolbaritemname = "custom094!"
+this.toolbaritemtext = "Recipient Modification"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_modification.destroy
+call super::destroy
+end on
+
+type m_statusaudit from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_query_statusaudit")
+end event
+
+on m_statusaudit.create
+call super::create
+this.text = "Status Audit"
+this.toolbaritemname = "showwatch5!"
+this.toolbaritemtext = "Status Audit"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_statusaudit.destroy
+call super::destroy
+end on
+
+type m_ordernotes from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_reclamo")
+end event
+
+on m_ordernotes.create
+call super::create
+this.text = "Order Notes"
+this.toolbaritemname = "custom100!"
+this.toolbaritemdownname = "Custom100!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_ordernotes.destroy
+call super::destroy
+end on
+
+type m_payernotifications from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_query_receivernot")
+end event
+
+on m_payernotifications.create
+call super::create
+this.text = "Payer Notifications"
+this.toolbaritemname = "properties!"
+this.toolbaritemtext = "Payer Notifications"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_payernotifications.destroy
+call super::destroy
+end on
+
+type m_hold from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;IF NOT fn_security('m_pfc_consulta_invoice_numero',text,gs_cashier) THEN Return
+w_pfc_consultar_invoice_numero_central.triggerevent("ue_hold")
+end event
+
+on m_hold.create
+call super::create
+this.visible = false
+this.text = "&Hold"
+this.enabled = false
+this.microhelp = "Invoice Hold"
+this.toolbaritemvisible = false
+this.toolbaritemname = "retrievecancel!"
+this.toolbaritemtext = "Hold"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_hold.destroy
+call super::destroy
+end on
+
+type m_reclamos from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+on m_reclamos.create
+call super::create
+this.visible = false
+this.text = "&Complaint"
+this.enabled = false
+this.microhelp = "Complaint of the Actual Invoice"
+this.toolbaritemname = "custom043!"
+this.toolbaritemtext = "Complaint"
+this.toolbaritemspace = 2
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_reclamos.destroy
+call super::destroy
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_reclamo")
+end event
+
+type m_customer_profile from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_customer_profile")
+end event
+
+on m_customer_profile.create
+call super::create
+this.text = "Customer Profile"
+this.toolbaritemname = "Asterisk!"
+this.toolbaritemdownname = "Asterisk!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_customer_profile.destroy
+call super::destroy
+end on
+
+type m_pay from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_pago")
+end event
+
+on m_pay.create
+call super::create
+this.text = "P&ay"
+this.microhelp = "Pay Invoice "
+this.toolbaritemname = "custom084!"
+this.toolbaritemtext = "Pay Invoice"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_pay.destroy
+call super::destroy
+end on
+
+type m_document from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_documento")
+end event
+
+on m_document.create
+call super::create
+this.text = "&Document"
+this.microhelp = "Document"
+this.toolbaritemname = "picture!"
+this.toolbaritemtext = "Document"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_document.destroy
+call super::destroy
+end on
+
+type m_find from menucascade within m_pfc_consulta_invoice_numero_central
+m_first m_first
+m_prior m_prior
+m_last m_last
+end type
+
+on m_find.create
+call super::create
+this.text = "Find"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_first=create m_first
+this.m_prior=create m_prior
+this.m_last=create m_last
+this.Item[UpperBound(this.Item)+1]=this.m_first
+this.Item[UpperBound(this.Item)+1]=this.m_prior
+this.Item[UpperBound(this.Item)+1]=this.m_last
+end on
+
+on m_find.destroy
+call super::destroy
+destroy(this.m_first)
+destroy(this.m_prior)
+destroy(this.m_last)
+end on
+
+type m_first from menu within m_find
+end type
+
+on m_first.create
+call super::create
+this.text = "Next"
+this.microhelp = "Next Invoice"
+this.toolbaritemname = "vcrnext!"
+this.toolbaritemtext = "Next"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_next")
+end event
+
+on m_first.destroy
+call super::destroy
+end on
+
+type m_prior from menu within m_find
+end type
+
+on m_prior.create
+call super::create
+this.text = "Prior"
+this.microhelp = "Prior"
+this.toolbaritemname = "vcrprior!"
+this.toolbaritemtext = "Prior"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_prior")
+end event
+
+on m_prior.destroy
+call super::destroy
+end on
+
+type m_last from menu within m_find
+end type
+
+on m_last.create
+call super::create
+this.text = "Last"
+this.microhelp = "Last"
+this.toolbaritemname = "vcrlast!"
+this.toolbaritemtext = "Last"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_last")
+end event
+
+on m_last.destroy
+call super::destroy
+end on
+
+type m_kyc from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_kyc");
+end event
+
+on m_kyc.create
+call super::create
+this.text = "KYC"
+this.toolbaritemname = "DataWindow5!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_kyc.destroy
+call super::destroy
+end on
+
+type m_refundrequest from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_fund_request")
+end event
+
+on m_refundrequest.create
+call super::create
+this.text = "Refund request"
+this.toolbaritemname = "custom081!"
+this.toolbaritemdownname = "Custom081!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_refundrequest.destroy
+call super::destroy
+end on
+
+type m_imprimir from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+on m_imprimir.create
+call super::create
+this.text = "&Print"
+this.microhelp = "Print Actual Invoice"
+this.toolbaritemname = "print!"
+this.toolbaritemtext = "Print Actual Invoice"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_imprimir.destroy
+call super::destroy
+end on
+
+event clicked;w_pfc_consultar_invoice_numero_central.triggerevent("ue_imprimir")
+end event
+
+type m_salir from menu within m_pfc_consulta_invoice_numero_central
+end type
+
+on m_salir.create
+call super::create
+this.text = "&Exit"
+this.microhelp = "Exit"
+this.toolbaritemname = "exit!"
+this.toolbaritemtext = "&Exit"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_salir.destroy
+call super::destroy
+end on
+
+event clicked;close(parentwindow)
+end event
+

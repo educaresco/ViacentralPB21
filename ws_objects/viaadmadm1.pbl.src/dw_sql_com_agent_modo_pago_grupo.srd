@@ -1,0 +1,64 @@
+﻿$PBExportHeader$dw_sql_com_agent_modo_pago_grupo.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="COMISION_AGENT_MODO_PAGO_GRUPO.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=char(4) updatewhereclause=yes name=id_main_branch dbname="COMISION_AGENT_MODO_PAGO_GRUPO.ID_MAIN_BRANCH" dbalias=".ID_MAIN_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=id_country dbname="COMISION_AGENT_MODO_PAGO_GRUPO.ID_COUNTRY" dbalias=".ID_COUNTRY" )
+ column=(type=char(1) updatewhereclause=yes name=mod_pay_currency dbname="COMISION_AGENT_MODO_PAGO_GRUPO.MOD_PAY_CURRENCY" dbalias=".MOD_PAY_CURRENCY" )
+ column=(type=char(2) updatewhereclause=yes name=id_modo_pago dbname="COMISION_AGENT_MODO_PAGO_GRUPO.ID_MODO_PAGO" dbalias=".ID_MODO_PAGO" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_begin_comision_pay dbname="COMISION_AGENT_MODO_PAGO_GRUPO.RANGE_BEGIN_COMISION_PAY" dbalias=".RANGE_BEGIN_COMISION_PAY" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_end_comision_pay dbname="COMISION_AGENT_MODO_PAGO_GRUPO.RANGE_END_COMISION_PAY" dbalias=".RANGE_END_COMISION_PAY" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_comision_comp dbname="COMISION_AGENT_MODO_PAGO_GRUPO.PORCENT_COMISION_COMP" dbalias=".PORCENT_COMISION_COMP" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_comision_comp dbname="COMISION_AGENT_MODO_PAGO_GRUPO.FEET_COMISION_COMP" dbalias=".FEET_COMISION_COMP" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_comision_agente dbname="COMISION_AGENT_MODO_PAGO_GRUPO.PORCENT_COMISION_AGENTE" dbalias=".PORCENT_COMISION_AGENTE" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_comision_agente dbname="COMISION_AGENT_MODO_PAGO_GRUPO.FEET_COMISION_AGENTE" dbalias=".FEET_COMISION_AGENTE" )
+ retrieve="SELECT  DBA.COMISION_AGENT_MODO_PAGO_GRUPO.ID_BRANCH,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.ID_MAIN_BRANCH ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.ID_COUNTRY ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.MOD_PAY_CURRENCY ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.ID_MODO_PAGO ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.RANGE_BEGIN_COMISION_PAY ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.RANGE_END_COMISION_PAY ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.PORCENT_COMISION_COMP ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.FEET_COMISION_COMP ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.PORCENT_COMISION_AGENTE ,
+           DBA.COMISION_AGENT_MODO_PAGO_GRUPO.FEET_COMISION_AGENTE   
+        FROM DBA.COMISION_AGENT_MODO_PAGO_GRUPO  WITH (NOLOCK)    
+        WHERE ( DBA.COMISION_AGENT_MODO_PAGO_GRUPO.ID_BRANCH = :ARG_BRANCH )   " arguments=(("arg_branch", string)) )
+text(band=header alignment="2" text="Id Branch" border="0" color="0" x="5" y="4" height="56" width="210" html.valueishtml="0"  name=id_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Main Branch" border="0" color="0" x="219" y="4" height="56" width="325" html.valueishtml="0"  name=id_main_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Country" border="0" color="0" x="549" y="4" height="56" width="224" html.valueishtml="0"  name=id_country_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Mod Pay Currency" border="0" color="0" x="777" y="4" height="56" width="407" html.valueishtml="0"  name=mod_pay_currency_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Modo Pago" border="0" color="0" x="1193" y="4" height="56" width="293" html.valueishtml="0"  name=id_modo_pago_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Range Begin Comision Pay" border="0" color="0" x="1490" y="4" height="56" width="585" html.valueishtml="0"  name=range_begin_comision_pay_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Range End Comision Pay" border="0" color="0" x="2080" y="4" height="56" width="544" html.valueishtml="0"  name=range_end_comision_pay_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Porcent Comision Comp" border="0" color="0" x="2629" y="4" height="56" width="517" html.valueishtml="0"  name=porcent_comision_comp_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Feet Comision Comp" border="0" color="0" x="3150" y="4" height="56" width="443" html.valueishtml="0"  name=feet_comision_comp_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Porcent Comision Agente" border="0" color="0" x="3598" y="4" height="56" width="553" html.valueishtml="0"  name=porcent_comision_agente_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Feet Comision Agente" border="0" color="0" x="4155" y="4" height="56" width="480" html.valueishtml="0"  name=feet_comision_agente_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="5" y="4" height="76" width="320" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="325" y="4" height="76" width="128" format="[general]" html.valueishtml="0"  name=id_main_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="453" y="4" height="76" width="160" format="[general]" html.valueishtml="0"  name=id_country visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="613" y="4" height="76" width="32" format="[general]" html.valueishtml="0"  name=mod_pay_currency visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="645" y="4" height="76" width="64" format="[general]" html.valueishtml="0"  name=id_modo_pago visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="709" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=range_begin_comision_pay visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="3493" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=range_end_comision_pay visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="6277" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=porcent_comision_comp visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="9061" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=feet_comision_comp visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="11845" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=porcent_comision_agente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="14629" y="4" height="76" width="2784" format="[general]" html.valueishtml="0"  name=feet_comision_agente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

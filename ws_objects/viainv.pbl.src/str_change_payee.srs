@@ -1,0 +1,13 @@
+﻿$PBExportHeader$str_change_payee.srs
+$PBExportComments$Para referenciar variables de cambio de pagador.
+global type str_change_payee from structure
+	string		branch
+	double		receiver
+	string		branch_pay
+	string		country
+	string		city
+	string		currency
+	string		mode_pay
+	double		amount
+end type
+

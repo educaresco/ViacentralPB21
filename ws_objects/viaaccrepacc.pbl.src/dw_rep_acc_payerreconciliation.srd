@@ -1,0 +1,125 @@
+﻿$PBExportHeader$dw_rep_acc_payerreconciliation.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=80 color="536870912" )
+summary(height=276 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=relacion_invoices_payee_id_concepto_contable dbname="RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE" )
+ column=(type=decimal(0) updatewhereclause=yes name=transaccion_diaria_payee_ref_balance dbname="TRANSACCION_DIARIA_PAYEE.REF_BALANCE" )
+ column=(type=datetime updatewhereclause=yes name=transaccion_diaria_payee_date_balance dbname="TRANSACCION_DIARIA_PAYEE.DATE_BALANCE" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_id_receiver dbname="RECEIVER.ID_RECEIVER" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_ref_payer dbname="RECEIVER.REF_PAYER" )
+ column=(type=char(30) updatewhereclause=yes name=receiver_clave dbname="RECEIVER.CLAVE" )
+ column=(type=char(8) updatewhereclause=yes name=currency dbname="CURRENCY" )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=receiver_amount_sent dbname="AMOUNT_SENT" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_exchange_rate dbname="RECEIVER.EXCHANGE_RATE" )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=receiver_amount_paid dbname="AMOUNT_PAID" )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=receiver_commission_payer dbname="COMMISSION_PAYER" )
+ column=(type=char(8) updatewhereclause=yes name=pay_mode dbname="PAY_MODE" )
+ column=(type=char(10) updatewhereclause=yes name=order_status dbname="ORDER_STATUS" )
+ column=(type=char(5) updatewhereclause=yes name=branch_origination_state dbname="BRANCH.ORIGINATION_STATE" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_recipient_name dbname="RECEIVER.RECIPIENT_NAME" )
+ column=(type=char(60) updatewhereclause=yes name=receiver_recipient_address dbname="RECEIVER.RECIPIENT_ADDRESS" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_recipient_country dbname="RECEIVER.RECIPIENT_COUNTRY" )
+ retrieve="SELECT DBA.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE,
+       DBA.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA AS REF_BALANCE,
+       DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA AS DATE_BALANCE,
+       DBA.RECEIVER.ID_BRANCH AS ID_BRANCH,
+       DBA.RECEIVER.ID_RECEIVER AS ID_RECEIVER,
+
+       DBA.RECEIVER.REF_RECEIVER AS REF_PAYER,
+       DBA.RECEIVER.CLAVE_RECEIVER AS CLAVE,
+
+       CASE DBA.RECEIVER.MOD_PAY_CURRENCY WHEN 'N' THEN 'NATIONAL' ELSE 'DOLLAR' END AS CURRENCY,
+      CASE WHEN  ISNULL(ORDER_EXPIRED, 'N') = 'Y' THEN DBA.RECEIVER.NET_AMOUNT_RECEIVER * -1 ELSE DBA.RECEIVER.NET_AMOUNT_RECEIVER END AS AMOUNT_SENT,
+       DBA.RECEIVER.RATE_CHANGE_RECEIVER AS EXCHANGE_RATE,
+       CASE WHEN  ISNULL(ORDER_EXPIRED, 'N') = 'Y' THEN DBA.RECEIVER.TOTAL_PAY_RECEIVER * -1 ELSE DBA.RECEIVER.TOTAL_PAY_RECEIVER END AS AMOUNT_PAID,
+       CASE WHEN ISNULL(ORDER_EXPIRED, 'N') = 'Y' THEN  DBA.RECEIVER.COMMISSION_PAYEE * -1 ELSE  DBA.RECEIVER.COMMISSION_PAYEE END AS COMMISSION_PAYER,
+
+       case DBA.RECEIVER.MODE_PAY_RECEIVER when 'D' then 'DELIVERY' WHEN 'C' THEN 'DEPOSIT' WHEN 'P' THEN 'CASH' ELSE 'OTHER' END AS PAY_MODE,
+      CASE  WHEN DBA.RECEIVER.ID_FLAG_RECEIVER = 'T' AND ISNULL(ORDER_EXPIRED, 'N') = 'N'  THEN 'TRANSFERED' WHEN DBA.RECEIVER.ID_FLAG_RECEIVER = 'P' THEN 'PAID' WHEN DBA.RECEIVER.ID_FLAG_RECEIVER = 'C' THEN 'CANCELED' WHEN DBA.RECEIVER.ID_FLAG_RECEIVER = 'T' AND ISNULL(ORDER_EXPIRED, 'N') = 'Y' THEN 'EXPIRED' ELSE 'OTHER' END AS ORDER_STATUS,
+	
+		DBA.BRANCH.ID_STATE AS ORIGINATION_STATE,
+
+       DBA.RECEIVER.NAME_RECEIVER AS RECIPIENT_NAME,
+       DBA.RECEIVER.ADDRESS_RECEIVER AS RECIPIENT_ADDRESS,
+       DBA.RECEIVER.ID_COUNTRY_RECEIVER AS RECIPIENT_COUNTRY
+
+  FROM DBA.RECEIVER,
+       DBA.RELACION_INVOICES_PAYEE,
+       DBA.TRANSACCION_DIARIA_PAYEE,
+	   DBA.BRANCH
+ WHERE DBA.RECEIVER.ID_RECEIVER = DBA.RELACION_INVOICES_PAYEE.ID_RECEIVER
+   AND DBA.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = DBA.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA
+   AND DBA.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE = DBA.RECEIVER.ID_BRANCH
+   AND DBA.RECEIVER.ID_BRANCH = DBA.BRANCH.ID_BRANCH
+
+   AND ((DBA.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = :p_concepto)
+          OR 
+        (DBA.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'CP' AND :p_concepto = 'TP') OR (DBA.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'CPE' AND :p_concepto = 'TP')
+           ) 
+	-- Incluye las cancelaciones cuando es por transferidas
+
+   AND DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA > :p_date1
+   AND DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA < :p_date2
+   --AND DBA.SFGETRECEIVERPAYERID(DBA.RECEIVER.ID_BRANCH,DBA.RECEIVER.ID_RECEIVER) = :p_group
+   AND (DBA.RECEIVER.id_main_branch_sent = :p_group  OR DBA.RECEIVER.ID_MAIN_BRANCH_EXPIRED = :p_group)
+ ORDER BY DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA, DBA.RECEIVER.REF_RECEIVER ASC" arguments=(("p_date1", datetime),("p_date2", datetime),("p_group", string),("p_concepto", string)) )
+text(band=header alignment="2" text="Ref Balance" border="2" color="33554432" x="23" y="12" height="60" width="274" html.valueishtml="0"  name=transaccion_diaria_payee_ref_balance_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Date Balance" border="2" color="33554432" x="315" y="12" height="60" width="315" html.valueishtml="0"  name=transaccion_diaria_payee_date_balance_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id Branch" border="2" color="33554432" x="649" y="12" height="60" width="251" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id Receiver" border="2" color="33554432" x="919" y="12" height="60" width="293" html.valueishtml="0"  name=receiver_id_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Ref Payer" border="2" color="33554432" x="1230" y="12" height="60" width="274" html.valueishtml="0"  name=receiver_ref_payer_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Clave" border="2" color="33554432" x="1522" y="12" height="60" width="581" html.valueishtml="0"  name=receiver_clave_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Currency" border="2" color="33554432" x="2121" y="12" height="60" width="288" html.valueishtml="0"  name=currency_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Pay Mode" border="2" color="33554432" x="3717" y="12" height="60" width="384" html.valueishtml="0"  name=pay_mode_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Exc. Rate" border="2" color="33554432" x="3077" y="12" height="60" width="274" html.valueishtml="0"  name=receiver_exchange_rate_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount Sent" border="2" color="33554432" x="2757" y="12" height="60" width="302" html.valueishtml="0"  name=receiver_amount_sent_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Comm. Payer" border="2" color="33554432" x="2427" y="12" height="60" width="311" html.valueishtml="0"  name=receiver_commission_payer_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount Paid" border="2" color="33554432" x="3369" y="12" height="60" width="329" html.valueishtml="0"  name=receiver_amount_paid_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Recipient Name" border="2" color="33554432" x="4754" y="12" height="60" width="937" html.valueishtml="0"  name=receiver_recipient_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Recipient Address" border="2" color="33554432" x="5710" y="12" height="60" width="1394" html.valueishtml="0"  name=receiver_recipient_address_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Recipient Country" border="2" color="33554432" x="7122" y="12" height="60" width="457" html.valueishtml="0"  name=receiver_recipient_country_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Order Status" border="2" color="33554432" x="4119" y="12" height="60" width="407" html.valueishtml="0"  name=order_status_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="St." border="2" color="33554432" x="4544" y="12" height="60" width="192" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="23" y="4" height="60" width="274" format="[general]" html.valueishtml="0"  name=transaccion_diaria_payee_ref_balance visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="0" color="33554432" x="315" y="4" height="60" width="315" format="[shortdate]" html.valueishtml="0"  name=transaccion_diaria_payee_date_balance visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="33554432" x="649" y="4" height="60" width="251" format="[general]" html.valueishtml="0"  name=receiver_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="33554432" x="919" y="4" height="60" width="293" format="[general]" html.valueishtml="0"  name=receiver_id_receiver visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="1522" y="4" height="60" width="581" format="[general]" html.valueishtml="0"  name=receiver_clave visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="2121" y="4" height="60" width="288" format="[general]" html.valueishtml="0"  name=currency visible="1" edit.limit=8 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="0" color="33554432" x="3077" y="4" height="60" width="274" format="[currency]" html.valueishtml="0"  name=receiver_exchange_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="33554432" x="2757" y="4" height="60" width="302" format="[currency]" html.valueishtml="0"  name=receiver_amount_sent visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="33554432" x="3369" y="4" height="60" width="329" format="[currency]" html.valueishtml="0"  name=receiver_amount_paid visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="33554432" x="2427" y="4" height="60" width="311" format="[currency]" html.valueishtml="0"  name=receiver_commission_payer visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="33554432" x="1230" y="4" height="60" width="274" format="[general]" html.valueishtml="0"  name=receiver_ref_payer visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="33554432" x="4754" y="4" height="60" width="937" format="[general]" html.valueishtml="0"  name=receiver_recipient_name visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="33554432" x="5710" y="4" height="60" width="1394" format="[general]" html.valueishtml="0"  name=receiver_recipient_address visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="0" tabsequence=32766 border="0" color="33554432" x="7122" y="4" height="60" width="457" format="[general]" html.valueishtml="0"  name=receiver_recipient_country visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="33554432" x="3717" y="4" height="60" width="384" format="[general]" html.valueishtml="0"  name=pay_mode visible="1" edit.limit=8 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="33554432" x="4119" y="0" height="56" width="407" format="[general]" html.valueishtml="0"  name=order_status visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="2" tabsequence=32766 border="0" color="33554432" x="4544" y="0" height="56" width="192" format="[general]" html.valueishtml="0"  name=branch_origination_state visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="Total Payer Comm.:" border="0" color="0" x="1925" y="20" height="56" width="489" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="count(receiver_ref_payer for all)"border="0" color="33554432" x="1531" y="20" height="60" width="274" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_commission_payer for all)"border="0" color="33554432" x="2427" y="20" height="60" width="311" format="[currency]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="Orders:" border="0" color="0" x="1312" y="20" height="56" width="192" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=summary alignment="1" text="Total Amount:" border="0" color="0" x="2816" y="20" height="56" width="535" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="224" y1="8" x2="7607" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=summary alignment="1" text="Total Amount Expires:" border="0" color="0" x="2478" y="204" height="56" width="878" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(receiver_amount_sent for all)"border="0" color="33554432" x="3369" y="20" height="60" width="343" format="[currency]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="SUM(IF (relacion_invoices_payee_id_concepto_contable = 'CPE',  receiver_amount_sent , 0))"border="0" color="33554432" x="3374" y="204" height="56" width="343" format="[currency]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="Total Amount and Payer Comm:" border="0" color="0" x="2478" y="116" height="56" width="878" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(receiver_amount_sent for all) + sum(receiver_commission_payer for all)"border="0" color="33554432" x="3374" y="116" height="56" width="343" format="[currency]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

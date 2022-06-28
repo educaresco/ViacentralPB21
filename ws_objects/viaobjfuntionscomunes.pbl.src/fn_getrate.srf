@@ -1,0 +1,86 @@
+﻿$PBExportHeader$fn_getrate.srf
+global type fn_getrate from function_object
+end type
+
+forward prototypes
+global function double fn_getrate (string p_idcountry, string p_idmodepay, string p_idstate, string p_idpayer, string p_idbranch)
+end prototypes
+
+global function double fn_getrate (string p_idcountry, string p_idmodepay, string p_idstate, string p_idpayer, string p_idbranch);Double ld_rate
+
+ld_rate = 0
+
+// PRIOR 1
+SELECT MIN(RATE)
+  INTO :ld_rate
+  FROM dba.RATE_GROUP_AGENT (nolock)
+ WHERE ID_COUNTRY_RATE = :p_idcountry
+   AND ID_BRANCH = :p_idbranch
+   AND ID_MAIN_BRANCH = :p_idpayer
+   AND ID_COUNTRY = 'USA'
+   AND ID_STATE = :p_idstate
+   AND ID_MODO_PAGO = :p_idmodepay 
+   AND ID_CURRENY <> 'D';
+	
+IF ISNULL(ld_rate) OR ld_rate = 0 THEN
+
+	// PRIOR 3
+	SELECT MIN(RATE)
+	  INTO :ld_rate
+	  FROM dba.RATE_GROUP_STATE_DELIVERY (nolock)
+	 WHERE ID_COUNTRY_RATE = :p_idcountry
+		AND ID_MAIN_BRANCH = :p_idpayer
+		AND ID_COUNTRY = 'USA'
+		AND ID_STATE = :p_idstate
+		AND ID_MODO_PAGO = :p_idmodepay 
+		AND ID_CURRENY <> 'D';			
+
+	IF ISNULL(ld_rate) OR ld_rate = 0 THEN
+	
+		// PRIOR 4
+		SELECT MIN(RATE)
+		  INTO :ld_rate
+		  FROM dba.RATE_STATE_DELIVERY (nolock)
+		 WHERE ID_COUNTRY_RATE = :p_idcountry
+			AND ID_COUNTRY = 'USA'
+			AND ID_STATE = :p_idstate
+			AND ID_MODO_PAGO = :p_idmodepay 
+			AND ID_CURRENY <> 'D';			
+
+		IF ISNULL(ld_rate) OR ld_rate = 0 THEN
+		
+			// PRIOR 5
+			SELECT MIN(RATE)
+			  INTO :ld_rate
+			  FROM dba.RATE_GROUP_STATE (nolock)
+			 WHERE ID_COUNTRY_RATE = :p_idcountry
+				AND ID_MAIN_BRANCH = :p_idpayer			 
+				AND ID_COUNTRY = 'USA'
+				AND ID_STATE = :p_idstate
+				AND ID_CURRENY <> 'D';			
+			
+				IF ISNULL(ld_rate) OR ld_rate = 0 THEN
+				
+					// PRIOR 6
+					SELECT MIN(RATE)
+					  INTO :ld_rate
+					  FROM dba.RATE (nolock)
+					 WHERE ID_COUNTRY = :p_idcountry
+						AND ID_CURRENY <> 'D';			
+					
+				END IF						
+			
+		END IF			
+				
+	END IF	
+		
+END IF
+
+
+IF ISNULL(ld_rate) THEN
+	ld_rate = 0		
+END IF
+
+return ld_rate
+end function
+

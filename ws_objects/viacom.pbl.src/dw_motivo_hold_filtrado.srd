@@ -1,0 +1,44 @@
+﻿$PBExportHeader$dw_motivo_hold_filtrado.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=yes showbackcoloronxp=no )
+header(height=64 color="0" )
+summary(height=0 color="536870912" )
+footer(height=4 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=char(5) update=yes updatewhereclause=yes name=type_motivo_hold dbname="MOTIVO_HOLD.TYPE_MOTIVO_HOLD" dbalias=".TYPE_MOTIVO_HOLD" )
+ column=(type=char(50) updatewhereclause=yes name=motivo_hold_desc_motivo_hold dbname="MOTIVO_HOLD.DESC_MOTIVO_HOLD" dbalias=".DESC_MOTIVO_HOLD" )
+ column=(type=char(50) updatewhereclause=yes name=desc_hold_descripcion dbname="DESC_HOLD.DESCRIPCION" dbalias=".DESCRIPCION" )
+ column=(type=char(3) updatewhereclause=yes name=desc_hold_hold_category dbname="DESC_HOLD.HOLD_CATEGORY" dbalias=".HOLD_CATEGORY" )
+ column=(type=long updatewhereclause=yes identity=yes name=order_ dbname="ORDER_" )
+ retrieve="SELECT
+DBA.MOTIVO_HOLD.TYPE_MOTIVO_HOLD,   
+DBA.MOTIVO_HOLD.DESC_MOTIVO_HOLD,
+DBA.DESC_HOLD.DESCRIPCION,
+DBA.DESC_HOLD.HOLD_CATEGORY,
+CASE DBA.DESC_HOLD.HOLD_CATEGORY WHEN 'COM' THEN 1 ELSE 2 END AS ORDER_
+FROM DBA.MOTIVO_HOLD,   
+DBA.RECEIVER,   
+DBA.DESC_HOLD  
+WHERE ( DBA.RECEIVER.ID_SENDER = DBA.MOTIVO_HOLD.ID_SENDER )  
+AND ( DBA.RECEIVER.ID_BRANCH = DBA.MOTIVO_HOLD.ID_BRANCH )
+AND ( DBA.RECEIVER.ID_RECEIVER = DBA.MOTIVO_HOLD.ID_RECEIVER )
+AND ( DBA.MOTIVO_HOLD.TYPE_MOTIVO_HOLD = DBA.DESC_HOLD.TIPO_HOLD )
+AND ( DBA.RECEIVER.ID_FLAG_RECEIVER = 'H' )
+AND ( DBA.MOTIVO_HOLD.ID_BRANCH = :ARG_BRANCH )
+AND ( DBA.MOTIVO_HOLD.ID_RECEIVER = :ARG_RECEIVER )    
+" arguments=(("arg_branch", string),("arg_receiver", number))  sort="order_ A " )
+text(band=header alignment="2" text="HOLD DETAILS" border="0" color="16777215" x="9" y="8" height="52" width="1385" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=detail x1="9" y1="32" x2="46" y2="32"  name=l_1 visible="1" pen.style="0" pen.width="9" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression="~"(Code: ~"+ trim(type_motivo_hold) +~")~""border="0" color="0~tif ( desc_hold_hold_category = 'COM', RGB(0,0,0),RGB(125,125,125))" x="1033" y="4" height="56" width="311" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="0" tabsequence=0 border="0" color="0~tif ( desc_hold_hold_category = 'COM', RGB(0,0,0),RGB(125,125,125))" x="69" y="4" height="52" width="946" html.valueishtml="0"  name=desc_hold_descripcion visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

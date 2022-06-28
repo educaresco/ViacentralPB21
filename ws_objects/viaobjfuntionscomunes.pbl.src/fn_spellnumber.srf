@@ -1,0 +1,58 @@
+﻿$PBExportHeader$fn_spellnumber.srf
+global type fn_spellnumber from function_object
+end type
+
+forward prototypes
+global function string fn_spellnumber (string mynumber)
+end prototypes
+
+global function string fn_spellnumber (string mynumber);string 	Dollars, Cents, Temp
+long 	 	DecimalPlace, Count
+string 	Place[9] 
+
+Place[2] 		= " Thousand "
+Place[3] 		= " Million "
+Place[4] 		= " Billion "
+Place[5] 		= " Trillion "
+MyNumber 		= trim(String(MyNumber))
+DecimalPlace 	= Pos(MyNumber, ".")
+
+If DecimalPlace > 0 Then
+	Cents 		= fn_GetTens(Left(Mid(MyNumber, DecimalPlace + 1) + "00", 2))
+	MyNumber 	= Trim(Left(MyNumber, DecimalPlace - 1))
+End If
+
+Count 			= 	1
+Do While MyNumber <> ""
+	Temp 			= 	fn_GetHundreds(Right(MyNumber, 3))
+	If Temp 		<> "" Then Dollars = Temp + Place[Count] + Dollars
+	If Len(MyNumber) > 3 Then
+		MyNumber = Left(MyNumber, Len(MyNumber) - 3)
+	Else
+		MyNumber = ""
+	End If
+	Count 		= Count + 1
+Loop
+
+Choose Case Dollars
+Case ""
+		Dollars = "zero Dollars"
+Case "One"
+		Dollars = "One Dollar"
+Case Else
+		Dollars = Dollars + " Dollars"
+End Choose
+
+Choose Case Cents
+Case ""
+		Cents = " and zero Cents"
+Case "One"
+		Cents = " and One Cent"
+Case Else
+		Cents = " and " + Cents + " Cents"
+End Choose
+
+return Dollars + Cents
+
+end function
+

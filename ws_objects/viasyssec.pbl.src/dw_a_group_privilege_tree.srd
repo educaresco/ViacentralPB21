@@ -1,0 +1,34 @@
+﻿$PBExportHeader$dw_a_group_privilege_tree.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=char(50) updatewhereclause=yes name=sec_menutitles_idmenutitle dbname="sec_menutitles.idmenutitle" )
+ column=(type=long updatewhereclause=yes name=sec_menutitles_levelmenutitle dbname="sec_menutitles.levelmenutitle" )
+ column=(type=char(250) updatewhereclause=yes name=sec_menutitles_menutitle dbname="sec_menutitles.menutitle" )
+ column=(type=char(250) updatewhereclause=yes name=sec_menutitles_showtitle dbname="sec_menutitles.showtitle" )
+ column=(type=char(1) updatewhereclause=yes name=a_granted dbname="a_granted" )
+ retrieve="  SELECT DISTINCT dba.sec_menutitles.idmenutitle,   
+         dba.sec_menutitles.levelmenutitle,   
+         dba.sec_menutitles.menutitle,   
+         dba.sec_menutitles.showtitle,   
+         'Y' a_granted  
+    FROM dba.sec_menutitles,   
+         dba.sec_group_privileges  
+   WHERE ( dba.sec_menutitles.menutitle = dba.sec_group_privileges.menutitle ) and  
+         ( ( dba.sec_group_privileges.idgroup = :p_idgroup ) )    
+union
+  SELECT dba.sec_menutitles.idmenutitle,   
+         dba.sec_menutitles.levelmenutitle,   
+         dba.sec_menutitles.menutitle,   
+         dba.sec_menutitles.showtitle,   
+         'N' a_granted 
+    FROM dba.sec_menutitles
+   WHERE dba.sec_menutitles.menutitle not in (  SELECT dba.sec_group_privileges.menutitle
+                             FROM dba.sec_group_privileges  
+                             WHERE ( dba.sec_group_privileges.idgroup = :p_idgroup ))" arguments=(("p_idgroup", string))  sort="sec_menutitles_idmenutitle A " )
+compute(band=detail alignment="0" expression="fn_completar_cadena( trim(sec_menutitles_showtitle), 'I', ' ', (len( trim(sec_menutitles_idmenutitle) )   ) * 3+len( trim(sec_menutitles_showtitle ))) "border="0" color="0~tif (a_granted = 'Y', RGB(0,0,0),RGB(180,180,180))" x="32" y="0" height="64" width="3323" format="[general]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0"font.underline="0~tif ( menutitles_levelmenutitle <2,1,0)"  background.mode="0" background.color="536870912~tif (a_granted = 'Y', RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="5225" y="0" height="76" width="3511" format="[general]"  name=sec_menutitles_menutitle edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="8736" y="0" height="76" width="3511" format="[general]"  name=sec_menutitles_showtitle edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

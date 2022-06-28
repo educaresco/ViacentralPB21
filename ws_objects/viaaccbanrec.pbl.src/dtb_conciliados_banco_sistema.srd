@@ -1,0 +1,113 @@
+﻿$PBExportHeader$dtb_conciliados_banco_sistema.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=id_banco dbname="A.ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=id_cuenta_banco dbname="A.ID_CUENTA_BANCO" )
+ column=(type=decimal(0) updatewhereclause=yes name=id_code_transaction dbname="A.A.ID_CODE_TRANSACTION" )
+ column=(type=char(40) updatewhereclause=yes name=bank_transactions_des_name_transaction dbname="A.DES_NAME_TRANSACTION" )
+ column=(type=datetime updatewhereclause=yes name=date_transaction dbname="A.DATE_TRANSACTION" )
+ column=(type=char(10) updatewhereclause=yes name=deposit_code dbname="A.DEPOSIT_CODE" )
+ column=(type=char(100) updatewhereclause=yes name=des_trans_corta dbname="A.DES_TRANS_CORTA" )
+ column=(type=decimal(2) updatewhereclause=yes name=total_amount dbname="A.TOTAL_AMOUNT" )
+ column=(type=char(1) updatewhereclause=yes name=flag_reconciliation dbname="A.FLAG_RECONCILIATION" values="	S/	N" )
+ column=(type=datetime updatewhereclause=yes name=reconciliationdate dbname="B.RECONCILIATIONDATE" )
+ column=(type=char(10) updatewhereclause=yes name=transaccion_diaria_banco_payee_deposit_code dbname="B.DEPOSIT_CODE" )
+ column=(type=char(50) updatewhereclause=yes name=des_trans_diaria dbname="B.DES_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=credit_trans_diaria dbname="B.CREDIT_TRANS_DIARIA" )
+ column=(type=char(1) updatewhereclause=yes name=transaccion_diaria_payee_flag_reconciliation dbname="B.FLAG_RECONCILIATION" values="	S/	N" )
+ retrieve="SELECT	A.ID_BANCO,
+		A.ID_CUENTA_BANCO,
+		A.ID_CODE_TRANSACTION,
+		A.DES_NAME_TRANSACTION,
+		A.DATE_TRANSACTION,
+		A.DEPOSIT_CODE,
+		A.DES_TRANS_CORTA,
+		A.TOTAL_AMOUNT,
+		A.FLAG_RECONCILIATION,
+		B.RECONCILIATIONDATE,
+		B.DEPOSIT_CODE,
+		B.DES_TRANS_DIARIA,
+		B.CREDIT_TRANS_DIARIA,
+		B.FLAG_RECONCILIATION
+FROM	dba.FN_DATOS_CONCILIADOS_BANCO(:as_id_banco,:as_id_cuenta_banco,:adtm_date_transaction_ini,:adtm_date_transaction_fin) A,
+		dba.FN_DATOS_CONCILIADOS_SISTEMA(:as_id_banco,:as_id_cuenta_banco,:adtm_date_transaction_ini,:adtm_date_transaction_fin) B
+WHERE	A.CONS_TRANS_DIARIA = B.CONS_TRANS_DIARIA
+UNION ALL
+SELECT	A.ID_BANCO,
+		A.ID_CUENTA_BANCO,
+		A.ID_CODE_TRANSACTION,
+		A.DES_NAME_TRANSACTION,
+		A.DATE_TRANSACTION,
+		A.DEPOSIT_CODE,
+		A.DES_TRANS_CORTA,
+		A.TOTAL_AMOUNT,
+		A.FLAG_RECONCILIATION,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL		
+FROM	dba.FN_DATOS_CONCILIADOS_BANCO(:as_id_banco,:as_id_cuenta_banco,:adtm_date_transaction_ini,:adtm_date_transaction_fin) A
+WHERE	A.CONS_TRANS_DIARIA IS NULL
+UNION ALL
+SELECT	B.ID_BANCO,
+		B.ID_CUENTA_BANCO,
+		B.ID_CODE_TRANSACTION,
+		B.DES_NAME_TRANSACTION,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		B.RECONCILIATIONDATE,
+		B.DEPOSIT_CODE,
+		B.DES_TRANS_DIARIA,
+		B.CREDIT_TRANS_DIARIA,
+		B.FLAG_RECONCILIATION		
+FROM	dba.FN_DATOS_CONCILIADOS_SISTEMA(:as_id_banco,:as_id_cuenta_banco,:adtm_date_transaction_ini,:adtm_date_transaction_fin) B
+WHERE	NOT EXISTS (SELECT	1
+					FROM	dba.FN_DATOS_CONCILIADOS_BANCO(:as_id_banco,:as_id_cuenta_banco,:adtm_date_transaction_ini,:adtm_date_transaction_fin) A
+					WHERE	A.CONS_TRANS_DIARIA = B.CONS_TRANS_DIARIA)
+" arguments=(("as_id_banco", string),("as_id_cuenta_banco", string),("adtm_date_transaction_ini", datetime),("adtm_date_transaction_fin", datetime))  sort="id_code_transaction A id_banco A id_cuenta_banco A c_nulos A Date(String(date_transaction,'yyyy-mm-dd')) A total_amount A Date(String(reconciliationdate,'yyyy-mm-dd')) A credit_trans_diaria A " )
+group(level=1 header.height=164 trailer.height=80 by=("id_code_transaction" , "id_banco" , "id_cuenta_banco" ) newpage=yes header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="BANCO" border="2" color="0" x="14" y="12" height="52" width="2231" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="SISTEMA" border="2" color="0" x="2267" y="12" height="52" width="2194" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Transacción:" border="0" color="0" x="23" y="8" height="52" width="329" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=4 alignment="0" tabsequence=32766 border="0" color="0" x="370" y="8" height="52" width="526" format="[general]" html.valueishtml="0"  name=bank_transactions_des_name_transaction visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Banco:" border="0" color="0" x="919" y="8" height="60" width="187" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="1106" y="8" height="60" width="462" format="[general]" html.valueishtml="0"  name=id_banco visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=2 alignment="0" tabsequence=32766 border="0" color="0" x="1810" y="8" height="60" width="416" format="[general]" html.valueishtml="0"  name=id_cuenta_banco visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="0" text="Cuenta:" border="0" color="0" x="1595" y="8" height="60" width="197" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+rectangle(band=header.1 x="23" y="148" height="16" width="4462"  name=r_1 visible="1" brush.hatch="6" brush.color="0" pen.style="0" pen.width="5" pen.color="16777215"  background.mode="2" background.color="0" )
+text(band=header.1 alignment="2" text="Fecha" border="2" color="0" x="50" y="84" height="52" width="265" html.valueishtml="0"  name=date_transaction_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Código Depósito" border="2" color="0" x="329" y="84" height="52" width="361" html.valueishtml="0"  name=deposit_code_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Descripción" border="2" color="0" x="704" y="84" height="52" width="850" html.valueishtml="0"  name=des_trans_corta_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Cantidad Total" border="2" color="0" x="1568" y="84" height="52" width="347" html.valueishtml="0"  name=total_amount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Reconciliado" border="2" color="0" x="1934" y="84" height="52" width="288" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Fecha" border="2" color="0" x="2281" y="84" height="52" width="265" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Código Depósito" border="2" color="0" x="2560" y="84" height="52" width="361" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Descripción" border="2" color="0" x="2935" y="84" height="52" width="850" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Cantidad Total" border="2" color="0" x="3799" y="84" height="52" width="347" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header.1 alignment="2" text="Reconciliado" border="2" color="0" x="4165" y="84" height="52" width="288" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+compute(band=trailer.1 alignment="1" expression="sum(total_amount for group 1)"border="0" color="0" x="1445" y="4" height="64" width="471" format="#,##0.00" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression=" sum(credit_trans_diaria for group 1) "border="0" color="0" x="3675" y="4" height="60" width="471" format="#,##0.00" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="46" y="4" height="60" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=date_transaction  tag="Fecha Banco" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="325" y="4" height="60" width="393" format="[general]" html.valueishtml="0"  name=deposit_code  tag="Código Depósito Banco" visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="699" y="4" height="60" width="850" format="[general]" html.valueishtml="0"  name=des_trans_corta  tag="Descripción Bnaco" visible="1" edit.limit=100 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="1563" y="4" height="60" width="347" format="#,##0.00" html.valueishtml="0"  name=total_amount  tag="Cantidad Banco" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=9 alignment="2" tabsequence=32766 border="0" color="0" x="1929" y="4" height="60" width="288" format="[general]" html.valueishtml="0"  name=flag_reconciliation  tag="Reconciliado Bnaco" visible="1" checkbox.text="" checkbox.on="S" checkbox.off="N" checkbox.scale=no checkbox.threed=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2281" y="4" height="60" width="265" format="mm/dd/yyyy" html.valueishtml="0"  name=reconciliationdate  tag="Fecha Sistema" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="2560" y="4" height="60" width="361" format="[general]" html.valueishtml="0"  name=transaccion_diaria_banco_payee_deposit_code  tag="Código Depósito Sistema" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="2935" y="4" height="60" width="850" format="[general]" html.valueishtml="0"  name=des_trans_diaria  tag="Descripción sistema" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=14 alignment="2" tabsequence=32766 border="0" color="0" x="4165" y="4" height="60" width="288" format="[general]" html.valueishtml="0"  name=transaccion_diaria_payee_flag_reconciliation  tag="Reconciliado Sistema" visible="1" checkbox.text="" checkbox.on="S" checkbox.off="N" checkbox.scale=no checkbox.threed=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+column(band=detail id=13 alignment="1" tabsequence=32766 border="0" color="0" x="3799" y="4" height="60" width="347" format="#,##0.00" html.valueishtml="0"  name=credit_trans_diaria  tag="Cantidad Sistema" visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+compute(band=detail alignment="0" expression="IF (isnull(  total_amount ) ,1,0 )"border="0" color="0" x="2162" y="8" height="52" width="215" format="[GENERAL]" html.valueishtml="0"  name=c_nulos visible="0"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="0" background.color="12639424~tIF ( mod( getRow(), 2 )=0, RGB(255,255,255), RGB(228,228,211))" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=1 distill.custompostscript="0" xslfop.print="0" )

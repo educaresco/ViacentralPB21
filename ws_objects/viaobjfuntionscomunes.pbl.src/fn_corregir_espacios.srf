@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_corregir_espacios.srf
+global type fn_corregir_espacios from function_object
+end type
+
+forward prototypes
+global function string fn_corregir_espacios (string nombre)
+end prototypes
+
+global function string fn_corregir_espacios (string nombre);string ls_nombre        //cadena que llega por parametros
+string ls_cadena_modi   //cadena sin dobles espacios que llega por parametro
+
+ls_nombre=(nombre)
+ls_cadena_modi=""
+do while Pos(ls_nombre," ") <> 0
+	ls_cadena_modi=trim(ls_cadena_modi + " " + trim(mid(ls_nombre,1,Pos(ls_nombre," "))) )
+
+	ls_nombre=trim(mid(ls_nombre,pos(ls_nombre," "),len(ls_nombre)))
+loop
+ls_cadena_modi=trim(ls_cadena_modi + " " + ls_nombre)
+
+return ls_cadena_modi
+end function
+

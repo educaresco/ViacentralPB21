@@ -1,0 +1,375 @@
+﻿$PBExportHeader$m_pfc_sender.srm
+forward
+global type m_pfc_sender from menu
+end type
+type m_nuevo from menu within m_pfc_sender
+end type
+type m_nuevo from menu within m_pfc_sender
+end type
+type m_calcular from menu within m_pfc_sender
+end type
+type m_calcular from menu within m_pfc_sender
+end type
+type m_actualizar from menu within m_pfc_sender
+end type
+type m_actualizar from menu within m_pfc_sender
+end type
+type m_senderid from menu within m_pfc_sender
+end type
+type m_senderid from menu within m_pfc_sender
+end type
+type m_documento from menu within m_pfc_sender
+end type
+type m_documento from menu within m_pfc_sender
+end type
+type m_report from menucascade within m_pfc_sender
+end type
+type m_fordeposit from menu within m_report
+end type
+type m_dailydepositreportdetail from menu within m_report
+end type
+type m_utility from menu within m_report
+end type
+type m_-1 from menu within m_report
+end type
+type m_agencyandcoprofit from menu within m_report
+end type
+type m_- from menu within m_report
+end type
+type m_paidinvoices from menu within m_report
+end type
+type m_complain from menu within m_report
+end type
+type m_bycashier from menu within m_report
+end type
+type m_depositagent from menu within m_report
+end type
+type m_report from menucascade within m_pfc_sender
+m_fordeposit m_fordeposit
+m_dailydepositreportdetail m_dailydepositreportdetail
+m_utility m_utility
+m_-1 m_-1
+m_agencyandcoprofit m_agencyandcoprofit
+m_- m_-
+m_paidinvoices m_paidinvoices
+m_complain m_complain
+m_bycashier m_bycashier
+m_depositagent m_depositagent
+end type
+type m_salir from menu within m_pfc_sender
+end type
+type m_salir from menu within m_pfc_sender
+end type
+end forward
+
+global type m_pfc_sender from menu
+m_nuevo m_nuevo
+m_calcular m_calcular
+m_actualizar m_actualizar
+m_senderid m_senderid
+m_documento m_documento
+m_report m_report
+m_salir m_salir
+end type
+global m_pfc_sender m_pfc_sender
+
+on m_pfc_sender.create
+m_pfc_sender=this
+this.m_nuevo=create m_nuevo
+this.m_calcular=create m_calcular
+this.m_actualizar=create m_actualizar
+this.m_senderid=create m_senderid
+this.m_documento=create m_documento
+this.m_report=create m_report
+this.m_salir=create m_salir
+this.Item[]={this.m_nuevo, &
+this.m_calcular, &
+this.m_actualizar, &
+this.m_senderid, &
+this.m_documento, &
+this.m_report, &
+this.m_salir}
+end on
+
+on m_pfc_sender.destroy
+destroy(this.m_nuevo)
+destroy(this.m_calcular)
+destroy(this.m_actualizar)
+destroy(this.m_senderid)
+destroy(this.m_documento)
+destroy(this.m_report)
+destroy(this.m_salir)
+end on
+
+type m_nuevo from menu within m_pfc_sender
+end type
+
+on m_nuevo.create
+this.Text="New"
+this.Microhelp="New Invoice"
+this.ToolBarItemText="New Invoice"
+this.ToolBarItemSpace=1
+end on
+
+on m_nuevo.destroy
+end on
+
+event clicked;w_pfc_sender.triggerevent("ue_insertar")
+end event
+
+type m_calcular from menu within m_pfc_sender
+end type
+
+event clicked;w_pfc_sender.triggerevent("ue_calcular")
+end event
+
+on m_calcular.create
+this.Text="Calculate"
+this.Microhelp="Calcularte amount to pay for the Sender"
+this.ToolBarItemText="Calculate Pay to Sender"
+this.ToolBarItemSpace=1
+end on
+
+on m_calcular.destroy
+end on
+
+type m_actualizar from menu within m_pfc_sender
+end type
+
+on m_actualizar.create
+this.Text="Save"
+this.Microhelp="Save the Invoice"
+this.ToolBarItemName="Save!"
+this.ToolBarItemText="Save Invoice"
+this.ToolBarItemSpace=1
+end on
+
+on m_actualizar.destroy
+end on
+
+event clicked;//w_pfc_sender.triggerevent("ue_calcular")
+w_pfc_sender.triggerevent("ue_update")
+end event
+
+type m_senderid from menu within m_pfc_sender
+end type
+
+event clicked;w_pfc_sender.triggerevent("ue_sender_id")
+
+end event
+
+on m_senderid.create
+this.Text="Sender ID"
+this.Microhelp="Sender ID"
+this.ToolBarItemName="Search!"
+this.ToolBarItemText="Sender ID"
+this.ToolBarItemSpace=1
+end on
+
+on m_senderid.destroy
+end on
+
+type m_documento from menu within m_pfc_sender
+end type
+
+on m_documento.create
+this.Text="&Document"
+this.Microhelp="Identification Document of the Sender"
+this.ToolBarItemText="Identification Document "
+this.ToolBarItemSpace=1
+end on
+
+on m_documento.destroy
+end on
+
+event clicked;w_pfc_sender.triggerevent("ue_documento")
+end event
+
+type m_report from menucascade within m_pfc_sender
+m_fordeposit m_fordeposit
+m_dailydepositreportdetail m_dailydepositreportdetail
+m_utility m_utility
+m_-1 m_-1
+m_agencyandcoprofit m_agencyandcoprofit
+m_- m_-
+m_paidinvoices m_paidinvoices
+m_complain m_complain
+m_bycashier m_bycashier
+m_depositagent m_depositagent
+end type
+
+on m_report.create
+this.Text="Reports"
+this.ToolBarItemSpace=1
+this.m_fordeposit=create m_fordeposit
+this.m_dailydepositreportdetail=create m_dailydepositreportdetail
+this.m_utility=create m_utility
+this.m_-1=create m_-1
+this.m_agencyandcoprofit=create m_agencyandcoprofit
+this.m_-=create m_-
+this.m_paidinvoices=create m_paidinvoices
+this.m_complain=create m_complain
+this.m_bycashier=create m_bycashier
+this.m_depositagent=create m_depositagent
+this.Item[]={this.m_fordeposit, &
+this.m_dailydepositreportdetail, &
+this.m_utility, &
+this.m_-1, &
+this.m_agencyandcoprofit, &
+this.m_-, &
+this.m_paidinvoices, &
+this.m_complain, &
+this.m_bycashier, &
+this.m_depositagent}
+end on
+
+on m_report.destroy
+destroy(this.m_fordeposit)
+destroy(this.m_dailydepositreportdetail)
+destroy(this.m_utility)
+destroy(this.m_-1)
+destroy(this.m_agencyandcoprofit)
+destroy(this.m_-)
+destroy(this.m_paidinvoices)
+destroy(this.m_complain)
+destroy(this.m_bycashier)
+destroy(this.m_depositagent)
+end on
+
+type m_fordeposit from menu within m_report
+end type
+
+event clicked;//OpenSheet(w_rep_diario_invoices_beneficiario,w_pfc_sender, 4, Original!)
+OpenSheet(w_rep_contable_fechas_agrupado,w_pfc_sender, 4, Original!)
+end event
+
+on m_fordeposit.create
+this.Text="Daily Deposit report"
+this.Microhelp="Deposit"
+this.ToolBarItemName="ExecuteSQL5!"
+this.ToolBarItemText="Deposit"
+end on
+
+type m_dailydepositreportdetail from menu within m_report
+end type
+
+event clicked;//OpenSheet(w_rep_contable_fechas,w_pfc_sender, 4, Original!)
+OpenSheet(w_rep_diario_invoices_beneficiario,w_pfc_sender, 4, Original!)
+end event
+
+on m_dailydepositreportdetail.create
+this.Text="Daily Deposit Report Detail"
+this.Microhelp="Daily Deposit Report Detail"
+this.ToolBarItemName="RunReport!"
+this.ToolBarItemText="Daily Deposit Report Detail"
+end on
+
+type m_utility from menu within m_report
+end type
+
+on m_utility.create
+this.Text="Deposit Report by Invoice"
+this.Microhelp="Utility"
+this.ToolBarItemName="RunReport5!"
+this.ToolBarItemText="Utility"
+end on
+
+event clicked;OpenSheet(w_rep_diario_invoices_beneficiario_rango,w_pfc_sender, 4, Original!)
+end event
+
+type m_-1 from menu within m_report
+end type
+
+on m_-1.create
+this.Text="-"
+end on
+
+type m_agencyandcoprofit from menu within m_report
+end type
+
+event clicked;OpenSheet(w_rep_contable_fechas,w_pfc_sender, 4, Original!)
+end event
+
+on m_agencyandcoprofit.create
+this.Text="Agency and Co. Profit"
+this.Microhelp="Agency and Co. Profit"
+this.ToolBarItemText="Agency and Co. Profit"
+end on
+
+type m_- from menu within m_report
+end type
+
+on m_-.create
+this.Text="-"
+end on
+
+type m_paidinvoices from menu within m_report
+end type
+
+on m_paidinvoices.create
+this.Text="Paid Invoices"
+this.Microhelp="Paid Invoices"
+this.ToolBarItemName="RunReport!"
+this.ToolBarItemText="Paid Invoices"
+end on
+
+event clicked;OpenSheet(w_rep_pagados,w_pfc_sender, 4, Original!)
+end event
+
+type m_complain from menu within m_report
+end type
+
+on m_complain.create
+this.Text="Complain"
+this.Microhelp="Complain"
+this.ToolBarItemName="DropDownListBox!"
+this.ToolBarItemText="Complain"
+end on
+
+event clicked;OpenSheet(w_rep_reclamos,w_pfc_sender, 4, Original!)
+end event
+
+type m_bycashier from menu within m_report
+end type
+
+on m_bycashier.create
+this.Text="By Cashier"
+this.Microhelp="By Cashier"
+this.ToolBarItemName="Properties!"
+this.ToolBarItemText="By Cashier"
+end on
+
+event clicked;//OpenSheet(w_rep_diario_por_cajero,w_pfc_sender, 4, Original!)
+return
+end event
+
+type m_depositagent from menu within m_report
+end type
+
+event clicked;//IF NOT fn_security('m_pfc_sender',text,gs_cashier) THEN Return
+OpenSheet(w_control_depositos_agente,w_pfc_sender, 4, Original!)
+
+end event
+
+on m_depositagent.create
+this.Text="Deposit Agent"
+this.Microhelp="Deposit Agent"
+this.ToolBarItemName="Query!"
+this.ToolBarItemText="Deposit Agent"
+end on
+
+type m_salir from menu within m_pfc_sender
+end type
+
+on m_salir.create
+this.Text="Exit"
+this.ToolBarItemName="Exit!"
+this.ToolBarItemSpace=1
+end on
+
+on m_salir.destroy
+end on
+
+event clicked;close(parentwindow)
+end event
+

@@ -1,0 +1,41 @@
+﻿$PBExportHeader$fn_limit_payer.srf
+global type fn_limit_payer from function_object
+end type
+
+forward prototypes
+global function string fn_limit_payer (string as_limit_payer_key)
+end prototypes
+
+global function string fn_limit_payer (string as_limit_payer_key);string ls_return
+ls_return = ' '
+String		ls_limit_message_tittle
+
+
+ DECLARE CUR_PAYER_LIMIT CURSOR FOR  
+  SELECT dba.RECEIVER_LIMIT.LIMIT_MESSAGE_TITTLE
+    FROM dba.RECEIVER_LIMIT  
+	 
+	where REPLACE(LIMIT_PAYER +'|'+LIMIT_PAYMODE +'|'+LIMIT_COUNTRY +'|'+LIMIT_CURRENCY , ' ', '') = REPLACE(:as_limit_payer_key, ' ', '') and
+			 RECEIVER_LIMIT.LIMIT_BLOCK = 'Y'
+			 AND (LIMIT_SOURCE_STATE is null or LIMIT_SOURCE_STATE = '')
+ORDER BY dba.RECEIVER_LIMIT.LIMIT_ID ASC;
+
+OPEN CUR_PAYER_LIMIT;
+
+FETCH CUR_PAYER_LIMIT INTO :ls_limit_message_tittle;
+
+DO WHILE SQLCA.SQLCODE = 0 
+	
+	ls_return = TRIM(ls_return) + '|' + trim(ls_limit_message_tittle) 
+	FETCH CUR_PAYER_LIMIT INTO :ls_limit_message_tittle;
+LOOP
+
+CLOSE CUR_PAYER_LIMIT;
+
+ls_return = mid(ls_return, 2, len(ls_return))
+
+return ls_return
+
+
+end function
+

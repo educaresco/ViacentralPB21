@@ -1,0 +1,41 @@
+﻿$PBExportHeader$fn_menuenabled.srf
+global type fn_menuenabled from function_object
+end type
+
+forward prototypes
+global function boolean fn_menuenabled (string p_text)
+end prototypes
+
+global function boolean fn_menuenabled (string p_text);long ll_count
+boolean lb_result
+
+ll_count = 0
+
+  SELECT COUNT(*)  
+    INTO :ll_count  
+    FROM dba.CASHIER,   
+         dba.SEC_GROUPS,   
+         dba.SEC_USER_GROUP,   
+         dba.SEC_GROUP_PRIVILEGES  
+   WHERE ( dba.CASHIER.ID_CASHIER = dba.SEC_USER_GROUP.ID_USER ) and  
+         ( dba.SEC_GROUPS.IDGROUP = dba.SEC_GROUP_PRIVILEGES.IDGROUP ) and  
+         ( dba.SEC_GROUPS.IDGROUP = dba.SEC_USER_GROUP.ID_GROUP ) and  
+         ( ( dba.SEC_GROUPS.STATUS = 'A' ) AND  
+         ( dba.CASHIER.ID_CASHIER = :gs_cashier ) AND  
+         ( upper(dba.SEC_GROUP_PRIVILEGES.MENUTITLE) =  upper(:p_text) ) )   ;
+
+if (ll_count > 0 and not isnull(ll_count)) & 
+   or (gb_admin = TRUE) &
+   or (upper(p_text) = '&EXIT') &
+   or (upper(p_text) = '&WINDOW') &
+   or (upper(p_text) = '&CLOSE ALL') &
+	or (p_text = '-') &
+	then
+	lb_result = TRUE
+else
+	lb_result = FALSE
+end if
+
+return lb_result
+end function
+

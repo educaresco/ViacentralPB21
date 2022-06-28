@@ -1,0 +1,72 @@
+﻿$PBExportHeader$fn_previousbalance.srf
+global type fn_previousbalance from function_object
+end type
+
+forward prototypes
+global function double fn_previousbalance (string ls_group, string ld_date, string ls_type)
+end prototypes
+
+global function double fn_previousbalance (string ls_group, string ld_date, string ls_type);// -----------------------------------------------------------------------------------------
+// Return the account balance for a group (ls_group) as it was in a specified date (ld_date)
+//
+// ls_type -> B: Balance, C: Credits, D:Debits
+//
+//
+// NOT IN ('PB','CPC') PARA BALANCE POR TRANSMITIDAS
+// NOT IN ('TP','CP') PARA BALANCE POR PAGADAS
+// -----------------------------------------------------------------------------------------
+
+Double		TotalCredits,		& 
+				PreBal, 				&
+				TotalDebits, 		&
+				ld_result			
+							
+Datetime		ld_datetime
+
+ld_datetime = datetime(date(ld_date),time('23:59:59'))
+ld_result = 0
+
+TotalCredits = 0
+TotalDebits = 0
+
+if ls_type <> 'D' then
+	
+	SELECT sum(isnull(DBA.TRANSACCION_DIARIA_PAYEE.credit_trans_diaria,0))
+	  INTO :TotalCredits
+	  FROM DBA.TRANSACCION_DIARIA_PAYEE 
+	 WHERE DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria  <= :ld_datetime 
+		AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_group 
+		AND DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','CPC');
+	
+	if isnull(TotalCredits) then TotalCredits = 0	
+	
+end if
+
+if ls_type <> 'C' then
+
+	SELECT sum( isnull(DBA.TRANSACCION_DIARIA_PAYEE.Debit_trans_diaria,0)) 
+	  INTO :TotalDebits
+	  FROM DBA.TRANSACCION_DIARIA_PAYEE 
+	 WHERE DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria <= :ld_datetime 
+		AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_group
+		AND DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','CPC');	
+	
+	if isnull(TotalDebits) 	then TotalDebits = 0	
+	
+end if	
+		
+ls_type = upper(ls_type)
+if ls_type = 'C' then
+	ld_result = TotalCredits
+elseif ls_type = 'D' then
+	ld_result = TotalDebits
+elseif ls_type = 'B' then
+	PreBal = TotalDebits - TotalCredits
+	ld_result = PreBal
+else
+	ld_result = -1
+end if		
+			
+return ld_result
+end function
+

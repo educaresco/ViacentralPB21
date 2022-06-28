@@ -1,0 +1,30 @@
+﻿$PBExportHeader$fn_controlfile.srf
+global type fn_controlfile from function_object
+end type
+
+forward prototypes
+global subroutine fn_controlfile (string ps_pdf_location, string ps_email_subject, string ps_email_address)
+end prototypes
+
+global subroutine fn_controlfile (string ps_pdf_location, string ps_email_subject, string ps_email_address);
+String ls_filename, ls_cadena
+Integer li_file_resumen
+
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// Crea el archivo de control
+ls_filename = fn_replace(upper(ps_pdf_location),'.PDF','.TXT')
+ls_cadena = "@F212 "+ps_email_address+"@@F307 "+ps_email_subject+"@@F606"+ ps_pdf_location+",D, R@"	
+li_file_resumen = FileOpen(ls_filename,LineMode!,Write!,LockWrite!,Append!)
+if li_file_resumen < 0 Then
+	Messagebox("Error","Error opening file "+ls_filename)
+	Return
+end if	
+FileWrite(li_file_resumen,ls_cadena)	
+ls_cadena = 'This EMail contains an attachment file sent by Viamericas / Este correo contiene un archivo anexo enviado por Viamericas.' + char(10) + char(13)	
+FileWrite(li_file_resumen,ls_cadena)	
+ls_cadena = 'This is an automated mail, please do not respond / Este es un correo automatico, por favor no responda.'	
+FileWrite(li_file_resumen,ls_cadena)	
+fileclose(li_file_resumen)
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^	
+end subroutine
+

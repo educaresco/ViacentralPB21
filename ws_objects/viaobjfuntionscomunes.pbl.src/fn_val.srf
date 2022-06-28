@@ -1,0 +1,22 @@
+﻿$PBExportHeader$fn_val.srf
+global type fn_val from function_object
+end type
+
+forward prototypes
+global function double fn_val (string ls_cadena_parm)
+end prototypes
+
+global function double fn_val (string ls_cadena_parm);double i
+string ls_caracter,ls_cadena,ls_return
+int    li_ascii
+
+ls_cadena = trim(ls_cadena_parm)
+for i =1 to len(ls_cadena)
+	ls_caracter = mid(ls_cadena,i,1)
+	if asc(ls_caracter) >= 48 and asc(ls_caracter) <= 57 then
+		ls_return = ls_return + ls_caracter
+	end if 	
+next 
+return double(ls_return)
+end function
+

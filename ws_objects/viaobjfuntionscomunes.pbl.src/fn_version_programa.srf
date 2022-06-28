@@ -1,0 +1,27 @@
+﻿$PBExportHeader$fn_version_programa.srf
+global type fn_version_programa from function_object
+end type
+
+forward prototypes
+global function string fn_version_programa (string arg_branch)
+end prototypes
+
+global function string fn_version_programa (string arg_branch);String	ls_version
+
+IF ISNULL(arg_branch) THEN
+	Return '0' ;
+END IF
+
+  SELECT isnull(dba.sfGetBranchSupportInfo(:arg_branch,'VV'),'UNKNOWN')
+    INTO :ls_version  
+    FROM dba.dual;
+
+if sqlca.sqlcode <> 0 then
+	ls_version = 'UNKNOWN'
+end if
+
+
+Return ls_version ;
+
+end function
+

@@ -1,0 +1,63 @@
+﻿$PBExportHeader$fn_email_notification.srf
+global type fn_email_notification from function_object
+end type
+
+forward prototypes
+global subroutine fn_email_notification (string p_address, string p_subject, string p_text, string p_attachment, string p_delete_attachment)
+end prototypes
+
+global subroutine fn_email_notification (string p_address, string p_subject, string p_text, string p_attachment, string p_delete_attachment);
+//string ls_attachment
+//
+//ls_attachment = p_attachment
+//
+//if upper(p_attachment) = 'DUMMY' then
+//	long ll_FileNum
+//	ll_FileNum = FileOpen("C:\ViamericasMT\dummy.txt",LineMode!, Write!, LockWrite!, Replace!)
+//	FileClose(ll_FileNum)
+//	ls_attachment = "c:\ViamericasMT\dummy.txt"	
+//end if
+//
+//run("c:\viamericasMT\MTSMail.exe "+trim(p_address)+"#*#"+trim(p_subject)+"#*#"+ls_attachment+"#*#"+p_text+"#*#"+p_delete_attachment)
+
+
+String 	ls_FileName, ls_fax_command
+Long 		ll_FileNum
+
+p_address = fn_replace(p_address,"@","\@")
+p_subject = fn_replace(p_subject,"@","\@")
+p_attachment = fn_replace(p_attachment,"@","\@")
+
+// Solo funciona con faxes locales!!!!
+p_attachment = fn_replace(upper(p_attachment),"U:\EMAILED","D:\FAXES\EMAILED")
+
+if not fileexists("U:\Autofax") then
+	ls_FileName = "S:\AUTOFAX\"
+else
+	ls_FileName = "U:\AUTOFAX\"	
+end if
+
+ls_FileName= ls_FileName + "EML_NOT1_"+string(today(),"yyyymmdd_hhmmss")+".TXT"
+
+ll_FileNum = FileOpen(ls_FileName,LineMode!,Write!,LockReadWrite!,Replace!)		
+
+ls_fax_command = "@F212 "+p_address+" @@F307 "+p_subject+"@"
+
+if upper(p_attachment) <> 'DUMMY' then
+
+	ls_fax_command =  ls_fax_command + "@F606 "+p_attachment+""
+	
+	if upper(p_delete_attachment) = 'Y' then
+		ls_fax_command = ls_fax_command + ", D@"
+	else
+		ls_fax_command = ls_fax_command + " @"		
+	end if
+	
+end if
+
+FileWrite(ll_filenum,ls_fax_command)
+FileWrite(ll_FileNum,p_text)
+FileClose(ll_FileNum)
+
+end subroutine
+

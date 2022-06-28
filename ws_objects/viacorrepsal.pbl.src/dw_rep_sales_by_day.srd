@@ -1,0 +1,43 @@
+﻿$PBExportHeader$dw_rep_sales_by_day.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=492 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=56 color="536870912" )
+table(column=(type=char(30) updatewhereclause=yes name=dateof dbname="DATEOF" )
+ column=(type=long updatewhereclause=yes name=datepart dbname="DATEPART" )
+ column=(type=decimal(16) updatewhereclause=yes name=number dbname="NUMBER" )
+ column=(type=decimal(4) updatewhereclause=yes name=compute_0004 dbname="compute_0004" )
+ retrieve="SELECT convert(varchar,date_receiver,101) AS DATEOF,
+		 datepart(dw,date_receiver) AS DATEPART,
+		 sum(id_receiver/abs(id_receiver)) AS NUMBER,
+		 sum(net_amount_receiver)
+FROM dba.RECEIVER
+WHERE date_receiver >= :p_date1
+and date_receiver <= :p_date2
+and id_flag_receiver <> 'A'
+group by convert(varchar,date_receiver,101), datepart(dw,date_receiver)
+order by datepart(dw,date_receiver), convert(varchar,date_receiver,101)" arguments=(("p_date1", datetime),("p_date2", datetime))  sort="datepart A dateof D " )
+rectangle(band=detail x="1198" y="0" height="68" width="1408"  name=r_1 visible="1~tif(dateof = string(today(),'mm/dd/yyyy'),1,0)" brush.hatch="6" brush.color="12639424" pen.style="0" pen.width="5" pen.color="16777215"  background.mode="2" background.color="12639424" )
+text(band=header alignment="2" text="Sales Report by Day of the Week" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + ~"From ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2459" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Day / Date" border="2" color="33554432" x="1202" y="432" height="52" width="613" html.valueishtml="0"  name=dateof_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="No. of Trans" border="2" color="33554432" x="1829" y="432" height="52" width="347" html.valueishtml="0"  name=number_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Amount Sent" border="2" color="33554432" x="2190" y="432" height="52" width="416" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="33554432" x="1829" y="4" height="56" width="256" format="#####" html.valueishtml="0"  name=number visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="2190" y="4" height="56" width="393" format="[currency]" html.valueishtml="0"  name=compute_0004 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="dayname(datetime(dateof))"border="0" color="33554432" x="1239" y="4" height="56" width="297" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="1541" y="4" height="56" width="265" format="[general]" html.valueishtml="0"  name=dateof visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=detail x1="1198" y1="0" x2="2606" y2="0"  name=l_2 visible="1~tif( datepart [-1] = datepart , 0, 1)" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

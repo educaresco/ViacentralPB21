@@ -1,0 +1,18 @@
+﻿$PBExportHeader$dw_encabezado_recibo_dot_matrix.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=240 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes key=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" )
+ column=(type=char(6) updatewhereclause=yes name=branch_id_company dbname="BRANCH.ID_COMPANY" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address_branch dbname="BRANCH.ADDRESS_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=zip_branch dbname="BRANCH.ZIP_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=phone1_branch dbname="BRANCH.PHONE1_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=phone2_branch dbname="BRANCH.PHONE2_BRANCH" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.BRANCH~" ) COLUMN(NAME=~"DBA.BRANCH.ID_BRANCH~") COLUMN(NAME=~"DBA.BRANCH.ID_COMPANY~") COLUMN(NAME=~"DBA.BRANCH.NAME_BRANCH~") COLUMN(NAME=~"DBA.BRANCH.ADDRESS_BRANCH~") COLUMN(NAME=~"DBA.BRANCH.ZIP_BRANCH~") COLUMN(NAME=~"DBA.BRANCH.PHONE1_BRANCH~") COLUMN(NAME=~"DBA.BRANCH.PHONE2_BRANCH~")WHERE(    EXP1 =~"( DBA.BRANCH.ID_BRANCH~"   OP =~"=~"    EXP2 =~":AS_BRANCH )~" ) ) ARG(NAME = ~"as_branch~" TYPE = string) " update="DBA.BRANCH" updatewhere=0 updatekeyinplace=no arguments=(("as_branch", string)) )
+compute(band=detail alignment="0" expression=" branch_name_branch "border="0" color="0" x="23" y="8" height="76" width="1129" format="[general]"  font.face="Courier" font.height="-10" font.weight="700"  font.family="1" font.pitch="1" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" branch_address_branch "border="0" color="0" x="23" y="96" height="64" width="1627" format="[general]"  font.face="Courier" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="~"ZIP, ~" +  zip_branch+~" Tel : ~"+  phone1_branch "border="0" color="0" x="27" y="172" height="60" width="1632" format="[general]"  font.face="Courier" font.height="-10" font.weight="400"  font.family="1" font.pitch="1" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,55 @@
+﻿$PBExportHeader$dw_change_payee.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes name=id_branch dbname="BRANCH.id_branch" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=name_branch dbname="BRANCH.name_branch" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=address_branch dbname="BRANCH.address_branch" )
+ column=(type=char(1) updatewhereclause=yes name=currency_pay_branch dbname="BRANCH.currency_pay_branch" values="DOLAR	D/NATIONAL	N/AMBAS	A/" )
+ column=(type=char(2) updatewhereclause=yes name=cubrimiento_branch_id_zona dbname="CUBRIMIENTO_BRANCH.id_zona" )
+ column=(type=char(2) updatewhereclause=yes name=modo_pago_branch_modo_pago dbname="modo_pago_branch.modo_pago" )
+ column=(type=char(5) updatewhereclause=yes name=cubrimiento_branch_id_city dbname="CUBRIMIENTO_BRANCH.id_city" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.name_main_branch" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_state dbname="BRANCH.id_state" )
+ retrieve="  SELECT  dba.branch.id_branch ,
+           dba.branch.name_branch ,           
+dba.branch.address_branch ,           
+dba.branch.currency_pay_branch ,           
+dba.cubrimiento_branch.id_zona ,           
+dba.modo_pago_branch.modo_pago ,           
+dba.cubrimiento_branch.id_city ,           
+dba.group_branch.name_main_branch ,           
+dba.branch.id_state     
+        FROM dba.branch ,           
+dba.cubrimiento_branch ,           
+dba.modo_pago_branch ,           
+dba.group_branch     
+        WHERE ( dba.cubrimiento_branch.id_branch = dba.branch.id_branch ) 
+and          ( dba.modo_pago_branch.id_branch = dba.branch.id_branch ) 
+and          ( dba.group_branch.id_main_branch = dba.branch.id_main_branch ) 
+and          (dba.branch.id_flag_branch = 'A' 
+and          ( dba.modo_pago_branch.modo_pago = :arg_modo_pago ) 
+and          ( dba.cubrimiento_branch.id_city = :arg_ciudad) ) 
+and          (dba.branch.currency_pay_branch = 'A' 
+or          ( dba.branch.currency_pay_branch = :arg_currency) ) 
+and          (dba.branch.id_type_branch = 'P' 
+or          ( dba.branch.id_type_branch = 'A') ) 
+and          ( dba.branch.id_branch <> :arg_branch_pay )  
+        ORDER BY dba.group_branch.name_main_branch          ASC,           
+dba.branch.name_branch          ASC  " arguments=(("arg_modo_pago", string),("arg_ciudad", string),("arg_currency", string),("arg_branch_pay", string)) )
+group(level=1 header.height=68 trailer.height=36 by=("group_branch_name_main_branch" ) header.color="536870912" trailer.color="536870912" )
+column(band=header id=1 alignment="2" tabsequence=32766 border="0" color="12632256" x="3296" y="20" height="52" width="64" format="[general]"  name=id_branch edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Pay Mode"border="0" color="12632256" x="3442" y="8" height="60" width="416"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Currency"border="0" color="12632256" x="3177" y="12" height="60" width="366"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="City"border="0" color="12632256" x="3269" y="4" height="60" width="471"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=header.1 id=8 alignment="2" tabsequence=32766 border="2" color="8388608" x="23" y="4" height="56" width="2949" format="[general]"  name=group_branch_name_main_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="8388608" x="27" y="8" height="68" width="1047" format="[general]"  name=name_branch edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="8388608" x="2606" y="8" height="68" width="370" format=""  name=cubrimiento_branch_id_zona dddw.name=dddw_zona dddw.displaycolumn=nombre_zona dddw.datacolumn=id_zona dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="2" tabsequence=32766 border="0" color="16777215" x="3794" y="12" height="68" width="416" format="[general]"  name=modo_pago_branch_modo_pago edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="2" tabsequence=32766 border="0" color="16777215" x="4288" y="0" height="68" width="361" format="[general]"  name=currency_pay_branch ddlb.limit=0 ddlb.allowedit=no ddlb.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="2" tabsequence=32766 border="0" color="16777215" x="4288" y="4" height="68" width="471" format="[general]"  name=cubrimiento_branch_id_city edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="8388608" x="1093" y="8" height="68" width="878" format="[general]"  name=address_branch edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="8388608" x="1993" y="8" height="68" width="590" format="[general]"  name=branch_id_state dddw.name=dddw_state dddw.displaycolumn=name_state dddw.datacolumn=id_state dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_filecopy.srf
+global type fn_filecopy from function_object
+end type
+
+forward prototypes
+global function integer fn_filecopy (string arg_source, string arg_target)
+end prototypes
+
+global function integer fn_filecopy (string arg_source, string arg_target);boolean lb_result
+
+// ---------------------------------------------------------------------------------------------------------
+// Para que esta funcion trabaje hay que poner la siguiente linea en "Declare --> Global External Functions"
+
+// FUNCTION boolean CopyFileA(ref string cfrom, ref string cto, boolean flag) LIBRARY "Kernel32.dll"
+
+// This function copies a file by taking the source and destination names as a string by reference. 
+// If the flag is set to true the file will not overwrite an existing file, 
+// if set to false it will overwrite an existing file.
+// ---------------------------------------------------------------------------------------------------------
+
+lb_result = CopyFileA(arg_source, arg_target, false)
+
+if lb_result then
+	return 0
+else
+	return 1
+end if
+end function
+

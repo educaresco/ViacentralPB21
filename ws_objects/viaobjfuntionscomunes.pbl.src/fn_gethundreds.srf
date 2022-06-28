@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_gethundreds.srf
+global type fn_gethundreds from function_object
+end type
+
+forward prototypes
+global function string fn_gethundreds (string mynumber)
+end prototypes
+
+global function string fn_gethundreds (string mynumber);String Result 
+If fn_Val(MyNumber) = 0 Then return ''
+MyNumber 	= Right("000" + MyNumber, 3)
+If Mid(MyNumber, 1, 1) <> "0" Then
+	Result 	= fn_GetDigit(Mid(MyNumber, 1, 1)) + " Hundred "
+End If
+If Mid(MyNumber, 2, 1) <> "0" Then
+	Result 	= Result + fn_GetTens(Mid(MyNumber, 2))
+Else
+	Result 	= Result + fn_GetDigit(Mid(MyNumber, 3))
+End If
+return Result
+
+end function
+

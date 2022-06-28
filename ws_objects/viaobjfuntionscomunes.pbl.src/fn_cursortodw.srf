@@ -1,0 +1,34 @@
+﻿$PBExportHeader$fn_cursortodw.srf
+global type fn_cursortodw from function_object
+end type
+
+forward prototypes
+global subroutine fn_cursortodw (string ls_sql, ref datawindow dw_dw)
+end prototypes
+
+global subroutine fn_cursortodw (string ls_sql, ref datawindow dw_dw);String ls_sqlline1,ls_sqlline2,ls_sqlline3,ls_sqlline4
+
+DECLARE cur_data DYNAMIC CURSOR FOR SQLSA;
+PREPARE SQLSA FROM :ls_sql USING SQLCArpt;
+OPEN DYNAMIC cur_data;
+
+if SQLCArpt.SQLCODE <> 0 then
+	Messagebox("",SQLCArpt.SQLErrText)
+	Messagebox("",ls_sql)
+	return
+end if
+
+ls_sqlline1=""
+ls_sqlline2=""
+ls_sqlline3=""
+ls_sqlline4=""
+
+FETCH cur_data INTO :ls_sqlline1,:ls_sqlline2,:ls_sqlline3,:ls_sqlline4;
+DO WHILE SQLCArpt.SQLCODE = 0
+	dw_dw.setitem(dw_dw.insertrow(0),1,ls_sqlline1+ls_sqlline2+ls_sqlline3+ls_sqlline4)
+	FETCH cur_data INTO :ls_sqlline1,:ls_sqlline2,:ls_sqlline3,:ls_sqlline4;
+LOOP
+
+CLOSE cur_data;
+end subroutine
+

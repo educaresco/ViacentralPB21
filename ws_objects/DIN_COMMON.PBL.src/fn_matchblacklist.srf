@@ -1,0 +1,82 @@
+﻿$PBExportHeader$fn_matchblacklist.srf
+global type fn_matchblacklist from function_object
+end type
+
+forward prototypes
+global function long fn_matchblacklist (string ps_completename, ref string ps_matches)
+end prototypes
+
+global function long fn_matchblacklist (string ps_completename, ref string ps_matches);String ls_name, ls_matches, ls_temp
+Long   ll_cont, ll_result
+
+ls_matches = ''
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// Limpia la cadena
+ls_name = trim(upper(ps_completename))
+ls_name = fn_replace(ls_name,",","")
+ls_name = fn_replace(ls_name,".","")
+ls_name = fn_replace(ls_name,"-","")
+ls_name = fn_replace(ls_name,"/","")
+ls_name = fn_replace(ls_name,"\","")
+ls_name = fn_replace(ls_name,"|","")
+ls_name = fn_replace(ls_name,"'","")
+ls_name = fn_replace(ls_name,char(34),"")
+ls_name = fn_replace(ls_name,":","")
+ls_name = fn_replace(ls_name,";","")
+ls_name = fn_replace(ls_name,"_","")
+ls_name = fn_replace(ls_name,"#","")
+ls_name = fn_replace(ls_name,"%","")
+ls_name = fn_replace(ls_name,"!","")
+ls_name = fn_replace(ls_name,"@","")
+ls_name = fn_replace(ls_name,"$","")
+ls_name = fn_replace(ls_name,"^","")
+ls_name = fn_replace(ls_name,"&","")
+ls_name = fn_replace(ls_name,"*","")
+ls_name = fn_replace(ls_name,"(","")
+ls_name = fn_replace(ls_name,")","")
+ls_name = fn_replace(ls_name,"    "," ")
+ls_name = fn_replace(ls_name,"   "," ")
+ls_name = fn_replace(ls_name,"  "," ")
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+ls_name = "%"+fn_replace(ls_name," ","%")+"%"
+				
+SELECT COUNT(*)
+INTO :ll_cont
+FROM dba.blacklist
+WHERE UPPER(rtrim(name_blacklist)) like :ls_name;
+
+if ll_cont > 0 then
+	
+	DECLARE cur_names CURSOR FOR  
+  	SELECT name_blacklist  
+	FROM dba.blacklist
+	WHERE UPPER(name_blacklist) like :ls_name;
+	OPEN cur_names;
+	FETCH cur_names INTO :ls_temp;
+	DO WHILE SQLCA.SQLCode = 0 
+		ls_matches = ls_matches + ls_temp + char(10) + char(13)
+		FETCH cur_names INTO :ls_temp;
+	LOOP
+	CLOSE cur_names;
+
+	// """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+	// Enviar Matches al EMail cuando el archivo debug exista
+	If FileExists("c:\ViamericasMT\debugimport.txt") then
+		String ls_emailtext
+		ls_emailtext = "Matches for "+trim(ps_completename)+char(10)+char(13)
+		ls_emailtext = ls_emailtext + ls_matches
+		//run("c:\viamericasMT\MTSMail.exe "+trim(ls_email)+"#*#BlackList Match ("+string(today(),"MM/DD/YYYY hh:mm")+")#*#c:\ViamericasMT\debugimport.txt#*#"+ls_emailtext+"#*#N")
+		fn_email_notification("slopez@viamericas.com","BlackList Match ("+string(today(),"MM/DD/YYYY hh:mm")+")",ls_emailtext,"DUMMY","Y")
+	End if
+	// """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+end if
+
+ll_result = ll_cont
+ps_matches = ls_matches
+
+return ll_result
+end function
+

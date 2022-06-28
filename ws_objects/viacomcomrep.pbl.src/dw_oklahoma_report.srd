@@ -1,0 +1,48 @@
+﻿$PBExportHeader$dw_oklahoma_report.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=780 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(21) updatewhereclause=yes name=invoice dbname="INVOICE" )
+ column=(type=datetime updatewhereclause=yes name=date_receiver dbname="RECEIVER.DATE_RECEIVER" dbalias=".DATE_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=net_amount_receiver dbname="RECEIVER.NET_AMOUNT_RECEIVER" dbalias=".NET_AMOUNT_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=date_transaction dbname="date_transaction" )
+ retrieve=" SELECT (rtrim(DBA.RECEIVER.ID_BRANCH)+ '-'+ cast(ID_RECEIVER as varchar(10))) as INVOICE, DATE_RECEIVER, NET_AMOUNT_RECEIVER, GETDATE() as date_transaction
+FROM DBA.RECEIVER, DBA.BRANCH
+WHERE DBA.RECEIVER.ID_BRANCH = DBA.BRANCH.ID_BRANCH 
+AND DATE_RECEIVER BETWEEN :date_from AND :date_to
+AND DBA.BRANCH.ID_STATE = 'OK'
+AND ID_FLAG_RECEIVER NOT IN ('H','A')
+AND not exists (SELECT 'x' FROM dba.receiver r2 WHERE DBA.RECEIVER.id_branch = r2.id_branch AND DBA.RECEIVER.id_receiver = (r2.id_receiver * -1) AND r2.id_receiver > 0 AND r2.date_receiver < '2009-07-01')
+ORDER BY DATE_RECEIVER
+" arguments=(("date_from", datetime),("date_to", datetime)) )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="5" y="280" height="40" width="969" html.valueishtml="0"  name=t_29 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="OKLAHOMA TAX REPORT" border="0" color="33554432" x="1184" y="52" height="92" width="1102" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-14" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="5" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="5" y="240" height="40" width="969" html.valueishtml="0"  name=t_28 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Invoice" border="2" color="33554432" x="23" y="724" height="52" width="416" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header alignment="2" text="Date" border="2" color="33554432" x="457" y="724" height="52" width="503" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header alignment="2" text="Amount" border="2" color="33554432" x="978" y="724" height="52" width="443" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+text(band=header alignment="2" text="Record Type" border="0" color="33554432" x="27" y="372" height="52" width="279" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="HDR" border="0" color="33554432" x="343" y="372" height="52" width="110" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Transmission Date" border="0" color="33554432" x="27" y="456" height="52" width="411" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="475" y="456" height="52" width="366" format="YYYYMMDD" html.valueishtml="0"  name=date_transaction visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="VIAMERICAS" border="0" color="33554432" x="27" y="540" height="52" width="325" html.valueishtml="0"  name=id_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Quarter Period End" border="0" color="33554432" x="27" y="624" height="52" width="421" html.valueishtml="0"  name=date_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" date_from "border="0" color="33554432" x="489" y="624" height="52" width="256" format="YYYYMM" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="23" y="8" height="52" width="416" format="[general]" html.valueishtml="0"  name=invoice visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="462" y="4" height="64" width="503" format="[shortdate] [time]" html.valueishtml="0"  name=date_receiver visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="33554432" x="978" y="4" height="64" width="443" format="###0.00" html.valueishtml="0"  name=net_amount_receiver visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,11 @@
+﻿$PBExportHeader$dddw_a_group.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(20) update=yes updatewhereclause=yes key=yes name=idgroup dbname="SEC_GROUPS.IDGROUP" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=nemegroup dbname="SEC_GROUPS.NEMEGROUP" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"dba.SEC_GROUPS~" ) COLUMN(NAME=~"dba.SEC_GROUPS.IDGROUP~") COLUMN(NAME=~"dba.SEC_GROUPS.NEMEGROUP~")WHERE(    EXP1 =~"dba.SEC_GROUPS.STATUS~"   OP =~"=~"    EXP2 =~"'A'~" ) ) " update="dba.SEC_GROUPS" updatewhere=1 updatekeyinplace=no )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="14" y="8" height="68" width="937" format="[general]"  name=nemegroup edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,15 @@
+﻿$PBExportHeader$dw_type_pay_group.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=100 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=88 color="536870912" )
+table(column=(type=char(4) update=yes updatewhereclause=yes key=yes name=id_group dbname="TYPE_PAY_GROUP.ID_GROUP" )
+ column=(type=char(1) update=yes updatewhereclause=yes key=yes name=id_type_pay dbname="TYPE_PAY_GROUP.ID_TYPE_PAY" values="Balance	B/Confirmation	C/" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.TYPE_PAY_GROUP~" ) COLUMN(NAME=~"DBA.TYPE_PAY_GROUP.ID_GROUP~") COLUMN(NAME=~"DBA.TYPE_PAY_GROUP.ID_TYPE_PAY~")) " update="DBA.TYPE_PAY_GROUP" updatewhere=0 updatekeyinplace=no )
+text(band=header alignment="2" text="Payee"border="6" color="8388608" x="146" y="32" height="56" width="1225"  name=id_group_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Type Pay Group"border="6" color="8388608" x="1394" y="32" height="56" width="1216"  name=id_type_pay_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="0" x="146" y="8" height="68" width="1225" format="[general]"  name=id_group dddw.name=dddw_group_branch dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="5" color="0" x="1394" y="8" height="68" width="1216" format="[general]"  name=id_type_pay ddlb.limit=0 ddlb.allowedit=no ddlb.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

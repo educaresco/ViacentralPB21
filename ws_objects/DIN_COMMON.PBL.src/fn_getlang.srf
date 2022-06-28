@@ -1,0 +1,11 @@
+﻿$PBExportHeader$fn_getlang.srf
+global type fn_getlang from function_object
+end type
+
+forward prototypes
+global function string fn_getlang ()
+end prototypes
+
+global function string fn_getlang ();return 'SP'
+end function
+

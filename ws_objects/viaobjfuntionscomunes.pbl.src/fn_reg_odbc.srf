@@ -1,0 +1,36 @@
+﻿$PBExportHeader$fn_reg_odbc.srf
+global type fn_reg_odbc from function_object
+end type
+
+forward prototypes
+global function integer fn_reg_odbc (string as_namdb)
+end prototypes
+
+global function integer fn_reg_odbc (string as_namdb);string 	ls_titlefont, ls_structure[]
+Integer	li_ok
+ContextKeyword  icxk_base 
+String   is_values[], ls_regedit
+
+li_ok=RegistryGet("HKEY_CURRENT_USER\Software\Dinero", "Version", RegString!,ls_regedit)
+
+IF Trim(ls_regedit)="" OR IsNull(ls_regedit) THEN
+	RegistrySet("HKEY_CURRENT_USER\Software","Dinero", RegString!, '')
+	RegistrySet("HKEY_CURRENT_USER\Software\Dinero\","Version", RegString!,gs_ver)
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI",as_namdb, RegString!, '')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'AutoStop', RegString!, 'yes')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'Driver', RegString!, 'C:\Program Files\Sybase\SQL Anywhere 5.0\win32\wod50t.dll')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'Start', RegString!, 'C:\Program Files\Sybase\SQL Anywhere 5.0\win32\dbeng50.exe')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'DatabaseFile', RegString!, 'C:\Dinero\Envio.db')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'DatabaseName', RegString!, 'Envio')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'Translation Name', RegString!, 'Sybase SQL Anywhere 5.0 Transl')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'TranslationDLL', RegString!, 'C:\Program Files\Sybase\SQL Anywhere 5.0\win32\wtr50t.dll')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'TranslationOption', RegString!, '1')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'Agent', RegString!, 'engine')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'PWD', RegString!, 'kxp1150')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\"+as_namdb,'UID', RegString!, 'dba')
+	RegistrySet("HKEY_CURRENT_USER\Software\ODBC\ODBC.INI\ODBC Data Sources",as_namdb, RegString!, 'Sybase SQL Anywhere 5.0')
+END IF
+
+Return 1
+end function
+

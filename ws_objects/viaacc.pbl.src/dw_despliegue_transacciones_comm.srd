@@ -1,0 +1,62 @@
+﻿$PBExportHeader$dw_despliegue_transacciones_comm.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=264 color="536870912" )
+summary(height=96 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912~tIF(MOD(GETROW(),2)=0,RGB(240,240,240),RGB(255,255,255))" )
+table(column=(type=char(4) updatewhereclause=yes name=transaccion_diaria_payee_comm_id_group_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.ID_GROUP_TRANS_DIARIA" )
+ column=(type=char(30) updatewhereclause=yes name=date_trans dbname="date_trans" )
+ column=(type=char(5) updatewhereclause=yes name=concepto_contable dbname="TRANSACCION_DIARIA_PAYEE_COMM.ID_CONCEPTO_CONTABLE" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_comm_des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DES_TRANS_DIARIA" )
+ column=(type=decimal(2) updatewhereclause=yes name=transaccion_diaria_payee_comm_debit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DEBIT_TRANS_DIARIA" )
+ column=(type=decimal(2) updatewhereclause=yes name=transaccion_diaria_payee_comm_credit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.CREDIT_TRANS_DIARIA" )
+ column=(type=decimal(0) updatewhereclause=yes name=cons dbname="TRANSACCION_DIARIA_PAYEE_COMM.CONS_TRANS_DIARIA" )
+ column=(type=decimal(2) updatewhereclause=yes name=transaccion_diaria_payee_comm_balance_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.BALANCE_TRANS_DIARIA" )
+ column=(type=datetime updatewhereclause=yes name=transaccion_diaria_payee_comm_hour_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.HOUR_TRANS_DIARIA" )
+ column=(type=char(40) updatewhereclause=yes name=transaccion_diaria_payee_comm_check_number dbname="TRANSACCION_DIARIA_PAYEE_COMM.CHECK_NUMBER" )
+ retrieve="SELECT DISTINCT  DBA.TRANSACCION_DIARIA_PAYEE_COMM.ID_GROUP_TRANS_DIARIA ,           
+convert( varchar,DBA.TRANSACCION_DIARIA_PAYEE_COMM.DATE_TRANS_DIARIA,101) as date_trans,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.ID_CONCEPTO_CONTABLE ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.DES_TRANS_DIARIA ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.DEBIT_TRANS_DIARIA ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.CREDIT_TRANS_DIARIA ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.CONS_TRANS_DIARIA ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.BALANCE_TRANS_DIARIA ,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.HOUR_TRANS_DIARIA,
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.CHECK_NUMBER
+FROM DBA.TRANSACCION_DIARIA_PAYEE_COMM ,           
+DBA.GROUP_BRANCH     
+WHERE ( DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.TRANSACCION_DIARIA_PAYEE_COMM.ID_GROUP_TRANS_DIARIA ) 
+and ( DBA.TRANSACCION_DIARIA_PAYEE_COMM.ID_CONCEPTO_CONTABLE in ('DAC','TDC','DAP') )  
+and ( DBA.TRANSACCION_DIARIA_PAYEE_COMM.ID_GROUP_TRANS_DIARIA = :ARG_GROUP )
+ORDER BY  DBA.TRANSACCION_DIARIA_PAYEE_COMM.CONS_TRANS_DIARIA ASC,      
+date_trans ASC,           
+DBA.TRANSACCION_DIARIA_PAYEE_COMM.HOUR_TRANS_DIARIA ASC  " arguments=(("arg_group", string)) )
+text(band=header alignment="2" text="Ref." border="2" color="0" x="32" y="200" height="52" width="306" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Date" border="2" color="0" x="357" y="200" height="52" width="247" html.valueishtml="0"  name=date_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="COMMISSION ACCOUNT" border="0" color="0" x="37" y="20" height="72" width="3264" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-11" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="32" y="4" height="52" width="306" format="[general]" html.valueishtml="0"  name=cons visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="5" y="8" height="52" width="14" format="[general]" html.valueishtml="0"  name=concepto_contable visible="0" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Arial" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="357" y="4" height="52" width="247" format="[general]" html.valueishtml="0"  name=date_trans visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=summary x1="965" y1="8" x2="3186" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(  transaccion_diaria_payee_comm_debit_trans_diaria  for all) "border="0" color="0" x="2304" y="20" height="52" width="430" format="[currency]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression=" sum( transaccion_diaria_payee_comm_credit_trans_diaria for all) "border="0" color="0" x="1851" y="20" height="52" width="430" format="[currency]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="# Trans. :" border="0" color="0" x="1125" y="20" height="52" width="279" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="0" expression="count( transaccion_diaria_payee_comm_des_trans_diaria  for all)"border="0" color="0" x="1422" y="20" height="52" width="151" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=summary alignment="1" text="Total :" border="0" color="0" x="1614" y="20" height="52" width="183" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=10 alignment="0" tabsequence=0 border="0" color="0" x="1824" y="8" height="44" width="187" html.valueishtml="0"  name=transaccion_diaria_payee_comm_check_number visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Pending. Comm." border="2" color="0" x="2930" y="200" height="52" width="430" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Paid Comm." border="2" color="0" x="2478" y="200" height="52" width="430" html.valueishtml="0"  name=debit_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Commission" border="2" color="0" x="2025" y="200" height="52" width="430" html.valueishtml="0"  name=credit_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="2930" y="4" height="52" width="430" format="[currency]" html.valueishtml="0"  name=transaccion_diaria_payee_comm_balance_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="2478" y="4" height="52" width="430" format="[currency]" html.valueishtml="0"  name=transaccion_diaria_payee_comm_debit_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="2025" y="4" height="52" width="430" format="[currency]" html.valueishtml="0"  name=transaccion_diaria_payee_comm_credit_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="622" y="4" height="52" width="1143" format="[general]" html.valueishtml="0"  name=transaccion_diaria_payee_comm_des_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Description" border="2" color="0" x="622" y="200" height="52" width="1143" html.valueishtml="0"  name=des_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Check #" border="2" color="0" x="1783" y="200" height="52" width="224" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

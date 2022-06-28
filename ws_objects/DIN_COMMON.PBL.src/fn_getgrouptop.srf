@@ -1,0 +1,28 @@
+﻿$PBExportHeader$fn_getgrouptop.srf
+$PBExportComments$Devuelve el grupo pagador
+global type fn_getgrouptop from function_object
+end type
+
+forward prototypes
+global function string fn_getgrouptop (string ls_branch)
+end prototypes
+
+global function string fn_getgrouptop (string ls_branch);
+String ls_id_branch_top
+string ls_return
+
+
+SELECT dba.sfGetGroupTop(ID_MAIN_BRANCH)
+  INTO :ls_id_branch_top
+  FROM dba.BRANCH
+ WHERE ID_BRANCH = :ls_branch;
+
+if not isnull(ls_id_branch_top) and ls_id_branch_top <> ls_branch then
+	ls_return = ls_id_branch_top
+else
+	ls_return = ls_branch
+end if
+
+return ls_return
+end function
+

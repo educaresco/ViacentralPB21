@@ -1,0 +1,310 @@
+﻿$PBExportHeader$fn_cancel_invoice_notcommit.srf
+global type fn_cancel_invoice_notcommit from function_object
+end type
+
+forward prototypes
+global function integer fn_cancel_invoice_notcommit (string ls_branch, decimal ld_receiver, string ls_silent)
+end prototypes
+
+global function integer fn_cancel_invoice_notcommit (string ls_branch, decimal ld_receiver, string ls_silent);Integer 	ls_result1
+String		ls_result1message
+
+if ls_silent = 'N' then 
+	If messagebox("Confirmation","Please confirm do you want to CANCEL invoice "+ls_branch+'-'+string(ld_receiver)+"?",Question!,YesNo!) = 2 then
+		return -1
+	end if
+end if
+
+
+SetPointer(HourGlass!)
+
+setnull(ls_result1) // = -1
+setnull(ls_result1message) // = ""
+
+DECLARE CancelInvoice PROCEDURE FOR
+dba.spCancelInvoice @id_branch = :ls_branch, @id_receiver = :ld_receiver, @result = :ls_result1 OUT, @resultmessage = :ls_result1message OUT;
+
+EXECUTE CancelInvoice;		
+
+IF sqlca.sqlcode = 0 THEN
+	FETCH CancelInvoice INTO :ls_result1, :ls_result1message;
+	IF SQLCA.sqlcode <>0 THEN
+		if ls_silent = 'N' and SQLCA.sqlcode <>0 then messagebox("DB Error","DB Error:~n"+SQLCA.SQLErrText,StopSign!)
+		ls_result1 = -1
+	end if
+ELSE
+	if ls_silent = 'N' and SQLCA.sqlcode <>0 then messagebox("DB Error","DB Error:~n"+SQLCA.SQLErrText,StopSign!)
+	ls_result1 = -1
+END IF
+	 
+CLOSE CancelInvoice;
+
+
+IF ls_result1 = -1 then
+	
+	if ls_silent = 'N' then messagebox("Cancelation Error (SP)",ls_result1message,StopSign!)
+
+ELSEIF ls_result1 = 1 then
+	
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// GENERATES A CANCELATION FILE FOR VIACASH
+	
+	//  comment code 2022/04/13 meeting loyalty changes  Ecartagena, EBernal, CSarmiento
+	
+//	String		ls_id_branch, ls_name_branch, ls_name_sender, ls_address_sender, ls_city,   &
+//					ls_id_country, ls_type_id_sender, ls_number_id_sender,  ls_payment,   &
+//					ls_curreny, ls_id_flag_receiver, ls_id_city_receiver, ls_id_state_receiver,   &
+//					ls_id_country_receiver, ls_branch_pay_receiver, ls_id_cashier, ls_name_receiver,   &
+//					ls_address_receiver, ls_phone1_receiver, ls_phone2_receiver, ls_zip_receiver,   &
+//					ls_notes_receiver, ls_recomend_receiver, ls_mode_pay_receiver, ls_acc_receiver,  & 
+//				ls_mod_pay_currency, ls_trans_receiver, ls_bank_receiver, ls_state, ls_sql, ls_filename, &
+//				ls_fecha, ls_hora, ls_fileline, ls_tollfree, ls_pinnumber
+//	
+//	Double	ld_sender, ld_branch, ld_phone1_sender, ld_phone2_sender, ld_zip_sender, ld_id_sender, ld_net_amount_receiver,   &
+//					ld_rate_change_receiver, ld_telex_receiver, ld_urgency_receiver, ld_exchange_receiver, ld_handling_receiver,   &
+//					ld_total_receiver, ld_porc_comision_receiver, ld_total_pay_receiver, ld_exchange_company, ld_telex_company,   &
+//					ld_ref_receiver, ld_total_diference, ld_total_modo_pago, ld_commission_payee, ld_referencia, ld_batch, ld_total_modo_pago_comp
+//	
+//	
+//	Double 	ld_agent_comm_profit, ld_state_tax
+//	
+//	Datetime	ld_date_receiver, lt_time_receiver
+//	Double	ld_fee_rate, ld_cons
+//	String 	ls_agencyfolder, is_output
+//	Long 		ll_filenum1
+//	
+//	ld_cons = 0
+//	ld_fee_rate = 0
+//	
+//	
+//	SELECT DISTINCT dba.parametros.dir_output  
+//	INTO :is_output
+//	FROM dba.parametros  ;
+//	
+//	
+//	ld_receiver = ld_receiver * -1
+//	
+//	SELECT dba.receiver.id_sender,   
+//	dba.receiver.id_branch,   
+//	dba.receiver.id_receiver,   
+//	dba.receiver.id_payment,   
+//	dba.receiver.id_curreny,   
+//	dba.receiver.id_flag_receiver,   
+//	dba.receiver.id_city_receiver,   
+//	dba.receiver.id_state_receiver,   
+//	dba.receiver.id_country_receiver,   
+//	dba.receiver.branch_pay_receiver,   
+//	dba.receiver.id_cashier,   
+//	dba.receiver.name_receiver,   
+//	dba.receiver.address_receiver,   
+//	dba.receiver.phone1_receiver,   
+//	dba.receiver.phone2_receiver,   
+//	dba.receiver.zip_receiver,   
+//	dba.receiver.notes_receiver,   
+//	dba.receiver.date_receiver,   
+//	dba.receiver.time_receiver,   
+//	dba.receiver.net_amount_receiver,   
+//	dba.receiver.rate_change_receiver,   
+//	dba.receiver.telex_receiver,   
+//	dba.receiver.urgency_receiver,   
+//	dba.receiver.recomend_receiver,   
+//	dba.receiver.mode_pay_receiver,   
+//	dba.receiver.acc_receiver,   
+//	dba.receiver.exchange_receiver,   
+//	dba.receiver.handling_receiver,   
+//	dba.receiver.total_receiver,   
+//	dba.receiver.mod_pay_currency,   
+//	dba.receiver.porc_comision_receiver,   
+//	dba.receiver.total_pay_receiver,   
+//	dba.receiver.trans_receiver,   
+//	dba.receiver.exchange_company,   
+//	dba.receiver.telex_company,   
+//	dba.receiver.ref_receiver,   
+//	dba.receiver.bank_receiver,   
+//	dba.receiver.total_diference,   
+//	dba.receiver.total_modo_pago,   
+//	dba.receiver.commission_payee,   
+//	dba.receiver.total_modo_pago_comp,   
+//	dba.receiver.toll_free,   
+//	dba.receiver.pin_number,
+//	dba.receiver.fee_rate,
+//	dba.receiver.agent_comm_profit,
+//	dba.receiver.state_tax
+//	INTO 		:ld_id_sender,   
+//	:ls_id_branch,   
+//	:ld_receiver,   
+//	:ls_payment,   
+//	:ls_curreny,   
+//	:ls_id_flag_receiver, 
+//	:ls_id_city_receiver, 
+//	:ls_id_state_receiver, 
+//	:ls_id_country_receiver, 
+//	:ls_branch_pay_receiver,
+//	:ls_id_cashier,   
+//	:ls_name_receiver, 
+//	:ls_address_receiver,
+//	:ls_phone1_receiver,
+//	:ls_phone2_receiver,
+//	:ls_zip_receiver,
+//	:ls_notes_receiver,
+//	:ld_date_receiver,
+//	:lt_time_receiver,
+//	:ld_net_amount_receiver,
+//	:ld_rate_change_receiver,
+//	:ld_telex_receiver,
+//	:ld_urgency_receiver,
+//	:ls_recomend_receiver,
+//	:ls_mode_pay_receiver,
+//	:ls_acc_receiver,
+//	:ld_exchange_receiver,
+//	:ld_handling_receiver,
+//	:ld_total_receiver,
+//	:ls_mod_pay_currency,
+//	:ld_porc_comision_receiver,
+//	:ld_total_pay_receiver,
+//	:ls_trans_receiver,
+//	:ld_exchange_company,
+//	:ld_telex_company,
+//	:ld_ref_receiver,
+//	:ls_bank_receiver,
+//	:ld_total_diference,
+//	:ld_total_modo_pago,
+//	:ld_commission_payee,
+//	:ld_total_modo_pago_comp,
+//	:ls_tollfree,
+//	:ls_pinnumber,
+//	:ld_fee_rate,
+//	:ld_agent_comm_profit,
+//	:ld_state_tax
+//	FROM dba.receiver  
+//	WHERE dba.receiver.id_branch = :ls_branch
+//	AND dba.receiver.id_receiver = :ld_receiver;
+//	
+//	/////////////////////////////////////////////
+//	
+//	// proceso de Insertar Cancelaciones .
+//	//	INSERTING RECEIVER INFORMATION
+//	IF IsNull(ld_id_sender) THEN ld_id_sender=0
+//	IF IsNull(ls_id_branch) THEN ls_id_branch=''
+//	IF IsNull(ld_receiver) THEN ld_receiver=0
+//	IF IsNull(ls_payment) THEN ls_payment=''
+//	IF IsNull(ls_curreny) THEN ls_curreny=''
+//	IF IsNull(ls_id_flag_receiver) THEN ls_id_flag_receiver=''
+//	IF IsNull(ls_id_city_receiver) THEN ls_id_city_receiver=''
+//	IF IsNull(ls_id_state_receiver) THEN ls_id_state_receiver=''
+//	IF IsNull(ls_id_country_receiver) THEN ls_id_country_receiver=''
+//	IF IsNull(ls_branch_pay_receiver) THEN ls_branch_pay_receiver=''
+//	IF IsNull(ls_id_cashier) THEN ls_id_cashier=''
+//	IF IsNull(ls_name_receiver) THEN ls_name_receiver=''
+//	IF IsNull(ls_address_receiver) THEN ls_address_receiver=''
+//	IF IsNull(ls_phone1_receiver) THEN ls_phone1_receiver=''
+//	IF IsNull(ls_phone2_receiver) THEN ls_phone2_receiver=''
+//	IF IsNull(ls_zip_receiver) THEN ls_zip_receiver=''
+//	IF IsNull(ls_notes_receiver) THEN ls_notes_receiver=''
+//	IF IsNull(ld_net_amount_receiver) THEN ld_net_amount_receiver=0
+//	IF IsNull(ld_rate_change_receiver) THEN ld_rate_change_receiver=0
+//	IF IsNull(ld_telex_receiver) THEN ld_telex_receiver=0
+//	IF IsNull(ld_urgency_receiver) THEN ld_urgency_receiver=0
+//	IF IsNull(ls_recomend_receiver) THEN ls_recomend_receiver=''
+//	IF IsNull(ls_mode_pay_receiver) THEN ls_mode_pay_receiver=''
+//	IF IsNull(ls_acc_receiver) THEN ls_acc_receiver=''
+//	IF IsNull(ld_exchange_receiver) THEN ld_exchange_receiver=0
+//	IF IsNull(ld_handling_receiver) THEN ld_handling_receiver=0
+//	IF IsNull(ld_total_receiver) THEN ld_total_receiver=0
+//	IF IsNull(ls_mod_pay_currency) THEN ls_mod_pay_currency=''
+//	IF IsNull(ld_porc_comision_receiver) THEN ld_porc_comision_receiver=0
+//	IF IsNull(ld_total_pay_receiver) THEN ld_total_pay_receiver=0
+//	IF IsNull(ls_trans_receiver) THEN ls_trans_receiver=''
+//	IF IsNull(ld_exchange_company) THEN ld_exchange_company=0
+//	IF IsNull(ld_telex_company) THEN ld_telex_company=0
+//	IF IsNull(ld_ref_receiver) THEN ld_ref_receiver=0
+//	IF IsNull(ls_bank_receiver) THEN ls_bank_receiver=''
+//	IF IsNull(ld_total_diference) THEN ld_total_diference=0
+//	IF IsNull(ld_total_modo_pago) THEN ld_total_modo_pago=0
+//	IF IsNull(ld_commission_payee) THEN ld_commission_payee=0
+//	IF IsNull(ld_total_modo_pago_comp) THEN ld_total_modo_pago_comp=0
+//	IF IsNull(ls_tollfree) THEN ls_tollfree=''
+//	IF IsNull(ls_pinnumber) THEN ls_pinnumber=''
+//	IF IsNull(ld_fee_rate) THEN ld_fee_rate = 0
+//	IF IsNull(ld_agent_comm_profit) THEN ld_agent_comm_profit = 0
+//	IF isnull(ld_state_tax) THEN ld_state_tax = 0
+//	
+//	ls_id_branch  = Trim(ls_id_branch)   
+//	ls_payment  = Trim(ls_payment)   
+//	ls_curreny  = Trim(ls_curreny)   
+//	ls_id_flag_receiver  = Trim(ls_id_flag_receiver) 
+//	ls_id_city_receiver  = Trim(ls_id_city_receiver) 
+//	ls_id_state_receiver  = Trim(ls_id_state_receiver) 
+//	ls_id_country_receiver  = Trim(ls_id_country_receiver) 
+//	ls_branch_pay_receiver  = Trim(ls_branch_pay_receiver)
+//	ls_id_cashier  = Trim(ls_id_cashier)   
+//	ls_name_receiver  = Trim(ls_name_receiver) 
+//	ls_address_receiver  = Trim(ls_address_receiver)
+//	ls_phone1_receiver  = Trim(ls_phone1_receiver)
+//	ls_phone2_receiver  = Trim(ls_phone2_receiver)
+//	ls_zip_receiver  = Trim(ls_zip_receiver)
+//	ls_notes_receiver  = Trim(ls_notes_receiver)
+//	ls_recomend_receiver  = Trim(ls_recomend_receiver)
+//	ls_mode_pay_receiver  = Trim(ls_mode_pay_receiver)
+//	ls_acc_receiver  = Trim(ls_acc_receiver)
+//	ls_mod_pay_currency  = Trim(ls_mod_pay_currency)
+//	ls_trans_receiver  = Trim(ls_trans_receiver)
+//	ls_bank_receiver  = Trim(ls_bank_receiver)
+//	ls_tollfree  = Trim(ls_tollfree)
+//	ls_pinnumber  = Trim(ls_pinnumber)
+//	
+//	ls_trans_receiver = 'T'
+//	
+//	
+//		
+//	ls_sql = "INSERT INTO receiver ( id_sender, id_branch, id_receiver, id_payment, id_curreny, id_flag_receiver, "
+//	ls_sql += "id_city_receiver, id_state_receiver, id_country_receiver, branch_pay_receiver, id_cashier, "
+//	ls_sql += "name_receiver, address_receiver, phone1_receiver, phone2_receiver, zip_receiver, notes_receiver, "
+//	ls_sql += "date_receiver, time_receiver, net_amount_receiver, rate_change_receiver, telex_receiver, "
+//	ls_sql += "urgency_receiver, recomend_receiver, mode_pay_receiver, acc_receiver, exchange_receiver, "
+//	ls_sql += "handling_receiver, total_receiver, mod_pay_currency, porc_comision_receiver, total_pay_receiver, "
+//	ls_sql += "trans_receiver, exchange_company, telex_company, ref_receiver, bank_receiver, total_diference, "
+//	ls_sql += "total_modo_pago, commission_payee, total_modo_pago_comp, toll_free, pin_number ,status_pago_payee, status_pago_agent, date_trans_payee, clave_receiver, fee_rate, agent_comm_profit ) VALUES ("
+//	ls_sql += String(ld_id_sender)+",'"+ls_id_branch+"',"+String(ld_receiver)+",'"+ls_payment+"','"+ls_curreny+"','" + &
+//	ls_id_flag_receiver+"','"+ls_id_city_receiver+"','"+ls_id_state_receiver+"','"+ls_id_country_receiver+"','" + &
+//	ls_branch_pay_receiver+"','"+"CH1"+"','"+ls_name_receiver+"','"+ls_address_receiver+"','" + &
+//	ls_phone1_receiver+"','"+ls_phone2_receiver+"','"+ls_zip_receiver+"','"+ls_notes_receiver+"','" + &
+//	String(ld_date_receiver,"yyyy-mm-dd")+"','"+String(lt_time_receiver,"HH:MM:SS")+"',"+ &
+//	String(ld_net_amount_receiver)+","+String(ld_rate_change_receiver)+","+String(ld_telex_receiver)+"," + &
+//	String(ld_urgency_receiver)+",'"+ls_recomend_receiver+"','"+ls_mode_pay_receiver+"','"+ls_acc_receiver+"'," + &
+//	String(ld_exchange_receiver)+","+String(ld_handling_receiver)+","+String(ld_total_receiver)+",'" + &
+//	ls_mod_pay_currency+"',"+String(ld_porc_comision_receiver)+","+String(ld_total_pay_receiver)+",'"+&
+//	ls_trans_receiver+"',"+String(ld_exchange_company)+","+String(ld_telex_company)+","+&
+//	String(ld_ref_receiver)+",'"+ls_bank_receiver+"',"+String(ld_total_diference)+","+&
+//	String(ld_total_modo_pago)+","+String(ld_commission_payee)+","+String(ld_total_modo_pago_comp)+",'"+ls_tollfree+"','"+ls_pinnumber+"','U','U',NULL,''," + string(ld_fee_rate) + "," + string(ld_agent_comm_profit) + ");"
+//	
+//	
+//	ls_agencyfolder = ''
+//	if fileexists(is_output+trim(ls_id_branch)) then ls_agencyfolder = trim(ls_id_branch) + '\'	
+//	
+//	ls_filename=TRIM(is_output)+ls_agencyfolder+'CAN'+Fill('0',10 - Len(TRIM(ls_id_branch)))+TRIM(ls_id_branch)+".sql"
+//	ll_filenum1=FileOpen(ls_filename, LineMode!, Write!, LockWrite!, Append!)
+//	FileWrite(ll_filenum1,"UPDATE receiver SET id_flag_receiver = 'C'  WHERE ( receiver.id_branch = '"+ls_id_branch+"' AND  receiver.id_receiver = "+string(ld_receiver * -1)+" );")
+//	FileWrite(ll_filenum1,"UPDATE receiver SET state_tax = "+string(ld_state_tax)+"  WHERE ( receiver.id_branch = '"+ls_id_branch+"' AND  receiver.id_receiver = "+string(ld_receiver)+" );")	
+//	// Adicionado 10/02/2008: Corrige la cancelacion para que tenga COMISION RETENIDA (CHEQUE) inversa a la orden Original	
+//	FileWrite(ll_filenum1,"UPDATE dba.receiver SET agent_comm_profit = (SELECT agent_comm_profit * -1 from dba.receiver WHERE id_branch = '"+ls_id_branch+"' AND id_receiver = " + string(ld_receiver * -1)+") WHERE id_branch = '"+ls_id_branch+"' AND id_receiver = "+string(ld_receiver)+";")				                       	
+//	FileWrite(ll_filenum1,"DELETE receiver WHERE ( receiver.id_branch = '"+ls_id_branch+"' AND  receiver.id_receiver = "+string(ld_receiver)+" );")
+//	FileWrite(ll_filenum1,ls_sql)
+//	FileClose(ll_filenum1)							
+//	
+//	
+//	// GENERATES A CANCELATION FILE FOR VIACASH
+//	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+
+END IF
+
+SetPointer(Arrow!)
+
+return ls_result1
+
+
+end function
+

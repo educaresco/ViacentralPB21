@@ -1,0 +1,117 @@
+﻿$PBExportHeader$dw_rep_custom_balance.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 108 print.margin.right = 108 print.margin.top = 94 print.margin.bottom = 94 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=472 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" height.autosize=yes )
+table(column=(type=char(30) updatewhereclause=yes name=fecha dbname="RECEIVER.PIN_NUMBER" )
+ column=(type=char(10) updatewhereclause=yes name=giro dbname="RECEIVER.ID_BRANCH" )
+ column=(type=char(2) updatewhereclause=yes name=nombre dbname="RECEIVER.ID_PAYMENT" )
+ column=(type=char(2) updatewhereclause=yes name=pais dbname="RECEIVER.ID_CURRENY" )
+ column=(type=char(5) updatewhereclause=yes name=amount dbname="RECEIVER.ID_CITY_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=fee dbname="RECEIVER.ID_STATE_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=comm dbname="RECEIVER.ID_COUNTRY_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=due dbname="RECEIVER.BRANCH_PAY_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=deposits dbname="RECEIVER.ID_CASHIER" )
+ column=(type=char(40) updatewhereclause=yes name=cancellations dbname="RECEIVER.NAME_RECEIVER" )
+ column=(type=char(60) updatewhereclause=yes name=adjustments dbname="RECEIVER.ADDRESS_RECEIVER" )
+ column=(type=char(12) updatewhereclause=yes name=bal_due dbname="RECEIVER.PHONE1_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=last_col dbname="RECEIVER.REC_ACCROUTING" )
+ column=(type=decimal(0) updatewhereclause=yes name=relacion_invoices_payee_cons_trans_diari dbname="RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA" )
+ column=(type=char(12) updatewhereclause=yes name=bal_acum dbname="RECEIVER.PHONE2_RECEIVER" )
+ column=(type=char(7) updatewhereclause=yes name=receiver_zip_receiver dbname="RECEIVER.ZIP_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=relacion_invoices_payee_id_branch_invoic dbname="RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE" )
+ column=(type=char(4) updatewhereclause=yes name=bal_acum dbname="BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=relacion_invoices_payee_id_concepto_cont dbname="RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE" )
+ column=(type=datetime updatewhereclause=yes name=relacion_invoices_payee_date_relacion_di dbname="RELACION_INVOICES_PAYEE.DATE_RELACION_DIARIA" )
+ column=(type=decimal(0) updatewhereclause=yes name=relacion_invoices_payee_id_receiver dbname="RELACION_INVOICES_PAYEE.ID_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_handling_receiver dbname="RECEIVER.HANDLING_RECEIVER" )
+ retrieve="  SELECT dba.RECEIVER.PIN_NUMBER,   
+         dba.RECEIVER.ID_BRANCH,   
+         dba.RECEIVER.ID_PAYMENT,   
+         dba.RECEIVER.ID_CURRENY,   
+         dba.RECEIVER.ID_CITY_RECEIVER,   
+         dba.RECEIVER.ID_STATE_RECEIVER,   
+         dba.RECEIVER.ID_COUNTRY_RECEIVER,   
+         dba.RECEIVER.BRANCH_PAY_RECEIVER,   
+         dba.RECEIVER.ID_CASHIER,   
+         dba.RECEIVER.NAME_RECEIVER,   
+         dba.RECEIVER.ADDRESS_RECEIVER,   
+         dba.RECEIVER.PHONE1_RECEIVER,   
+         dba.RECEIVER.REC_ACCROUTING,   
+         dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA,   
+         dba.RECEIVER.PHONE2_RECEIVER,   
+         dba.RECEIVER.ZIP_RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE,   
+         dba.BRANCH.ID_MAIN_BRANCH,   
+         dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE,   
+         dba.RELACION_INVOICES_PAYEE.DATE_RELACION_DIARIA,   
+         dba.RELACION_INVOICES_PAYEE.ID_RECEIVER,   
+         dba.RECEIVER.HANDLING_RECEIVER  
+    FROM dba.RELACION_INVOICES_PAYEE,   
+         dba.BRANCH,   
+         dba.RECEIVER  
+   WHERE ( dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE = dba.BRANCH.ID_BRANCH ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE = dba.RECEIVER.ID_BRANCH ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( ( dba.RELACION_INVOICES_PAYEE.DATE_RELACION_DIARIA >= :arg_fecha1 ) AND  
+         ( dba.RELACION_INVOICES_PAYEE.DATE_RELACION_DIARIA <= :arg_fecha2 ) AND  
+         ( dba.BRANCH.ID_MAIN_BRANCH = :arg_grupo ) AND  
+         ( :arg_tittle = :arg_tittle ) )    
+" arguments=(("arg_fecha1", date),("arg_fecha2", date),("arg_grupo", string),("arg_tittle", string)) )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="18" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="18" y="232" height="40" width="969" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="18" y="272" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="3849" y="176" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3849" y="244" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Date" border="0" color="0" x="5" y="412" height="48" width="233" html.valueishtml="0"  name=t_21 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=header x1="5" y1="464" x2="4599" y2="464"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+text(band=header alignment="2" text="Due" border="0" color="0" x="3963" y="408" height="48" width="265" html.valueishtml="0"  name=t_14 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Balance" border="0" color="0" x="3963" y="360" height="48" width="265" html.valueishtml="0"  name=t_5 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Adjust." border="0" color="0" x="3694" y="408" height="48" width="265" html.valueishtml="0"  name=t_13 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Cancel." border="0" color="0" x="3424" y="408" height="48" width="265" html.valueishtml="0"  name=t_12 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Deposits" border="0" color="0" x="3154" y="408" height="48" width="265" html.valueishtml="0"  name=t_11 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Country/
+Bank" border="0" color="0" x="1385" y="356" height="148" width="297" html.valueishtml="0"  name=t_23 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Order" border="0" color="0" x="1687" y="360" height="48" width="338" html.valueishtml="0"  name=t_3 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Amount" border="0" color="0" x="1687" y="408" height="48" width="338" html.valueishtml="0"  name=t_7 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Total Fee" border="0" color="0" x="2021" y="408" height="48" width="265" html.valueishtml="0"  name=t_8 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Comm." border="0" color="0" x="2290" y="408" height="48" width="265" html.valueishtml="0"  name=t_19 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Agency" border="0" color="0" x="2290" y="360" height="48" width="265" html.valueishtml="0"  name=t_4 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Handling" border="0" color="0" x="2560" y="408" height="48" width="265" html.valueishtml="0"  name=t_9 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Total Due" border="0" color="0" x="2834" y="408" height="48" width="325" html.valueishtml="0"  name=t_10 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Balance" border="0" color="0" x="4242" y="408" height="48" width="357" html.valueishtml="0"  name=t_15 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Running" border="0" color="0" x="4242" y="360" height="48" width="357" html.valueishtml="0"  name=t_6 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=detail x1="5" y1="0" x2="4599" y2="0"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="0" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="14" y="12" height="60" width="233" format="[general]" html.valueishtml="0"  name=fecha visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="0" x="3163" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=deposits visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="0" color="0" x="3433" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=cancellations visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="0" x="3703" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=adjustments visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="0" x="3973" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=bal_due visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="1385" y="12" height="60" width="297" format="[general]" html.valueishtml="0"  name=pais visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="1687" y="12" height="60" width="338" format="[general]" html.valueishtml="0"  name=amount visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="2030" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=fee visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="2299" y="12" height="60" width="265" format="[general]" html.valueishtml="0"  name=comm visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=22 alignment="1" tabsequence=32766 border="0" color="0" x="2569" y="12" height="60" width="265" format="[currency]" html.valueishtml="0"  name=receiver_handling_receiver visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="2834" y="12" height="60" width="325" format="[general]" html.valueishtml="0"  name=due visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=13 alignment="1" tabsequence=32766 border="0" color="0" x="4242" y="12" height="60" width="357" format="[general]" html.valueishtml="0"  name=last_col visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+text(band=header alignment="2" text="Itemized Statement of Account" border="0" color="0" x="1202" y="20" height="76" width="2638" html.valueishtml="0"  name=t_16 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + arg_fecha2 + ~" to ~" + arg_fecha1"border="0" color="0" x="1202" y="116" height="76" width="2638" format="[General]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="arg_tittle"border="0" color="0" x="1202" y="196" height="92" width="2638" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Description / Sender Name" border="0" color="0" x="622" y="404" height="48" width="759" html.valueishtml="0"  name=t_22 visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="622" y="12" height="60" width="759" format="[general]" html.valueishtml="0"  name=nombre visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="265" y="12" height="60" width="315" format="[general]" html.valueishtml="0"  name=giro visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Verdana" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif (fecha = 'DAILY',RGB(200,255,200),RGB(255,255,255))" )
+text(band=header alignment="2" text="Order
+Number" border="0" color="0" x="265" y="360" height="96" width="315" html.valueishtml="0"  name=t_20  tag="" visible="1"  font.face="Verdana" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+htmltable(border="1" generatecss="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

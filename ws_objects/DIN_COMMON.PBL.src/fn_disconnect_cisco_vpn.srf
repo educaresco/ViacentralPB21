@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_disconnect_cisco_vpn.srf
+global type fn_disconnect_cisco_vpn from function_object
+end type
+
+forward prototypes
+global subroutine fn_disconnect_cisco_vpn ()
+end prototypes
+
+global subroutine fn_disconnect_cisco_vpn ();long ll_FileNum
+ll_FileNum = FileOpen("C:\ViamericasMT\DisConnVPN.bat",LineMode!, Write!, LockWrite!, Replace!)
+
+FileWrite(ll_FileNum,'C:')
+FileWrite(ll_FileNum,'CD c:\ViamericasMT')
+FileWrite(ll_FileNum,'KP.exe agricolasend')
+FileWrite(ll_FileNum,'cd ..')
+FileWrite(ll_FileNum,'taskkill /IM AgricolaSend.exe')
+FileWrite(ll_FileNum,'CD C:\Program Files\Cisco Systems\VPN Client')
+FileWrite(ll_FileNum,'VPNCLIENT DISCONNECT')
+FileClose(ll_FileNum)
+
+Run("C:\ViamericasMT\DisConnVPN.bat", Minimized!)
+end subroutine
+

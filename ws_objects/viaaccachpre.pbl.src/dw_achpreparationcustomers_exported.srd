@@ -1,0 +1,90 @@
+﻿$PBExportHeader$dw_achpreparationcustomers_exported.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes key=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes key=yes name=receiver_id_receiver dbname="RECEIVER.ID_RECEIVER" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_sender dbname="RECEIVER.Sender" )
+ column=(type=datetime updatewhereclause=yes name=receiver_ordertime dbname="RECEIVER.OrderTime" )
+ column=(type=char(40) updatewhereclause=yes name=sender_sendername dbname="SENDER.SenderName" )
+ column=(type=char(2) updatewhereclause=yes name=sender_senderidtype dbname="SENDER.SenderIDType" )
+ column=(type=char(15) updatewhereclause=yes name=sender_senderidnumber dbname="SENDER.SenderIDNumber" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_rec_accrouting dbname="RECEIVER.REC_ACCROUTING" )
+ column=(type=char(20) updatewhereclause=yes name=receiver_rec_accbank dbname="RECEIVER.REC_ACCBANK" )
+ column=(type=char(20) updatewhereclause=yes name=receiver_rec_accnumber dbname="RECEIVER.REC_ACCNUMBER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_recipientcountry dbname="RECEIVER.RecipientCountry" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_totalamount dbname="RECEIVER.TotalAmount" )
+ column=(type=char(200) updatewhereclause=yes name=receiver_notes dbname="RECEIVER.Notes" )
+ column=(type=long update=yes updatewhereclause=yes name=req_verification dbname="RECEIVER.REQ_VERIFICATION" values="	Y/	N" )
+ column=(type=decimal(2) updatewhereclause=yes name=verification_amt dbname="RECEIVER.VERIFICATION_AMT" )
+ column=(type=char(80) updatewhereclause=yes name=bank_filename dbname="RECEIVER.BANK_FILENAME" )
+ column=(type=decimal(2) updatewhereclause=yes identity=yes name=dummy1 dbname="dummy1" )
+ retrieve="SELECT DISTINCT 
+DBA.RECEIVER.ID_BRANCH,  
+DBA.RECEIVER.ID_RECEIVER,   
+DBA.RECEIVER.ID_SENDER as Sender,   
+DBA.RECEIVER.DATE_RECEIVER as OrderTime,   
+dba.SENDER.NAME_SENDER as SenderName,     
+dba.SENDER.ID_TYPE_ID_SENDER as SenderIDType,   
+dba.SENDER.NUMBER_ID_SENDER as SenderIDNumber,   
+DBA.RECEIVER.REC_ACCROUTING,   
+DBA.RECEIVER.REC_ACCBANK,   
+DBA.RECEIVER.REC_ACCNUMBER,   
+DBA.RECEIVER.ID_COUNTRY_RECEIVER as RecipientCountry,   
+DBA.RECEIVER.TOTAL_RECEIVER as TotalAmount,   
+DBA.RECEIVER.NOTES_RECEIVER as Notes,
+REQ_VERIFICATION,
+VERIFICATION_AMT,
+BANK_FILENAME,
+0.00 as dummy1
+
+FROM DBA.RECEIVER,   
+DBA.SENDER,   
+DBA.MOTIVO_HOLD,
+DBA.ACH_DETAIL_RECEIVER
+
+
+WHERE dba.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER
+
+AND DBA.RECEIVER.ID_BRANCH = DBA.SENDER.ID_BRANCH
+AND DBA.RECEIVER.ID_SENDER = DBA.MOTIVO_HOLD.ID_SENDER
+AND DBA.RECEIVER.ID_BRANCH = DBA.MOTIVO_HOLD.ID_BRANCH
+AND DBA.RECEIVER.ID_RECEIVER = DBA.MOTIVO_HOLD.ID_RECEIVER
+AND DBA.ACH_DETAIL_RECEIVER.ID_BRANCH =  DBA.RECEIVER.ID_BRANCH 
+AND DBA.ACH_DETAIL_RECEIVER.ID_RECEIVER = DBA.RECEIVER.ID_RECEIVER
+AND DBA.RECEIVER.ID_FLAG_RECEIVER = 'H'
+AND DBA.MOTIVO_HOLD.TYPE_MOTIVO_HOLD  in (SELECT TIPO_HOLD FROM DBA.DESC_HOLD WHERE HOLD_CATEGORY = 'ACH') 
+ORDER BY DBA.RECEIVER.ID_RECEIVER ASC   " update="DBA.ACH_DETAIL_RECEIVER" updatewhere=0 updatekeyinplace=yes )
+text(band=header alignment="2" text="Order" border="2" color="33554432" x="407" y="16" height="52" width="425" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Date" border="2" color="33554432" x="846" y="16" height="52" width="320" html.valueishtml="0"  name=receiver_ordertime_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Sender" border="2" color="33554432" x="1179" y="16" height="52" width="933" html.valueishtml="0"  name=sender_sendername_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Acc. Routing" border="2" color="33554432" x="2377" y="16" height="52" width="334" html.valueishtml="0"  name=receiver_rec_accrouting_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Acc. Number" border="2" color="33554432" x="2725" y="16" height="52" width="558" html.valueishtml="0"  name=receiver_rec_accnumber_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Country" border="2" color="33554432" x="2126" y="16" height="52" width="238" html.valueishtml="0"  name=receiver_recipientcountry_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Bank FileName" border="2" color="33554432" x="3877" y="16" height="52" width="686" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount" border="2" color="33554432" x="3529" y="16" height="52" width="334" html.valueishtml="0"  name=receiver_totalamount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Verify?" border="2" color="33554432" x="3296" y="16" height="52" width="219" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+compute(band=detail alignment="0" expression="trim( receiver_id_branch )+'-'+ string(receiver_id_receiver )"border="0" color="33554432" x="430" y="12" height="64" width="402" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="864" y="12" height="64" width="302" format="[shortdate]" html.valueishtml="0"  name=receiver_ordertime visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="1179" y="12" height="64" width="933" format="[general]" html.valueishtml="0"  name=sender_sendername visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=10 border="2" color="0" x="2377" y="12" height="64" width="334" format="[general]" html.valueishtml="0"  name=receiver_rec_accrouting visible="1" editmask.mask="#########" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=10 alignment="0" tabsequence=20 border="2" color="0" x="2725" y="12" height="64" width="558" format="[general]" html.valueishtml="0"  name=receiver_rec_accnumber visible="1" editmask.mask="####################" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=16 alignment="0" tabsequence=30 border="0" color="33554432" x="3877" y="12" height="64" width="686" format="[general]" html.valueishtml="0"  name=bank_filename visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="33554432" x="3534" y="12" height="64" width="329" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=receiver_totalamount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+button(band=detail text="Release" enabled=yes action="0" border="0" color="0" x="119" y="8" height="72" width="297" vtextalign="0" htextalign="0"  name=b_release visible="1~tif (req_verification = 1, 0 , 1)"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=detail text="" enabled=yes action="0" border="0" color="0" x="3456" y="4" height="76" width="64" vtextalign="0" htextalign="0"  name=b_verification  tag="" visible="1~tIF( req_verification = 1, IF( verification_amt > 0, 1,0),0)"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="2126" y="12" height="64" width="238" format="[general]" html.valueishtml="0"  name=receiver_recipientcountry visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="1" tabsequence=40 border="5" color="33554432" x="3301" y="12" height="64" width="142" format="0.00" html.valueishtml="0"  name=dummy1 visible="1~tIF( req_verification = 1, IF( verification_amt > 0, 1,0),0)" editmask.useformat=yes editmask.mask="0.00" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()

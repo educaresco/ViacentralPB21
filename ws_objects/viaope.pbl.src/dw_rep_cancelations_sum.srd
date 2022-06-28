@@ -1,0 +1,81 @@
+﻿$PBExportHeader$dw_rep_cancelations_sum.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=yes )
+header(height=368 color="536870912" )
+summary(height=76 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=0 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes key=yes name=id_branch dbname="RECEIVER_STATISTICS.ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes key=yes name=id_receiver dbname="RECEIVER_STATISTICS.ID_RECEIVER" )
+ column=(type=char(60) updatewhereclause=yes name=payername dbname="PayerName" )
+ column=(type=char(1) updatewhereclause=yes name=c_source dbname="RECEIVER_STATISTICS.C_SOURCE" values="CANCELLATIONS REQUESTED BY FAX	F/CANCELLATIONS REQUESTED BY VIACASH	S/UNKNOWN	/" )
+ column=(type=datetime updatewhereclause=yes name=c_req_db_time dbname="RECEIVER_STATISTICS.C_REQ_DB_TIME" )
+ column=(type=datetime updatewhereclause=yes name=c_req_sent_to_payer dbname="RECEIVER_STATISTICS.C_REQ_SENT_TO_PAYER" )
+ column=(type=datetime updatewhereclause=yes name=c_req_time_cancelled dbname="RECEIVER_STATISTICS.C_REQ_TIME_CANCELLED" )
+ column=(type=decimal(3) updatewhereclause=yes name=processtime dbname="ProcessTime" )
+ column=(type=decimal(3) updatewhereclause=yes name=payertime dbname="PayerTime" )
+ column=(type=decimal(3) updatewhereclause=yes name=netprocesstime dbname="NetProcessTime" )
+ column=(type=decimal(3) updatewhereclause=yes name=netpayertime dbname="NetPayerTime" )
+ retrieve="SELECT ID_BRANCH, ID_RECEIVER, 
+		 dba.sfGetReceiverPayer(ID_BRANCH, ID_RECEIVER) as PayerName,
+		 C_SOURCE, C_REQ_DB_TIME, 
+		 C_REQ_SENT_TO_PAYER, C_REQ_TIME_CANCELLED,
+		 dba.sfGetBusinessDateDiffNN(C_REQ_DB_TIME,C_REQ_SENT_TO_PAYER) ProcessTime,
+		 dba.sfGetBusinessDateDiffNN(C_REQ_SENT_TO_PAYER,C_REQ_TIME_CANCELLED) PayerTime,
+		 dba.sfGetNetDateDiffNN(C_REQ_DB_TIME,C_REQ_SENT_TO_PAYER) NetProcessTime,
+		 dba.sfGetNetDateDiffNN(C_REQ_SENT_TO_PAYER,C_REQ_TIME_CANCELLED) NetPayerTime
+FROM dba.RECEIVER_STATISTICS
+WHERE ID_FLAG_RECEIVER = 'C'
+AND C_REQ_TIME_CANCELLED >= :p_date1
+AND C_REQ_TIME_CANCELLED <= :p_date2
+ORDER BY C_SOURCE, C_REQ_TIME_CANCELLED" update="dba.RECEIVER_STATISTICS" updatewhere=0 updatekeyinplace=no arguments=(("p_date1", datetime),("p_date2", datetime))  sort="c_source A payername A " )
+group(level=1 header.height=320 trailer.height=84 by=("c_source" ) newpage=yes header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=0 trailer.height=80 by=("payername" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Cancelations Report" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + ~"From ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2459" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=header.1 id=4 alignment="0" tabsequence=32766 border="0" color="0" x="46" y="28" height="88" width="3429" format="[general]" html.valueishtml="0"  name=c_source visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.imemode=0  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Payer
+Resp. Time" border="0" color="0" x="2363" y="204" height="104" width="347" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Viamericas
+Proc. Time" border="0" color="0" x="2747" y="204" height="104" width="347" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Payer
+Resp. Time" border="0" color="0" x="3113" y="204" height="104" width="347" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header.1 x1="9" y1="312" x2="3465" y2="312"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Call Center Time" border="0" color="0" x="2002" y="144" height="52" width="709" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="29687748" )
+text(band=header.1 alignment="2" text="Net Time" border="0" color="0" x="2752" y="144" height="52" width="709" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+text(band=header.1 alignment="2" text="Viamericas
+Proc. Time" border="0" color="0" x="1998" y="204" height="104" width="347" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Count" border="0" color="0" x="1815" y="256" height="52" width="174" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.2 x1="9" y1="4" x2="3465" y2="4"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="avg(payertime for group 2)"border="0" color="0" x="2363" y="12" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="avg(netpayertime for group 2)"border="0" color="0" x="3113" y="12" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="avg(processtime for group 2)"border="0" color="0" x="1998" y="12" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="avg(netprocesstime for group 2)"border="0" color="0" x="2747" y="12" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.2 alignment="1" expression="count(trim(id_branch) +'-'+ string(id_receiver) for group 2)"border="0" color="0" x="1856" y="16" height="56" width="96" format="[GENERAL]" html.valueishtml="0"  name=compute_20 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=trailer.2 id=3 alignment="0" tabsequence=32766 border="0" color="8421504" x="32" y="12" height="64" width="1079" format="[general]" html.valueishtml="0"  name=payername visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="avg(payertime for group 1)"border="0" color="0" x="2363" y="8" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="avg(netpayertime for group 1)"border="0" color="0" x="3113" y="8" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="avg(netprocesstime for group 1)"border="0" color="0" x="2747" y="8" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_14 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="avg(processtime for group 1)"border="0" color="0" x="1998" y="8" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.1 x1="9" y1="4" x2="3465" y2="4"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="count(trim(id_branch) +'-'+ string(id_receiver) for group 1)"border="0" color="0" x="1856" y="8" height="56" width="96" format="[GENERAL]" html.valueishtml="0"  name=compute_21 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="'TOTAL '+ if(c_source = 'F','FAX','VIACASH')+' :'"border="0" color="0" x="238" y="12" height="52" width="1554" format="[GENERAL]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="avg(payertime for all)"border="0" color="0" x="2363" y="16" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_16 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="avg(netpayertime for all)"border="0" color="0" x="3113" y="12" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_17 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="avg(netprocesstime for all)"border="0" color="0" x="2747" y="16" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_19 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="avg(processtime for all)"border="0" color="0" x="1998" y="16" height="56" width="347" format="###0.000" html.valueishtml="0"  name=compute_18 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="9" y1="8" x2="3465" y2="8"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=summary x1="9" y1="4" x2="3465" y2="4"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="count(trim(id_branch) +'-'+ string(id_receiver) for all)"border="0" color="0" x="1856" y="16" height="56" width="96" format="[GENERAL]" html.valueishtml="0"  name=compute_22 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="'TOTAL :'"border="0" color="0" x="238" y="20" height="52" width="1554" format="[GENERAL]" html.valueishtml="0"  name=compute_15 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

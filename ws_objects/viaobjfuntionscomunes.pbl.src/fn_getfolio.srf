@@ -1,0 +1,129 @@
+﻿$PBExportHeader$fn_getfolio.srf
+global type fn_getfolio from function_object
+end type
+
+forward prototypes
+global function string fn_getfolio (string p_idbranch, double p_idreceiver, string p_idgroup)
+end prototypes
+
+global function string fn_getfolio (string p_idbranch, double p_idreceiver, string p_idgroup);// ??????????????????????????????????????????????????????????????????????????????
+//
+//  Returns the folio (clave) for a given invoice
+//
+//  The standar folio is 10 digits:
+//
+//  Agency code, example A00788, last 4 digits:              0788 = A1,A2,A3,A4
+//  Invoice number, example 12345, add 1111: 12345 + 1111 = 13456 = I1,I2,I3,I4,I5
+//
+//  A fixed 7 will be placed between Agency and Invoice digits, this number will be
+//  usefull for duplicated folios.
+//
+//  Standar Folio = A1 A2 A3 A4 7 I5 I4 I3 I2 I1 = 0788765431
+//
+// ------------------------------------------------------------------------------
+//
+//  Exceptions: Banrural prefix = 700000, example 7000000788765431 (16 digits)
+//              Banorte prefix = 80471 (+7 viamericas), example 8047190788765431
+//
+// ??????????????????????????????????????????????????????????????????????????????
+
+string ls_agencypart, ls_invoicepart, ls_fixeddigit, ls_revinvoicepart, ls_branchfolio
+string ls_folio, ls_pre, ls_prefix
+
+p_idbranch = trim(p_idbranch)
+p_idreceiver = abs(p_idreceiver)
+
+ls_agencypart = mid(p_idbranch,len(p_idbranch)-3)
+ls_agencypart = fn_completar_cadena(ls_agencypart,'I','0',4)
+
+ls_invoicepart = trim(string(p_idreceiver + 1111))
+
+ls_invoicepart = fn_completar_cadena(ls_invoicepart,'I','0',5)
+
+ls_fixeddigit = '7'
+
+// reversing invoice part
+ls_revinvoicepart = mid(ls_invoicepart,5,1) + &
+                    mid(ls_invoicepart,4,1) + &
+                    mid(ls_invoicepart,3,1) + &
+                    mid(ls_invoicepart,2,1) + &
+                    mid(ls_invoicepart,1,1)
+
+ls_folio = ls_agencypart + ls_fixeddigit + ls_revinvoicepart
+
+
+ls_pre = '' 
+ls_prefix = ''
+// """"""""""""""""""""""""""""""""""""""""
+// Prefixes Payors
+////alter table dba.group_branch add (FOLIOPREFIX VARCHAR(20));
+select GRO_COMPANYIDFOLIO 
+into :ls_pre
+from dba.group_branch
+where id_main_branch = :p_idgroup;
+
+if isnull(ls_pre) then ls_pre = ''
+
+ls_pre = trim(ls_pre)
+//ls_folio = ls_pre + ls_folio
+// """"""""""""""""""""""""""""""""""""""""
+
+//**************************************************************************
+// Folios PRE ASIGNADOS (Ex. BTS) Estan en la tabla dba.claves
+
+if ls_pre = 'PRE-ASSIGN' then
+	
+	// Prueba con folios asignados a A00001
+	ls_branchfolio = 'A00001'
+
+	// 05/11/2013 Adds some random selection to avoid duplicated folios retaled to concurrency
+	// selects el top 1 del 1% sample
+	//http://msdn.microsoft.com/en-us/library/cc441928.aspx
+	select TOP 1 id_clave,  isnull(ID_CLAVE_PREFIX,'')
+	into :ls_folio, :ls_prefix
+	from dba.claves
+	where id_group_payee = :p_idgroup
+	and id_branch = :ls_branchfolio
+	and id_used = 'N'
+	AND (ABS(CAST((BINARY_CHECKSUM(*) * RAND()) as int)) % 100) < 1;		
+	
+	// -------------------------------
+	// Se Acabaron los folios!
+	if isnull(ls_folio) then 
+		
+		// Prueba con folios asignados a la agencia		
+		ls_branchfolio = p_idbranch
+		
+		select TOP 1 id_clave, isnull(ID_CLAVE_PREFIX,'')
+		into :ls_folio, :ls_prefix
+		from dba.claves
+		where id_group_payee = :p_idgroup
+		and id_branch = :ls_branchfolio
+		and id_used = 'N';		
+		
+		// -------------------------------
+		// Se Acabaron Los Asignados a la Agencia Tambien
+		if isnull(ls_folio) then 						
+			ls_folio = 'CALL CUS.SERVICE'
+			return ls_folio			
+		end if
+	end if
+	// -------------------------------
+	
+	UPDATE dba.claves
+	SET id_used = 'Y'
+	WHERE id_group_payee = :p_idgroup
+	and id_branch = :ls_branchfolio
+	AND id_clave = :ls_folio;	
+	
+	ls_pre=ls_prefix 
+end if
+//**************************************************************************
+
+
+ls_pre = trim(ls_pre)
+ls_folio = ls_pre + ls_folio
+
+return ls_folio
+end function
+

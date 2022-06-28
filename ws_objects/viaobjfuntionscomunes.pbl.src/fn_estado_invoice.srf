@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_estado_invoice.srf
+global type fn_estado_invoice from function_object
+end type
+
+forward prototypes
+global function string fn_estado_invoice (string ls_branch, double ld_receiver)
+end prototypes
+
+global function string fn_estado_invoice (string ls_branch, double ld_receiver);string	ls_flag
+
+SELECT dba.receiver.id_flag_receiver  
+INTO :ls_flag  
+FROM dba.receiver WITH (NOLOCK)
+WHERE dba.receiver.id_branch = :ls_branch 
+AND dba.receiver.id_receiver = :ld_receiver;
+
+if isnull(ld_receiver) OR IsNull(ls_branch) Then
+	ls_flag = 'ERROR'
+end if
+
+return ls_flag
+
+
+
+end function
+

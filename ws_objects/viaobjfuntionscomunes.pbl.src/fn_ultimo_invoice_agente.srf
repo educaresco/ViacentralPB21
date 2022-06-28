@@ -1,0 +1,47 @@
+﻿$PBExportHeader$fn_ultimo_invoice_agente.srf
+$PBExportComments$determina cual es el ultimo Invoice en la base de Datos de esa Agencia.
+global type fn_ultimo_invoice_agente from function_object
+end type
+
+forward prototypes
+global function double fn_ultimo_invoice_agente (string ls_branch)
+end prototypes
+
+global function double fn_ultimo_invoice_agente (string ls_branch);Double	ld_ultimo
+
+
+ld_ultimo = 0
+
+	 SELECT dba.web_last_invoice.id_receiver  
+    INTO :ld_ultimo 
+    FROM dba.web_last_invoice  
+    WHERE dba.web_last_invoice.id_branch = :ls_branch   ;
+	
+	if isnull(ld_ultimo) then ld_ultimo = 0
+
+
+if ld_ultimo = 0 then
+	
+	//DON (03/24/2015) - PERFORMANCE TUNING RELATED CHANGES.  ***********************************************
+//  		SELECT MAX(dba.receiver.id_receiver)   
+//    	INTO :ld_ultimo  
+//    	FROM dba.receiver
+//   	WHERE dba.receiver.id_branch = :ls_branch and 
+//	      	dba.receiver.id_receiver < 900000  ;
+	
+	SELECT ID_RECEIVER		INTO	:ld_ultimo	FROM dba.BRANCH_LAST_TRANSACTION	WHERE ID_BRANCH = :ls_branch;
+	//**********************************************************************************************
+	
+end if			
+
+
+
+If isnull(ld_ultimo) Then
+	ld_ultimo = 0
+END IF
+
+Return ld_ultimo
+
+
+end function
+

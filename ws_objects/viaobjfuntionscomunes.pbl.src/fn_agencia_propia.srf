@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_agencia_propia.srf
+global type fn_agencia_propia from function_object
+end type
+
+forward prototypes
+global function string fn_agencia_propia (string ls_branch)
+end prototypes
+
+global function string fn_agencia_propia (string ls_branch);string ls_propia
+
+  SELECT dba.group_branch.type_group  
+    INTO :ls_propia  
+    FROM dba.group_branch,   
+         dba.branch  
+   WHERE ( dba.branch.id_main_branch = dba.group_branch.id_main_branch ) and  
+         ( ( dba.branch.id_branch = :ls_branch ) )   ;
+
+
+if sqlca.sqlcode <> 0 then
+	ls_propia = 'N'
+	return ls_propia
+else
+	return ls_propia
+end if
+end function
+

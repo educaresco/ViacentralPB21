@@ -1,0 +1,31 @@
+﻿$PBExportHeader$fn_telefono_branch.srf
+global type fn_telefono_branch from function_object
+end type
+
+forward prototypes
+global function string fn_telefono_branch (string ls_branch)
+end prototypes
+
+global function string fn_telefono_branch (string ls_branch);string	ls_tel = ""
+
+
+IF ISNULL(ls_branch) THEN
+	Return '0' ;
+END IF	
+
+
+	  SELECT dba.branch.phone1_branch  
+    INTO :ls_tel  
+    FROM dba.branch  
+   WHERE dba.branch.id_branch = :ls_branch   ;
+
+
+
+
+	Return ls_tel  ;
+
+
+
+
+end function
+

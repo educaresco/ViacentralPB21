@@ -1,0 +1,28 @@
+﻿$PBExportHeader$fn_comision_modo_pago_fija_payee.srf
+global type fn_comision_modo_pago_fija_payee from function_object
+end type
+
+forward prototypes
+global function double fn_comision_modo_pago_fija_payee (string ls_grupo, string ls_country_receiver, string ls_mod_currency, string ls_modo_pago1, double ld_amount)
+end prototypes
+
+global function double fn_comision_modo_pago_fija_payee (string ls_grupo, string ls_country_receiver, string ls_mod_currency, string ls_modo_pago1, double ld_amount);Double ld_telex_modo_pago= 0
+
+   SELECT dba.comision_modo_pago_grupo.feet_comision_payee  
+    INTO :ld_telex_modo_pago  
+    FROM dba.comision_modo_pago_grupo  
+   WHERE ( dba.comision_modo_pago_grupo.id_main_branch = :ls_grupo ) AND  
+         ( dba.comision_modo_pago_grupo.id_country = :ls_country_receiver ) AND  
+         ( dba.comision_modo_pago_grupo.mod_pay_currency = :ls_mod_currency ) AND  
+         ( dba.comision_modo_pago_grupo.id_modo_pago = :ls_modo_pago1 ) AND  
+         ( dba.comision_modo_pago_grupo.range_begin_comision_pay <= :ld_amount ) AND  
+         ( dba.comision_modo_pago_grupo.range_end_comision_pay >= :ld_amount )   ;
+					
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_telex_modo_pago
+end if
+end function
+

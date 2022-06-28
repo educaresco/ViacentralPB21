@@ -1,0 +1,35 @@
+﻿$PBExportHeader$fn_xmlcounttag.srf
+global type fn_xmlcounttag from function_object
+end type
+
+forward prototypes
+global function integer fn_xmlcounttag (string ps_xml, string ps_tag)
+end prototypes
+
+global function integer fn_xmlcounttag (string ps_xml, string ps_tag);
+
+long ll_cont, ll_nextpos
+String ls_xml, ls_tag
+
+ls_xml = fn_replace(upper(ps_Xml),'< ','<')
+ls_xml = fn_replace(upper(ls_xml),'< ','<')
+ls_tag = "<"+upper(ps_Tag)
+
+ll_cont = 0 
+
+ll_nextpos = 1
+
+do while ll_nextpos > 0
+
+	ll_nextpos = Pos(ls_xml, ls_tag, ll_nextpos)
+
+	if ll_nextpos > 0 then 
+		ll_cont += 1
+		ll_nextpos += 1
+	end if
+
+loop
+
+return ll_cont
+end function
+

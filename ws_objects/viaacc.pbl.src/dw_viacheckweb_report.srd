@@ -1,0 +1,62 @@
+﻿$PBExportHeader$dw_viacheckweb_report.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=yes )
+header(height=340 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(22) updatewhereclause=yes name=typematch dbname="TypeMatch" )
+ column=(type=char(10) updatewhereclause=yes name=fechaenusbank dbname="FechaEnUSBank" )
+ column=(type=char(10) updatewhereclause=yes name=fechabancoencentral dbname="FechaBancoEnCentral" )
+ column=(type=char(10) updatewhereclause=yes name=created dbname="created" )
+ column=(type=char(64) updatewhereclause=yes name=name dbname="name" )
+ column=(type=char(18) updatewhereclause=yes name=batchid dbname="batchid" )
+ column=(type=char(18) updatewhereclause=yes name=credittransactionid dbname="creditTransactionId" )
+ column=(type=decimal(2) updatewhereclause=yes name=valoracreditadocentral dbname="ValorAcreditadoCentral" )
+ column=(type=decimal(2) updatewhereclause=yes name=valoracreditadousbank dbname="ValorAcreditadoUsBank" )
+ retrieve="select '                      ' as TypeMatch,
+		 '          ' as FechaEnUSBank,
+	    '          ' as FechaBancoEnCentral,
+       '          ' as created, 
+	    '                                                                ' as name, 
+       '                  ' as  batchid, 
+       '                  ' as creditTransactionId, 
+       0.00 as ValorAcreditadoCentral,
+		 0.00  as ValorAcreditadoUsBank 
+  from dba.dual
+ where :p_date1 = :p_date1
+   and :p_date2 = :p_date2
+   and 1 = 2
+" arguments=(("p_date1", datetime),("p_date2", datetime)) )
+group(level=1 header.height=224 trailer.height=128 by=("typematch" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Reconcialiacion de Banco ViaCheck" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + ~"From ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2459" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="27" y="44" height="84" width="2702" format="[general]" html.valueishtml="0"  name=typematch visible="1" edit.limit=22 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-11" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Fecha en Banco" border="2" color="33554432" x="27" y="160" height="52" width="439" html.valueishtml="0"  name=fechaenusbank_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Fecha Sistema" border="2" color="33554432" x="485" y="160" height="52" width="439" html.valueishtml="0"  name=fechabancoencentral_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Agencia" border="2" color="33554432" x="942" y="160" height="52" width="407" html.valueishtml="0"  name=name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Batch ID" border="2" color="33554432" x="1367" y="160" height="52" width="434" html.valueishtml="0"  name=batchid_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Referencia" border="2" color="33554432" x="1819" y="160" height="52" width="366" html.valueishtml="0"  name=credittransactionid_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Valor Banco" border="2" color="33554432" x="2203" y="160" height="52" width="558" html.valueishtml="0"  name=valoracreditadousbank_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Valor Sistema" border="2" color="33554432" x="2779" y="160" height="52" width="558" html.valueishtml="0"  name=valoracreditadocentral_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="2" tabsequence=32766 border="0" color="33554432" x="27" y="8" height="56" width="439" format="[general]" html.valueishtml="0"  name=fechaenusbank visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="2" tabsequence=32766 border="0" color="33554432~tif ( fechaenusbank <>  fechabancoencentral, RGB(200,0,0), RGB(0,0,0))" x="485" y="8" height="56" width="439" format="[general]" html.valueishtml="0"  name=fechabancoencentral visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="983" y="8" height="56" width="366" format="[general]" html.valueishtml="0"  name=name visible="1" edit.limit=64 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="1445" y="8" height="56" width="357" format="[general]" html.valueishtml="0"  name=batchid visible="1" edit.limit=18 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="1888" y="8" height="56" width="297" format="[general]" html.valueishtml="0"  name=credittransactionid visible="1" edit.limit=18 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="33554432" x="2199" y="8" height="56" width="526" format="[currency]" html.valueishtml="0"  name=valoracreditadousbank visible="1" edit.limit=31 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="33554432" x="2775" y="8" height="56" width="526" format="[currency]" html.valueishtml="0"  name=valoracreditadocentral visible="1" edit.limit=31 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="18" y1="0" x2="3342" y2="0"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum(valoracreditadocentral for group 1)"border="0" color="33554432" x="2779" y="16" height="56" width="526" format="[currency]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(valoracreditadousbank for group 1)"border="0" color="33554432" x="2203" y="16" height="56" width="526" format="[currency]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

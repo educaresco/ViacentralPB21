@@ -1,0 +1,66 @@
+﻿$PBExportHeader$fn_getdigit.srf
+global type fn_getdigit from function_object
+end type
+
+forward prototypes
+global function string getdigit (double ld_digit)
+global function string fn_getdigit (string ld_digit)
+end prototypes
+
+global function string getdigit (double ld_digit);////'Converts a number from 1 to 9 into text
+string ls_return
+if ld_digit >9 or ld_digit <1 then
+	return ""
+end if 	
+choose Case (ld_digit)
+Case 1
+	ls_return = "One"
+Case 2
+	ls_return = "Two"
+Case 3
+	ls_return = "Three"
+Case 4  
+	ls_return = "Four"
+Case 5 
+	ls_return = "Five"
+Case 6 
+	ls_return = "Six"
+Case 7 
+	ls_return = "Seven"
+Case 8 
+	ls_return = "Eight"
+Case 9 
+	ls_return = "Nine"
+End choose
+return ls_return
+
+end function
+
+global function string fn_getdigit (string ld_digit);string ls_return
+if fn_val(ld_digit) >9 or fn_val(ld_digit) <1 then
+	return ""
+end if 	
+choose Case fn_val(ld_digit)
+Case 1
+	ls_return = "One"
+Case 2
+	ls_return = "Two"
+Case 3
+	ls_return = "Three"
+Case 4  
+	ls_return = "Four"
+Case 5 
+	ls_return = "Five"
+Case 6 
+	ls_return = "Six"
+Case 7 
+	ls_return = "Seven"
+Case 8 
+	ls_return = "Eight"
+Case 9 
+	ls_return = "Nine"
+End choose
+return ls_return
+
+end function
+

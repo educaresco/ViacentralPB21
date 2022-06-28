@@ -1,0 +1,25 @@
+﻿$PBExportHeader$fn_last_invoice_paid.srf
+global type fn_last_invoice_paid from function_object
+end type
+
+forward prototypes
+global function double fn_last_invoice_paid (string arg_branch)
+end prototypes
+
+global function double fn_last_invoice_paid (string arg_branch);Double	ld_last
+  
+  
+  
+  SELECT MAX(dba.RELACION_PAGO_AGENTE.ID_RECEIVER)  
+    INTO :ld_last  
+    FROM dba.RELACION_PAGO_AGENTE  
+   WHERE dba.RELACION_PAGO_AGENTE.ID_BRANCH = :arg_branch   ;
+
+
+if sqlca.sqlcode <> 0 then
+	ld_last = 0
+end if
+
+return ld_last
+end function
+

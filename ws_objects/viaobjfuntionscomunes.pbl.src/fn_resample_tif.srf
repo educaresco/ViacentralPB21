@@ -1,0 +1,50 @@
+﻿$PBExportHeader$fn_resample_tif.srf
+global type fn_resample_tif from function_object
+end type
+
+forward prototypes
+global subroutine fn_resample_tif (string p_filepath)
+end prototypes
+
+global subroutine fn_resample_tif (string p_filepath);Integer li_FileNum
+String ls_batname
+
+SetPointer(HourGlass!)
+
+///ls_batname = 'C:\Temp\RS'+fn_replace(fn_replace(fn_replace(upper(p_filepath),'.TIF.',''),":",""),"\","")+'.BAT'
+ls_batname = 'C:\Temp\RS.BAT'
+
+if FileExists('D:\Temp\') then
+	ls_batname = fn_replace(ls_batname,"C:\","D:\")
+end if
+	
+if not FileExists(ls_batname) then
+	
+	li_FileNum = FileOpen(ls_batname, LineMode!, Write!, LockWrite!,Replace!)
+	
+	if li_filenum < 0 Then
+		Messagebox("Error","Error creating "+ls_batname+" File")
+		Return
+	end if
+	
+	FileWrite (li_FileNum,"c:")	
+	FileWrite (li_FileNum,"cd " + fn_busparameter("IM_PATH"))	
+	//FileWrite (li_FileNum,"convert.exe "+p_filepath+" -resample "+String(p_xdip)+"x"+String(p_ydip)+" -units pixelsperinch "+fn_replace(upper(p_filepath),'.TIF','_R.TIF'))
+	//FileWrite (li_FileNum,"convert.exe %1 -resample "+String(p_xdip)+"x"+String(p_ydip)+" -units pixelsperinch %2")
+	FileWrite (li_FileNum,"convert.exe %1 -resample "+fn_busparameter("IM_DPIs")+" -units pixelsperinch %2")
+	FileWrite (li_FileNum,"")		
+	
+	FileClose(li_FileNum)
+
+end if 
+
+//Run(ls_batname+ " "+ p_filepath +" "+fn_replace(upper(p_filepath),'.TIF','_R.TIF'),Minimized!)
+Run(ls_batname+ " "+ p_filepath +" "+p_filepath,Minimized!)
+
+Sleep(5)
+
+SetPointer(Arrow!)
+
+
+end subroutine
+

@@ -1,0 +1,21 @@
+﻿$PBExportHeader$fn_valemailaddress.srf
+global type fn_valemailaddress from function_object
+end type
+
+forward prototypes
+global function boolean fn_valemailaddress (string ps_email_address)
+end prototypes
+
+global function boolean fn_valemailaddress (string ps_email_address);boolean lb_return
+
+lb_return = false
+
+If ps_email_address <> "" then
+	if match(ps_email_address,'^[a-zA-Z0-9][a-zA-Z\0-9\-_\.]*[^. ]\@[^. ][a-zA-Z\0-9\-_\.]+\.[a-zA-Z\0-9\-_\.]*[a-zA-Z\0-9]+$') then
+		lb_return = true
+	end if
+end if
+
+return lb_return
+end function
+

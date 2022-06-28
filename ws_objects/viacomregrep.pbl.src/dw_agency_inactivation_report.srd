@@ -1,0 +1,66 @@
+﻿$PBExportHeader$dw_agency_inactivation_report.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=yes print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=340 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=88 color="536870912" height.autosize=yes )
+table(column=(type=datetime updatewhereclause=yes name=audit_branch_status_date_audit dbname="AUDIT_BRANCH_STATUS.DATE_AUDIT" )
+ column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=char(200) updatewhereclause=yes name=audit_branch_status_old_comment dbname="AUDIT_BRANCH_STATUS.OLD_COMMENT" )
+ column=(type=char(45) updatewhereclause=yes name=inactivation_types_desc_inactivation_type dbname="INACTIVATION_TYPES.DESC_INACTIVATION_TYPE" )
+ column=(type=decimal(2) updatewhereclause=yes identity=yes name=balance dbname="BALANCE" )
+ column=(type=datetime updatewhereclause=yes name=date_activate dbname="DATE_ACTIVATE" )
+ retrieve="SELECT A.DATE_AUDIT,
+B.ID_BRANCH,
+B.NAME_BRANCH, 
+A.OLD_COMMENT, 
+C.DESC_INACTIVATION_TYPE,
+dba.sfcalpastdueasdate(B.ID_MAIN_BRANCH,DATEADD(DAY,-1,convert(datetime,convert(varchar(10),A.DATE_AUDIT,120)))) AS BALANCE,
+(SELECT MIN(DATE_AUDIT) FROM dba.AUDIT_BRANCH_STATUS WHERE DATE_AUDIT >= A.DATE_AUDIT AND NEW_FLAG = 'A' AND ID_BRANCH = B.ID_BRANCH) AS DATE_ACTIVATE
+FROM dba.AUDIT_BRANCH_STATUS A, dba.BRANCH B, dba.INACTIVATION_TYPES C
+WHERE A.ID_BRANCH = B.ID_BRANCH AND
+		   A.LAST_INACTIVATION_TYPE = C.ID_INACTIVATION_TYPE AND
+		   A.DATE_AUDIT >= :d_date_1 AND
+             A.DATE_AUDIT <= :d_date_2 AND
+		   A.ID_BRANCH = :id_branch" arguments=(("d_date_1", datetime),("d_date_2", datetime),("id_branch", string)) )
+group(level=1 header.height=260 trailer.height=0 by=("branch_id_branch" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="73" y="28" height="68" width="329" format="mm/dd/yyyy" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="375" y="88" height="64" width="1394" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="0" text="Agency:" border="0" color="0" x="37" y="20" height="52" width="206" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=header.1 id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="37" y="88" height="64" width="251" format="[general]" html.valueishtml="0"  name=branch_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="0" text="" border="2" color="33554432" x="0" y="0" height="12" width="4558" html.valueishtml="0"  name=t_3 visible="1"  slideup=directlyabove  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="0" text="" border="0" color="33554432" x="0" y="244" height="12" width="4567" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="2" text="Date" border="0" color="33554432" x="32" y="176" height="64" width="480" html.valueishtml="0"  name=audit_branch_status_date_audit_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Comment" border="0" color="33554432" x="613" y="176" height="64" width="1774" html.valueishtml="0"  name=audit_branch_status_old_comment_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Inactivation Reason" border="0" color="33554432" x="2542" y="176" height="64" width="1051" html.valueishtml="0"  name=inactivation_types_desc_inactivation_type_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Due Balance" border="0" color="33554432" x="3621" y="176" height="64" width="411" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="Reactivate Date" border="0" color="33554432" x="4059" y="176" height="64" width="485" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="105" y="12" height="64" width="320" format="[shortdate]" html.valueishtml="0"  name=audit_branch_status_date_audit visible="1" accelerator=" " edit.name="MM/DD/YYYY HH:MM:SS" editmask.mask="MM/DD/YYYY" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="658" y="12" height="64" width="1806" format="[general]" html.valueishtml="0"  name=audit_branch_status_old_comment visible="1"  slideup=allabove height.autosize=yes edit.limit=200 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="2542" y="12" height="64" width="1051" format="[general]" html.valueishtml="0"  name=inactivation_types_desc_inactivation_type visible="1" edit.limit=45 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="33554432" x="3621" y="16" height="52" width="411" format="[general]" html.valueishtml="0"  name=balance visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="2" tabsequence=32766 border="0" color="33554432" x="4059" y="16" height="52" width="485" format="mm/dd/yyyy" html.valueishtml="0"  name=date_activate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_16 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_14 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Historical Inactivation Data" border="0" color="0" x="1577" y="24" height="100" width="1225" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="From :" border="0" color="0" x="1509" y="240" height="80" width="242" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" d_date_1 "border="0" color="33554432" x="1810" y="240" height="80" width="411" format="[SHORTDATE]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="To :" border="0" color="0" x="2309" y="240" height="80" width="151" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" d_date_2 "border="0" color="33554432" x="2533" y="240" height="80" width="411" format="[SHORTDATE]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3982" y="28" height="68" width="471" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="3730" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3730" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

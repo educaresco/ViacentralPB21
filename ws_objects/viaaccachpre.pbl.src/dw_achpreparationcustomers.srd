@@ -1,0 +1,114 @@
+﻿$PBExportHeader$dw_achpreparationcustomers.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="536870912" )
+summary(height=92 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes key=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes key=yes name=receiver_id_receiver dbname="RECEIVER.ID_RECEIVER" dbalias=".ID_RECEIVER" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_sender dbname="RECEIVER.Sender" dbalias=".Sender" )
+ column=(type=datetime updatewhereclause=yes name=receiver_ordertime dbname="RECEIVER.OrderTime" dbalias=".OrderTime" )
+ column=(type=char(40) updatewhereclause=yes name=sender_sendername dbname="SENDER.SenderName" dbalias=".SenderName" )
+ column=(type=char(2) updatewhereclause=yes name=sender_senderidtype dbname="SENDER.SenderIDType" dbalias=".SenderIDType" )
+ column=(type=char(15) updatewhereclause=yes name=sender_senderidnumber dbname="SENDER.SenderIDNumber" dbalias=".SenderIDNumber" )
+ column=(type=char(10) update=yes updatewhereclause=yes name=receiver_rec_accrouting dbname="RECEIVER.REC_ACCROUTING" dbalias=".REC_ACCROUTING" )
+ column=(type=char(20) updatewhereclause=yes name=receiver_rec_accbank dbname="RECEIVER.REC_ACCBANK" dbalias=".REC_ACCBANK" )
+ column=(type=char(20) update=yes updatewhereclause=yes name=receiver_rec_accnumber dbname="RECEIVER.REC_ACCNUMBER" dbalias=".REC_ACCNUMBER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_recipientcountry dbname="RECEIVER.RecipientCountry" dbalias=".RecipientCountry" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_totalamount dbname="RECEIVER.TotalAmount" dbalias=".TotalAmount" )
+ column=(type=char(200) updatewhereclause=yes name=receiver_notes dbname="RECEIVER.Notes" dbalias=".Notes" )
+ column=(type=char(1) updatewhereclause=yes name=checkaccount dbname="CheckAccount" values="	Y/	N" )
+ column=(type=char(1) updatewhereclause=yes name=processrecord dbname="ProcessRecord" values="	Y/	N" )
+ column=(type=char(50) updatewhereclause=yes name=sender_address1 dbname="Sender_Address1" )
+ column=(type=char(69) updatewhereclause=yes name=sender_address2 dbname="Sender_Address2" )
+ column=(type=char(500) updatewhereclause=yes name=receiver_name dbname="Receiver_name" )
+ column=(type=char(500) updatewhereclause=yes name=receiver_address1 dbname="Receiver_Address1" )
+ column=(type=char(81) updatewhereclause=yes name=receiver_address2 dbname="Receiver_Address2" )
+ column=(type=char(30) updatewhereclause=yes name=clave_receiver dbname="RECEIVER.CLAVE_RECEIVER" dbalias=".CLAVE_RECEIVER" )
+ column=(type=char(30) updatewhereclause=yes name=receiver_receiver_idnumber dbname="RECEIVER.Receiver_IDNumber" dbalias=".Receiver_IDNumber" )
+ column=(type=char(11) updatewhereclause=yes name=sender_address3 dbname="Sender_Address3" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=rec_senacctype dbname="RECEIVER.REC_SENACCTYPE" dbalias=".REC_SENACCTYPE" values="SAVINGS	S/CHECKING	C/" )
+ retrieve="SELECT DISTINCT 
+DBA.RECEIVER.ID_BRANCH,  
+DBA.RECEIVER.ID_RECEIVER,   
+DBA.RECEIVER.ID_SENDER as Sender,   
+DBA.RECEIVER.DATE_RECEIVER as OrderTime,   
+dba.SENDER.NAME_SENDER as SenderName,     
+dba.SENDER.ID_TYPE_ID_SENDER as SenderIDType,   
+dba.SENDER.NUMBER_ID_SENDER as SenderIDNumber,   
+DBA.RECEIVER.REC_ACCROUTING,   
+DBA.RECEIVER.REC_ACCBANK,   
+DBA.RECEIVER.REC_ACCNUMBER,   
+DBA.RECEIVER.ID_COUNTRY_RECEIVER as RecipientCountry,   
+DBA.RECEIVER.TOTAL_RECEIVER as TotalAmount,   
+DBA.RECEIVER.NOTES_RECEIVER as Notes,
+'N' as CheckAccount,
+'Y' as ProcessRecord,
+left(ltrim(dba.sfGetCleanStringAddress(addres_sender)),50) as Sender_Address1,
+rtrim(ltrim(CITY_SENDER)) +' '+ rtrim(ltrim(STATE_SENDER))+' '+ dba.sfGetFullZip(ZIP_SENDER) as Sender_Address2,
+
+dba.sfGetCleanStringNoSpclChrs(name_receiver) as Receiver_name,
+dba.sfGetCleanStringAddress(DBA.RECEIVER.ADDRESS_RECEIVER) as Receiver_Address1,
+DBA.CITY.NAME_CITY + ' '+ DBA.STATE.NAME_STATE as Receiver_Address2,
+CLAVE_RECEIVER,
+dba.RECEIVER.NUMID as Receiver_IDNumber,
+~"USA ~" + dba.sfGetFullZip(ZIP_SENDER) as Sender_Address3,
+REC_SENACCTYPE
+
+FROM DBA.RECEIVER,   
+DBA.SENDER,   
+DBA.MOTIVO_HOLD,
+DBA.CITY, 
+DBA.STATE  
+
+WHERE dba.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER
+AND DBA.RECEIVER.ID_BRANCH = DBA.SENDER.ID_BRANCH
+AND DBA.RECEIVER.ID_SENDER = DBA.MOTIVO_HOLD.ID_SENDER
+AND DBA.RECEIVER.ID_BRANCH = DBA.MOTIVO_HOLD.ID_BRANCH
+AND DBA.RECEIVER.ID_RECEIVER = DBA.MOTIVO_HOLD.ID_RECEIVER
+AND DBA.RECEIVER.ID_CITY_RECEIVER = DBA.CITY.ID_CITY
+AND DBA.RECEIVER.ID_STATE_RECEIVER = DBA.CITY.ID_STATE
+AND DBA.RECEIVER.ID_COUNTRY_RECEIVER = DBA.CITY.ID_COUNTRY
+AND DBA.RECEIVER.ID_STATE_RECEIVER = DBA.STATE.ID_STATE
+AND DBA.RECEIVER.ID_COUNTRY_RECEIVER = DBA.STATE.ID_COUNTRY
+
+AND (DBA.RECEIVER.ID_FLAG_RECEIVER = 'H' or dba.receiver.id_receiver in (46353,46354,46355,46356,46357,46358,46359,46360,46361,46362,46363,46364,46365))
+AND DBA.MOTIVO_HOLD.TYPE_MOTIVO_HOLD IN  (SELECT TIPO_HOLD FROM DBA.DESC_HOLD WHERE HOLD_CATEGORY = 'ACH') 
+AND NOT EXISTS (SELECT 'X' FROM dba.ACH_DETAIL_RECEIVER WHERE dba.ACH_DETAIL_RECEIVER.ID_BRANCH =  DBA.RECEIVER.ID_BRANCH AND dba.ACH_DETAIL_RECEIVER.ID_RECEIVER = DBA.RECEIVER.ID_RECEIVER)
+ORDER BY DBA.RECEIVER.ID_RECEIVER ASC   
+
+
+" update="DBA.RECEIVER" updatewhere=0 updatekeyinplace=yes )
+text(band=header alignment="2" text="Order" border="2" color="33554432" x="375" y="16" height="52" width="425" html.valueishtml="0"  name=receiver_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Date" border="2" color="33554432" x="814" y="16" height="52" width="320" html.valueishtml="0"  name=receiver_ordertime_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Process?" border="2" color="33554432" x="133" y="16" height="52" width="229" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Sender" border="2" color="33554432" x="1147" y="16" height="52" width="933" html.valueishtml="0"  name=sender_sendername_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Country" border="2" color="33554432" x="2094" y="16" height="52" width="238" html.valueishtml="0"  name=receiver_recipientcountry_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Acc. Routing" border="2" color="33554432" x="2345" y="16" height="52" width="334" html.valueishtml="0"  name=receiver_rec_accrouting_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Acc. Number" border="2" color="33554432" x="2693" y="16" height="52" width="558" html.valueishtml="0"  name=receiver_rec_accnumber_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount" border="2" color="33554432" x="3954" y="16" height="52" width="334" html.valueishtml="0"  name=receiver_totalamount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Verify?" border="2" color="33554432" x="3721" y="16" height="52" width="219" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Acc. Type" border="2" color="33554432" x="3264" y="16" height="52" width="443" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+compute(band=detail alignment="0" expression="trim( receiver_id_branch )+'-'+ string(receiver_id_receiver )"border="0" color="33554432" x="398" y="12" height="64" width="402" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="832" y="12" height="64" width="302" format="[shortdate]" html.valueishtml="0"  name=receiver_ordertime visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=50 border="0" color="33554432" x="215" y="16" height="52" width="64" format="[general]" html.valueishtml="0"  name=processrecord visible="1" checkbox.text="" checkbox.on="Y" checkbox.off="N" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="1147" y="12" height="64" width="933" format="[general]" html.valueishtml="0"  name=sender_sendername visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="2098" y="12" height="64" width="238" format="[general]" html.valueishtml="0"  name=receiver_recipientcountry visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=40 border="0" color="33554432" x="3803" y="16" height="52" width="64" format="[general]" html.valueishtml="0"  name=checkaccount visible="1~tif( receiver_id_branch = 'A00788',1,0)" checkbox.text="" checkbox.on="Y" checkbox.off="N" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="33554432" x="3959" y="12" height="64" width="334" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=receiver_totalamount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=24 alignment="0" tabsequence=30 border="5" color="33554432" x="3264" y="12" height="64" width="443" format="[general]" html.valueishtml="0" protect="0~tif( receiver_id_branch <> 'A00788',1,0)"  name=rec_senacctype visible="1" ddlb.limit=0 ddlb.sorted=yes ddlb.allowedit=no ddlb.case=upper ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=20 border="5" color="0" x="2693" y="12" height="64" width="558" format="[general]" html.valueishtml="0" protect="0~tif( receiver_id_branch <> 'A00788',1,0)"  name=receiver_rec_accnumber visible="1" editmask.mask="####################" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=10 border="5" color="0" x="2345" y="12" height="64" width="334" format="[general]" html.valueishtml="0" protect="0~tif( receiver_id_branch <> 'A00788',1,0)"  name=receiver_rec_accrouting visible="1" editmask.mask="#########" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(receiver_totalamount for all)"border="0" color="33554432" x="3959" y="20" height="64" width="334" format="[currency]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="2" expression="count(trim( receiver_id_branch )+'-'+ string(receiver_id_receiver ) for all)"border="0" color="33554432" x="398" y="16" height="64" width="402" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()

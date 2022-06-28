@@ -1,0 +1,50 @@
+﻿$PBExportHeader$dw_viacheck_ack.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=16 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=char(51) updatewhereclause=yes name=trdepositid dbname="TRDEPOSITID" )
+ column=(type=char(51) updatewhereclause=yes name=irn dbname="IRN" )
+ column=(type=char(51) updatewhereclause=yes name=location dbname="LOCATION" )
+ column=(type=char(51) updatewhereclause=yes name=banknumber dbname="BANKNUMBER" )
+ column=(type=char(51) updatewhereclause=yes name=accountnumber dbname="ACCOUNTNUMBER" )
+ column=(type=char(51) updatewhereclause=yes name=checknumber dbname="CHECKNUMBER" )
+ column=(type=char(51) updatewhereclause=yes name=amount dbname="AMOUNT" )
+ column=(type=char(51) updatewhereclause=yes name=endpoint dbname="ENDPOINT" )
+ column=(type=char(51) updatewhereclause=yes name=achtype dbname="ACHTYPE" )
+ column=(type=char(51) updatewhereclause=yes name=capturedate dbname="CAPTUREDATE" )
+ column=(type=char(51) updatewhereclause=yes name=capturetime dbname="CAPTURETIME" )
+ column=(type=char(51) updatewhereclause=yes name=status dbname="STATUS" )
+ retrieve="  SELECT '                                                   ' as TRDEPOSITID,
+			'                                                   ' as IRN,
+			'                                                   ' as LOCATION,
+			'                                                   ' as BANKNUMBER,
+			'                                                   ' as ACCOUNTNUMBER,
+ 			'                                                   ' as CHECKNUMBER,
+			'                                                   ' as AMOUNT,
+			'                                                   ' as ENDPOINT,
+			'                                                   ' as ACHTYPE,
+			'                                                   ' as CAPTUREDATE,
+			'                                                   ' as CAPTURETIME,
+			'                                                   ' as STATUS
+    FROM dba.DUAL   
+" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="18" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=trdepositid visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="297" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=irn visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="576" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=location visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="864" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=banknumber visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="1147" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=accountnumber visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="1426" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=checknumber visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="1705" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=amount visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="1989" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=endpoint visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="2290" y="0" height="76" width="265" format="[general]" html.valueishtml="0"  name=achtype visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2597" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=capturedate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="2898" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=capturetime visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="0" x="3200" y="0" height="76" width="261" format="[general]" html.valueishtml="0"  name=status visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

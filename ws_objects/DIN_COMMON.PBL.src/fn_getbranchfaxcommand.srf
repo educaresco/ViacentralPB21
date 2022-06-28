@@ -1,0 +1,25 @@
+﻿$PBExportHeader$fn_getbranchfaxcommand.srf
+global type fn_getbranchfaxcommand from function_object
+end type
+
+forward prototypes
+global function string fn_getbranchfaxcommand (string ps_id_branch, string ps_subject)
+end prototypes
+
+global function string fn_getbranchfaxcommand (string ps_id_branch, string ps_subject);
+
+// Retorna la siguiente cadena (cuando la agencia no tiene la ruta metrofax
+//"@F211 "+ls_fax+"@@F301 1@@F313 2@F307 TEL.ROJO INVOICE: "+trim(gs_branch_insta)+"-"+string(ld_receiver)+"@"	
+
+
+String ls_fax, ls_fax_command
+
+ls_fax = fn_getbranchfaxoremail(ps_id_branch)
+
+ls_fax_command = ls_fax+"@F301 1@@F313 2@F307 "+ps_subject+"@F311 VC@F308 "+gs_cashier
+
+return ls_fax_command
+
+
+end function
+

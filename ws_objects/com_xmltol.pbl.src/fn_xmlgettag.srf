@@ -1,0 +1,50 @@
+﻿$PBExportHeader$fn_xmlgettag.srf
+global type fn_xmlgettag from function_object
+end type
+
+forward prototypes
+global function string fn_xmlgettag (string ps_xml, string ps_tag, integer pl_position)
+end prototypes
+
+global function string fn_xmlgettag (string ps_xml, string ps_tag, integer pl_position);
+
+long ll_cont, ll_nextpos, ll_posfin
+String ls_xml, ls_tagini, ls_tagfin
+String ls_tagcontent
+
+
+ls_xml = fn_replace(upper(ps_Xml),'< ','<')
+ls_xml = fn_replace(upper(ls_xml),'< ','<')
+ls_tagini = "<"+upper(ps_Tag)
+ls_tagfin = "</"+upper(ps_Tag)
+
+ls_tagcontent = ''
+
+ll_cont = 0 
+
+ll_nextpos = 1
+
+do while ll_nextpos > 0
+
+	ll_nextpos = Pos(ls_xml, ls_tagini, ll_nextpos)
+
+	if ll_nextpos > 0 then 
+		ll_cont += 1
+		ll_nextpos += 1
+	end if
+	
+	if ll_cont = pl_position then 
+		//ll_nextpos = ll_nextpos + len(ls_tagini) 
+		ll_nextpos = Pos(ls_xml, ">", ll_nextpos) + 1
+		
+		ll_posfin = Pos(ls_xml, ls_tagfin, ll_nextpos)
+		ls_tagcontent = mid(ls_xml, ll_nextpos, ll_posfin - ll_nextpos)
+				
+		ll_nextpos = 0	// Entontro el que buscaba, lo saca del loop!
+	end if
+
+loop
+
+return ls_tagcontent
+end function
+

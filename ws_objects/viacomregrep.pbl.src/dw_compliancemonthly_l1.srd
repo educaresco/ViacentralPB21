@@ -1,0 +1,57 @@
+﻿$PBExportHeader$dw_compliancemonthly_l1.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 60 print.margin.right = 60 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=428 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=sender_branch dbname="SENDER.Branch" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_ordernumber dbname="RECEIVER.OrderNumber" )
+ column=(type=decimal(0) updatewhereclause=yes name=sender_senderid dbname="SENDER.SenderId" )
+ column=(type=char(30) updatewhereclause=yes name=orderdate dbname="OrderDate" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_namesender dbname="RECEIVER.NameSender" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_namereceiver dbname="RECEIVER.NameReceiver" )
+ column=(type=char(40) updatewhereclause=yes name=country_namecountry dbname="COUNTRY.NameCountry" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_amountsent dbname="RECEIVER.AmountSent" )
+ column=(type=decimal(4) updatewhereclause=yes name=totalamount dbname="RECEIVER.TotalAmount" )
+ retrieve="select dba.sender.id_branch as Branch,
+       dba.receiver.id_receiver as OrderNumber, 
+       dba.sender.id_sender as SenderId,
+       convert(varchar,date_receiver,101) as OrderDate, 
+		 name_sender as NameSender,
+		 dba.receiver.name_receiver as NameReceiver,
+		 dba.country.name_country as NameCountry,
+		 net_amount_receiver as AmountSent,
+       total_receiver as TotalAmount
+from dba.receiver, dba.sender, dba.country
+where dba.sender.id_branch = dba.receiver.id_branch
+and dba.sender.id_sender = dba.receiver.id_sender
+and dba.receiver.id_country_receiver = dba.country.id_country
+and date_receiver between :p_date1 and :p_date2
+and total_receiver > 8000
+and dba.receiver.id_flag_receiver not in ('A','C')
+order by 1,2;
+
+" arguments=(("p_date1", datetime),("p_date2", datetime)) )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="3927" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3927" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~")  + ~" to ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="76" width="3671" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Level1: Ordenes mayores a 8000" border="0" color="0" x="997" y="8" height="76" width="3671" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Sender" border="2" color="0" x="18" y="368" height="52" width="320" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="32" y="8" height="52" width="288" format="[general]" html.valueishtml="0"  name=sender_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="334" y="8" height="52" width="233" format="[general]" html.valueishtml="0"  name=sender_senderid visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="594" y="8" height="52" width="1312" format="[general]" html.valueishtml="0"  name=receiver_namesender visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="0" x="1929" y="8" height="52" width="498" format="[currency]" html.valueishtml="0"  name=totalamount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="0" x="2446" y="8" height="52" width="2002" html.valueishtml="0"  name=receiver_ordernumber visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="0" tabsequence=0 border="0" color="0" x="4448" y="8" height="52" width="690" html.valueishtml="0"  name=orderdate visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=0 border="0" color="0" x="5138" y="8" height="52" width="919" html.valueishtml="0"  name=receiver_namereceiver visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=0 border="0" color="0" x="6057" y="8" height="52" width="923" html.valueishtml="0"  name=country_namecountry visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=0 border="0" color="0" x="6981" y="8" height="52" width="2002" html.valueishtml="0"  name=receiver_amountsent visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

@@ -1,0 +1,66 @@
+﻿$PBExportHeader$dw_group_branch_topcredits.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=80269524 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=84 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=80 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes key=yes name=id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(2) updatewhereclause=yes name=fin_collectmethod dbname="GROUP_BRANCH.fin_collectmethod" values="DEPOSIT	DE/ACH	AC/ARMORED CAR	CA/ELECTRONIC CHECK.	EA/VIACHECK	VC/" )
+ column=(type=char(25) updatewhereclause=yes name=fin_schedule dbname="GROUP_BRANCH.fin_schedule" )
+ column=(type=char(2) updatewhereclause=yes name=fin_status dbname="GROUP_BRANCH.fin_status" )
+ column=(type=char(6) updatewhereclause=yes name=state dbname="State" )
+ column=(type=char(30) updatewhereclause=yes name=groupbranches dbname="GroupBranches" )
+ column=(type=decimal(4) updatewhereclause=yes name=debt_limit dbname="GROUP_BRANCH.DEBT_LIMIT" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=top_credit dbname="GROUP_BRANCH.TOP_CREDIT" )
+ column=(type=decimal(4) updatewhereclause=yes name=debt_limit_wknd dbname="GROUP_BRANCH.DEBT_LIMIT_WKND" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=top_credit_wknd dbname="GROUP_BRANCH.TOP_CREDIT_WKND" )
+ column=(type=datetime update=yes updatewhereclause=yes name=review_credit_top_on dbname="GROUP_BRANCH.REVIEW_CREDIT_TOP_ON" )
+ retrieve="SELECT  DBA.GROUP_BRANCH.ID_MAIN_BRANCH ,
+		  DBA.GROUP_BRANCH.NAME_MAIN_BRANCH ,
+		  DBA.GROUP_BRANCH.fin_collectmethod ,
+		  DBA.GROUP_BRANCH.fin_schedule ,
+		  DBA.GROUP_BRANCH.fin_status ,
+		  dba.sfGetGroupState(id_main_branch) as State,
+		  dba.sfGetGroupChilds(id_main_branch) as GroupBranches,
+		DEBT_LIMIT,
+		TOP_CREDIT,
+		DEBT_LIMIT_WKND,
+		TOP_CREDIT_WKND,
+		REVIEW_CREDIT_TOP_ON
+	FROM DBA.GROUP_BRANCH      
+  WHERE DBA.GROUP_BRANCH.group_type in ('R','A')
+	 AND DBA.GROUP_BRANCH.FLAG_GRUPO <> 'C'
+ORDER BY DBA.GROUP_BRANCH.NAME_MAIN_BRANCH ASC,
+		  DBA.GROUP_BRANCH.ID_MAIN_BRANCH ASC" update="DBA.GROUP_BRANCH" updatewhere=0 updatekeyinplace=yes  sort="fin_collectmethod A name_main_branch A " )
+text(band=header alignment="2" text="ID (Group / Branches)" border="2" color="0" x="146" y="16" height="56" width="649" html.valueishtml="0"  name=id_main_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="2" tabsequence=10 border="5" color="0" x="146" y="8" height="56" width="151" format="[general]" html.valueishtml="0"  name=id_main_branch visible="1" edit.limit=4 edit.case=upper edit.autoselect=yes edit.required=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=20 border="5" color="0" x="315" y="8" height="56" width="475" format="[general]" html.valueishtml="0"  name=groupbranches visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Name" border="2" color="0" x="814" y="16" height="56" width="850" html.valueishtml="0"  name=name_main_branch_t visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="0" tabsequence=30 border="5" color="0" x="814" y="8" height="56" width="850" format="[general]" html.valueishtml="0"  name=name_main_branch visible="1" edit.limit=40 edit.case=upper edit.autoselect=yes edit.required=yes edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="ST" border="2" color="0" x="1682" y="16" height="56" width="142" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Finan. Schedule" border="2" color="0" x="1842" y="16" height="56" width="475" html.valueishtml="0"  name=t_4 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Week Credit" border="2" color="0" x="2359" y="16" height="56" width="439" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="5" color="0" x="1682" y="8" height="56" width="142" format="[general]" html.valueishtml="0"  name=state visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="5" color="0" x="1842" y="8" height="56" width="475" format="[general]" html.valueishtml="0"  name=fin_schedule visible="1" edit.limit=0 edit.case=upper edit.focusrectangle=no edit.autoselect=no edit.autohscroll=yes edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="80269524" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="5" color="0" x="2359" y="8" height="56" width="439" format="[currency]" html.valueishtml="0"  name=debt_limit visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+text(band=header alignment="2" text="TOP" border="2" color="0" x="2821" y="16" height="56" width="384" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+column(band=detail id=9 alignment="1" tabsequence=40 border="5" color="0" x="2821" y="8" height="56" width="384" format="[currency]" html.valueishtml="0"  name=top_credit visible="1" editmask.mask="###,###.00" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Weekend Credit" border="2" color="0" x="3246" y="16" height="56" width="439" html.valueishtml="0"  name=t_6 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="5" color="0" x="3246" y="8" height="56" width="439" format="[currency]" html.valueishtml="0"  name=debt_limit_wknd visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+text(band=header alignment="2" text="TOP" border="2" color="0" x="3703" y="16" height="56" width="384" html.valueishtml="0"  name=t_5 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+column(band=detail id=11 alignment="1" tabsequence=50 border="5" color="0" x="3703" y="8" height="56" width="384" format="[currency]" html.valueishtml="0"  name=top_credit_wknd visible="1" editmask.mask="###,###.00" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Review Top On" border="2" color="0" x="4123" y="16" height="56" width="398" html.valueishtml="0"  name=t_7 visible="1"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=12 alignment="2" tabsequence=60 border="5" color="0" x="4123" y="8" height="56" width="398" format="[shortdate] [time]" html.valueishtml="0"  name=review_credit_top_on visible="1" editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,74 @@
+﻿$PBExportHeader$dw_rep_sender_name_report_banking.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=248 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=48 color="536870912"  height.autosize=yes)
+table(column=(type=char(40) updatewhereclause=yes name=sender_name_sender dbname="SENDER.NAME_SENDER" )
+ column=(type=datetime updatewhereclause=yes name=receiver_date_receiver dbname="RECEIVER.DATE_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_id_receiver dbname="RECEIVER.ID_RECEIVER" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_name_receiver dbname="RECEIVER.NAME_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_net_amount_receiver dbname="RECEIVER.NET_AMOUNT_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_id_city_receiver dbname="RECEIVER.ID_CITY_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_id_country_receiver dbname="RECEIVER.ID_COUNTRY_RECEIVER" )
+ column=(type=char(12) updatewhereclause=yes name=receiver_phone1_receiver dbname="RECEIVER.PHONE1_RECEIVER" )
+ retrieve=" SELECT  DBA.SENDER.NAME_SENDER ,           
+  DBA.RECEIVER.DATE_RECEIVER ,           
+  DBA.RECEIVER.ID_BRANCH ,           
+  DBA.RECEIVER.ID_RECEIVER ,           
+  DBA.RECEIVER.NAME_RECEIVER ,           
+  DBA.RECEIVER.NET_AMOUNT_RECEIVER ,           
+  DBA.RECEIVER.ID_CITY_RECEIVER ,           
+  DBA.RECEIVER.ID_COUNTRY_RECEIVER ,           
+  DBA.RECEIVER.PHONE1_RECEIVER
+  FROM DBA.RECEIVER ,           DBA.SENDER
+  WHERE DBA.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER  AND          
+   DBA.SENDER.ID_BRANCH = DBA.RECEIVER.ID_BRANCH  AND          
+   DBA.RECEIVER.ID_FLAG_RECEIVER <> 'A'  AND          
+   DBA.RECEIVER.ID_FLAG_RECEIVER <> 'C'   AND          
+   DBA.RECEIVER.DATE_RECEIVER >= :ARG_FECHA1  AND          
+   DBA.RECEIVER.DATE_RECEIVER <= :ARG_FECHA2  AND          
+   DBA.SENDER.NAME_SENDER IN (  SELECT DBA.SENDER.NAME_SENDER      
+  								 FROM DBA.RECEIVER ,           
+  								 	  DBA.SENDER     
+  								 WHERE  DBA.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER  AND          
+  								        DBA.SENDER.ID_BRANCH = DBA.RECEIVER.ID_BRANCH  AND          
+  								        DBA.RECEIVER.ID_FLAG_RECEIVER <> 'C'  AND          
+  								        DBA.RECEIVER.ID_FLAG_RECEIVER <> 'A'  AND          
+  								        DBA.RECEIVER.DATE_RECEIVER >= :ARG_FECHA1  AND          
+  								        DBA.RECEIVER.DATE_RECEIVER <= :ARG_FECHA2  
+  								  GROUP BY DBA.SENDER.NAME_SENDER
+  								  HAVING  SUM(DBA.RECEIVER.NET_AMOUNT_RECEIVER) >= :ARG_VALOR )
+  ORDER BY DBA.SENDER.NAME_SENDER          ASC,
+   DBA.RECEIVER.ID_BRANCH          ASC" arguments=(("arg_fecha1", date),("arg_fecha2", date),("arg_valor", number)) )
+group(level=1 header.height=52 trailer.height=56 by=("sender_name_sender" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="87" y="24" height="64" width="329" format="mm/dd/yyyy"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2907" y="24" height="64" width="361" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Sender Name Report"border="0" color="0" x="1138" y="16" height="80" width="1184"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="From :"border="0" color="0" x="695" y="112" height="64" width="187"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression=" arg_fecha1 "border="0" color="0" x="896" y="112" height="64" width="471" format="mm/dd/yyyy"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="To :"border="0" color="0" x="1426" y="112" height="64" width="110"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression=" arg_fecha2"border="0" color="0" x="1550" y="112" height="64" width="503" format="mm/dd/yyyy"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="1" text="Amount :"border="0" color="0" x="2176" y="112" height="64" width="256"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=header alignment="0" expression=" arg_valor "border="0" color="0" x="2446" y="112" height="64" width="416" format="$#,##0.00;[RED]($#,##0.00)"  font.face="Arial" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Date "border="0" color="0" x="247" y="200" height="44" width="155"  name=receiver_date_receiver_t  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Invoice"border="0" color="0" x="475" y="200" height="44" width="215"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver's Name"border="0" color="0" x="754" y="200" height="44" width="512"  name=receiver_name_receiver_t  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="City "border="0" color="0" x="1961" y="200" height="44" width="133"  name=receiver_id_city_receiver_t  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Country "border="0" color="0" x="2368" y="200" height="44" width="247"  name=receiver_id_country_receiver_t  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Amount"border="0" color="0" x="2688" y="200" height="44" width="219"  name=receiver_net_amount_receiver_t  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Telephone "border="0" color="0" x="1673" y="200" height="44" width="242"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="0" x="334" y="4" height="52" width="782" format="[general]"  name=sender_name_sender edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="SENDER: "border="0" color="0" x="18" y="4" height="44" width="297"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="242" y="4" height="44" width="219" format="[general]"  name=receiver_date_receiver editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" trim(receiver_id_branch )+~" - ~"+ receiver_id_receiver "border="0" color="0" x="475" y="4" height="44" width="251" format="[general]"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="741" y="4" height="44" width="928" format="[general]"  name=receiver_name_receiver edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="0" x="1943" y="4" height="44" width="370" format="[general]"  name=receiver_id_city_receiver dddw.name=dddw_city dddw.displaycolumn=name_city dddw.datacolumn=id_city dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="2368" y="4" height="44" width="302" format="[general]"  name=receiver_id_country_receiver dddw.name=dddw_country dddw.displaycolumn=name_country dddw.datacolumn=id_country dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="2688" y="4" height="44" width="219" format="$#,##0.00;($#,##0.00)"  name=receiver_net_amount_receiver edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="1682" y="4" height="44" width="242" format="[general]"  name=receiver_phone1_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="27" y1="32" x2="2921" y2="32" pen.style="2" pen.width="5" pen.color="0"  background.mode="1" background.color="553648127" )
+compute(band=trailer.1 alignment="1" expression="sum(receiver_net_amount_receiver for group 1)"border="0" color="0" x="2949" y="4" height="44" width="242" format="$#,##0.00;($#,##0.00)"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

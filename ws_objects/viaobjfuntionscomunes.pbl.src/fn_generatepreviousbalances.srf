@@ -1,0 +1,106 @@
+﻿$PBExportHeader$fn_generatepreviousbalances.srf
+global type fn_generatepreviousbalances from function_object
+end type
+
+forward prototypes
+global subroutine fn_generatepreviousbalances (string ld_date)
+end prototypes
+
+global subroutine fn_generatepreviousbalances (string ld_date);// -----------------------------------------------------------------------------------------
+// Return the account balance for a group (ls_group) as it was in a specified date (ld_date)
+//
+// NO SE HA PROBADO!!! REVISAR!!!
+//
+// ls_type -> B: Balance, C: Credits, D:Debits
+// -----------------------------------------------------------------------------------------
+
+SetPointer(HourGlass!)
+
+Double		TotalFee, 			&
+				CompanyFee,			&					 
+				TotalReceiver, 	&
+				NetAmount,			&
+				AmountDue, 			&
+				AgencyFee, 			&
+				TotalCredits,		& 
+				PreBal, 				&
+				TotalDebits, 		&
+				ld_result
+				
+
+Datetime		ld_datetime, ld_now
+
+String ls_group, ls_state
+
+delete from DBA.TMP_BALANCES where id_cashier = :gs_iduser;
+commit;
+
+ld_datetime = datetime(date(ld_date),time('23:59:59'))
+ld_now = datetime(today(),now())
+
+DECLARE cur_groups CURSOR FOR
+  SELECT DISTINCT 
+         dba.GROUP_BRANCH.ID_MAIN_BRANCH,   
+         dba.GROUP_BRANCH.state_group_branch  			
+    FROM dba.GROUP_BRANCH,   
+         dba.BRANCH  
+   WHERE ( dba.BRANCH.ID_MAIN_BRANCH = dba.GROUP_BRANCH.ID_MAIN_BRANCH )
+   ORDER BY dba.GROUP_BRANCH.NAME_MAIN_BRANCH ASC;
+
+Open cur_groups ;
+
+Fetch cur_groups INTO :ls_group, :ls_state;
+
+DO WHILE sqlca.sqlcode = 0
+
+	SELECT Sum(DBA.RECEIVER.telex_receiver + DBA.RECEIVER.exchange_receiver), 
+		    Sum(DBA.RECEIVER.telex_company + DBA.RECEIVER.exchange_company) , 
+		    Sum(DBA.RECEIVER.total_receiver) , 
+		    Sum(DBA.RECEIVER.net_amount_receiver) 
+	INTO :TotalFee, :CompanyFee, :TotalReceiver, :NetAmount 	
+	FROM DBA.receiver, dba.branch 
+	WHERE DBA.RECEIVER.ID_BRANCH = dba.branch.id_branch
+	AND dba.branch.id_main_branch = :ls_group
+	AND DBA.receiver.date_receiver < :ld_datetime;
+		
+	if isnull(TotalFee) 	then TotalFee = 0	
+	if isnull(CompanyFee) 	then CompanyFee = 0	
+	if isnull(TotalReceiver) 	then TotalReceiver = 0	
+	if isnull(NetAmount) 	then NetAmount = 0		
+	
+	AmountDue = TotalReceiver - AgencyFee
+	
+	Select sum(isnull(DBA.TRANSACCION_DIARIA_PAYEE.credit_trans_diaria,0))
+	into :TotalCredits
+	from DBA.TRANSACCION_DIARIA_PAYEE 
+	WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND 
+	DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria  < :ld_datetime AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_group ;	
+	
+	if isnull(TotalCredits) then TotalCredits = 0	
+	
+	Select sum( isnull(DBA.TRANSACCION_DIARIA_PAYEE.Debit_trans_diaria,0)) 
+	into :TotalDebits
+	from DBA.TRANSACCION_DIARIA_PAYEE 
+	WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND 
+	DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria < :ld_datetime AND 
+	DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_group   ;
+	
+	if isnull(TotalDebits) 	then TotalDebits = 0	
+	
+	PreBal = NetAmount + CompanyFee + TotalDebits - TotalCredits
+	if isnull(PreBal) 	then PreBal = 0			
+						
+	TotalDebits = round(TotalDebits,4)
+	TotalCredits = round(TotalCredits,4)
+	PreBal = round(PreBal,4)	
+	
+	INSERT INTO DBA.TMP_BALANCES(id_cashier,id_main_branch,id_state,balancedate,debit,credit,balance,gendate)
+	VALUES (:gs_iduser,:ls_group,:ls_state,:ld_datetime,:TotalDebits,:TotalCredits,:PreBal,:ld_now);	
+	
+	Fetch cur_groups INTO :ls_group, :ls_state;	
+LOOP
+CLOSE cur_groups ;
+
+commit;
+end subroutine
+

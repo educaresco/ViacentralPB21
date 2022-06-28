@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_consulta_cuenta_banco.srf
+global type fn_consulta_cuenta_banco from function_object
+end type
+
+forward prototypes
+global function string fn_consulta_cuenta_banco (double id_cons_trans)
+end prototypes
+
+global function string fn_consulta_cuenta_banco (double id_cons_trans);string	ls_cuenta
+  
+     SELECT dba.cuenta_banco.id_cuenta_banco  
+    INTO :ls_cuenta  
+    FROM dba.cuenta_banco,   
+         dba.transaccion_diaria_banco_payee  
+   WHERE ( dba.transaccion_diaria_banco_payee.id_banco = dba.cuenta_banco.id_banco ) and  
+         ( dba.transaccion_diaria_banco_payee.id_cuenta_banco = dba.cuenta_banco.id_cuenta_banco ) and  
+         ((dba.transaccion_diaria_banco_payee.cons_trans_diaria = :id_cons_trans ) )   ;
+
+
+IF SQLCA.SQLCODE<>0 THEN
+	Return ''
+ELSE
+	Return ls_cuenta
+END IF
+
+
+
+end function
+

@@ -1,0 +1,37 @@
+﻿$PBExportHeader$dw_subreport_creditscore_last_rev.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=60 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(8000) update=yes updatewhereclause=yes name=owner_name dbname="owner_name" )
+ column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_branch dbname="BRANCH_OWNER_INFORMATION.ID_BRANCH" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=owner_creditscore dbname="BRANCH_OWNER_INFORMATION.OWNER_CREDITSCORE" )
+ column=(type=datetime update=yes updatewhereclause=yes name=owner_creditscore_date dbname="BRANCH_OWNER_INFORMATION.OWNER_CREDITSCORE_DATE" )
+ retrieve=" SELECT (ltrim(rtrim(owner_fname)) + replace(isnull(' '+ltrim(rtrim(owner_mname)) + ' ' ,' '),'  ',' ') + ltrim(rtrim(owner_lname)) + ' ' + isnull(ltrim(rtrim(owner_slname)),'')) as owner_name,   
+         dba.BRANCH_OWNER_INFORMATION.ID_BRANCH,   
+         dba.BRANCH_OWNER_INFORMATION.OWNER_CREDITSCORE,   
+         dba.BRANCH_OWNER_INFORMATION.OWNER_CREDITSCORE_DATE  
+ FROM dba.BRANCH_OWNER_INFORMATION
+ WHERE dba.BRANCH_OWNER_INFORMATION.OWNER_SSN = :d_ssn
+" update="dba.BRANCH_OWNER_INFORMATION" updatewhere=1 updatekeyinplace=no arguments=(("d_ssn", number)) )
+text(band=header alignment="2" text="Owner Name" border="2" color="33554432" x="5" y="4" height="52" width="978" html.valueishtml="0"  name=owner_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="33554432" x="5" y="4" height="64" width="978" format="[general]" html.valueishtml="0"  name=owner_name visible="1" edit.limit=8000 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Branch" border="2" color="33554432" x="1001" y="4" height="52" width="251" html.valueishtml="0"  name=id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="33554432" x="1001" y="4" height="64" width="251" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Credit Score" border="2" color="33554432" x="1271" y="4" height="52" width="411" html.valueishtml="0"  name=owner_creditscore_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+column(band=detail id=3 alignment="1" tabsequence=30 border="0" color="33554432" x="1271" y="4" height="64" width="411" format="[general]" html.valueishtml="0"  name=owner_creditscore visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Credit Score Date" border="2" color="33554432" x="1701" y="4" height="52" width="530" html.valueishtml="0"  name=owner_creditscore_date_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+column(band=detail id=4 alignment="2" tabsequence=40 border="0" color="33554432" x="1701" y="4" height="64" width="530" format="[shortdate]" html.valueishtml="0"  name=owner_creditscore_date visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

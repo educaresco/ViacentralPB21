@@ -1,0 +1,17 @@
+﻿$PBExportHeader$dw_seleccionar_state.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=100 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=id_state dbname="STATE.ID_STATE" )
+ column=(type=char(5) updatewhereclause=yes name=id_country dbname="STATE.ID_COUNTRY" )
+ column=(type=char(40) updatewhereclause=yes name=name_state dbname="STATE.NAME_STATE" )
+ column=(type=char(1) updatewhereclause=yes name=flag_state dbname="STATE.FLAG_STATE" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.STATE~" ) COLUMN(NAME=~"DBA.STATE.ID_STATE~") COLUMN(NAME=~"DBA.STATE.ID_COUNTRY~") COLUMN(NAME=~"DBA.STATE.NAME_STATE~") COLUMN(NAME=~"DBA.STATE.FLAG_STATE~")) ORDER(NAME=~"DBA.STATE.ID_STATE~" ASC=yes ) " )
+text(band=header alignment="2" text="Id. State"border="1" color="8388608" x="5" y="12" height="76" width="242"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name State"border="1" color="8388608" x="261" y="12" height="76" width="585"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="5" y="0" height="76" width="242" format="[general]"  name=id_state edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="261" y="0" height="76" width="617" format="[general]"  name=name_state edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

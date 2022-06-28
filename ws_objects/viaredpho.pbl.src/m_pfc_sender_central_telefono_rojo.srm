@@ -1,0 +1,114 @@
+﻿$PBExportHeader$m_pfc_sender_central_telefono_rojo.srm
+forward
+global type m_pfc_sender_central_telefono_rojo from menu
+end type
+type m_nuevo from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_nuevo from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_calcular from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_calcular from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_actualizar from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_actualizar from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_salir from menu within m_pfc_sender_central_telefono_rojo
+end type
+type m_salir from menu within m_pfc_sender_central_telefono_rojo
+end type
+end forward
+
+global type m_pfc_sender_central_telefono_rojo from menu
+m_nuevo m_nuevo
+m_calcular m_calcular
+m_actualizar m_actualizar
+m_salir m_salir
+end type
+global m_pfc_sender_central_telefono_rojo m_pfc_sender_central_telefono_rojo
+
+on m_pfc_sender_central_telefono_rojo.create
+m_pfc_sender_central_telefono_rojo=this
+this.m_nuevo=create m_nuevo
+this.m_calcular=create m_calcular
+this.m_actualizar=create m_actualizar
+this.m_salir=create m_salir
+this.Item[]={this.m_nuevo, &
+this.m_calcular, &
+this.m_actualizar, &
+this.m_salir}
+end on
+
+on m_pfc_sender_central_telefono_rojo.destroy
+destroy(this.m_nuevo)
+destroy(this.m_calcular)
+destroy(this.m_actualizar)
+destroy(this.m_salir)
+end on
+
+type m_nuevo from menu within m_pfc_sender_central_telefono_rojo
+end type
+
+on m_nuevo.create
+this.Text="New"
+this.Microhelp="New Invoice"
+this.ToolBarItemText="New Invoice"
+this.ToolBarItemSpace=1
+end on
+
+on m_nuevo.destroy
+end on
+
+event clicked;w_pfc_sender_telefono_rojo.triggerevent("ue_insertar")
+end event
+
+type m_calcular from menu within m_pfc_sender_central_telefono_rojo
+end type
+
+event clicked;w_pfc_sender_telefono_rojo.triggerevent("ue_calcular")
+end event
+
+on m_calcular.create
+this.Text="Calculate"
+this.Microhelp="Calcularte amount to pay for the Sender"
+this.ToolBarItemText="Calculate Pay to Sender"
+this.ToolBarItemSpace=1
+end on
+
+on m_calcular.destroy
+end on
+
+type m_actualizar from menu within m_pfc_sender_central_telefono_rojo
+end type
+
+on m_actualizar.create
+this.Text="Save"
+this.Microhelp="Save the Invoice"
+this.ToolBarItemName="Save!"
+this.ToolBarItemText="Save Invoice"
+this.ToolBarItemSpace=1
+end on
+
+on m_actualizar.destroy
+end on
+
+event clicked;//w_pfc_sender.triggerevent("ue_calcular")
+w_pfc_sender_telefono_rojo.triggerevent("ue_update")
+end event
+
+type m_salir from menu within m_pfc_sender_central_telefono_rojo
+end type
+
+on m_salir.create
+this.Text="Exit"
+this.ToolBarItemName="Exit!"
+this.ToolBarItemSpace=1
+end on
+
+on m_salir.destroy
+end on
+
+event clicked;close(parentwindow)
+end event
+

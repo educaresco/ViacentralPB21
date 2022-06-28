@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_check_user_menu_item.srf
+global type fn_check_user_menu_item from function_object
+end type
+
+forward prototypes
+global function integer fn_check_user_menu_item (string p_menutitle)
+end prototypes
+
+global function integer fn_check_user_menu_item (string p_menutitle);long ll_cont
+
+SELECT count(*)
+INTO :ll_cont
+FROM dba.SEC_USER_GROUP, dba.SEC_GROUP_PRIVILEGES 
+WHERE dba.SEC_USER_GROUP.ID_GROUP = dba.SEC_GROUP_PRIVILEGES.IDGROUP
+AND MENUTITLE = :p_menutitle
+AND ID_USER = :gs_cashier;
+	  
+if ll_cont > 0 then
+	return 1
+else
+	return 0
+	
+end if
+
+end function
+

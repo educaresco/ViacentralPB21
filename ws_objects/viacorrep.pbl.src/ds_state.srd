@@ -1,0 +1,20 @@
+﻿$PBExportHeader$ds_state.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(5) update=yes updatewhereclause=yes key=yes name=id_state dbname="STATE.id_state" )
+ column=(type=char(5) update=yes updatewhereclause=yes key=yes name=id_country dbname="STATE.id_country" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_state dbname="STATE.name_state" )
+ retrieve="  SELECT  dba.state.id_state ,           dba.state.id_country ,           dba.state.name_state     
+        FROM dba.state      
+        WHERE ( dba.state.id_country = :as_country )   " update="dba.state" updatewhere=1 updatekeyinplace=no arguments=(("as_country", string)) )
+text(band=header alignment="2" text="Id State"border="0" color="0" x="5" y="4" height="56" width="165"  name=id_state_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Country"border="0" color="0" x="174" y="4" height="56" width="224"  name=id_country_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name State"border="0" color="0" x="402" y="4" height="56" width="937"  name=name_state_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="5" y="4" height="68" width="137" format="[general]"  name=id_state edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="174" y="4" height="68" width="137" format="[general]"  name=id_country edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="402" y="4" height="68" width="937" format="[general]"  name=name_state edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,46 @@
+﻿$PBExportHeader$dw_print_detalle_cheques_comisiones_labels.srd
+release 11;
+datawindow(units=2 timer_interval=0 color=1073741824 processing=2 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 188 print.margin.right = 187 print.margin.top = 500 print.margin.bottom = 500 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no label.name="Laser Address 1.00 x 2.63 5160,5260" label.width=2625 label.height=1000 label.rows=10 label.rows.spacing=0 label.columns=3 label.columns.spacing=125 label.topdown=no label.sheet=yes label.shape=roundrectangle label.ellipse_height=0 label.ellipse_width=0 )
+detail(height=1000 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=group_branch_id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_comm_des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DES_TRANS_DIARIA" )
+ column=(type=decimal(2) updatewhereclause=yes name=transaccion_diaria_payee_comm_debit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DEBIT_TRANS_DIARIA" )
+ column=(type=char(5) updatewhereclause=yes name=group_branch_state_group_branch dbname="GROUP_BRANCH.STATE_GROUP_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=transaccion_diaria_payee_comm_cons_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.CONS_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_branch_balance_group dbname="GROUP_BRANCH.BALANCE_GROUP" )
+ column=(type=char(1) updatewhereclause=yes name=transaccion_diaria_payee_comm_allow_print dbname="TRANSACCION_DIARIA_PAYEE_COMM.ALLOW_PRINT" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=cons_print dbname="CONS_PRINT" )
+ column=(type=char(150) updatewhereclause=yes name=address_branch dbname="address_branch" )
+ column=(type=char(60) updatewhereclause=yes name=payableto dbname="PayableTo" )
+ column=(type=char(42) updatewhereclause=yes name=check_number dbname="Check_Number" )
+ column=(type=datetime updatewhereclause=yes name=datefrom dbname="DateFrom" )
+ column=(type=datetime updatewhereclause=yes name=dateto dbname="DateTo" )
+ column=(type=char(20) updatewhereclause=yes name=postalcode dbname="PostalCode" )
+ retrieve="select 	G.ID_MAIN_BRANCH,G.NAME_MAIN_BRANCH,T.DES_TRANS_DIARIA,T.DEBIT_TRANS_DIARIA, G.STATE_GROUP_BRANCH,T.CONS_TRANS_DIARIA,G.BALANCE_GROUP,T.ALLOW_PRINT ,ISNULL(T.CONS_PRINT,0) AS CONS_PRINT,
+			dba.sfGetGroupCheckAddress(id_main_branch) as address_branch,
+			 dba.sfGetGroupCheckPayableTo(id_main_branch) as PayableTo,
+			 '-'+isnull(check_number,'-')+'-' as Check_Number,
+			 convert(datetime,substring(T.DES_TRANS_DIARIA, (charindex('FROM ',T.DES_TRANS_DIARIA,0)+5 ),10)) DateFrom,
+			 convert(datetime,substring(T.DES_TRANS_DIARIA, (charindex('TO ',T.DES_TRANS_DIARIA,0)+3 ),10)) DateTo,
+			 dba.sfGetGroupCheckAddressZipFormatted(id_main_branch) as PostalCode
+from 		dba.transaccion_diaria_payee_comm T,dba.group_branch G
+where    T.id_group_trans_diaria = G.id_main_branch
+and		T.id_concepto_contable 	= 'DAC'
+and      isnull(T.ALLOW_PRINT ,'F') = 'T'
+and      CONVERT(DATETIME,CONVERT(VARCHAR,T.date_trans_diaria,101) )    = :p_date
+ORDER BY G.NAME_MAIN_BRANCH ASC  
+" arguments=(("p_date", stringlist)) )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432" x="62" y="375" height="406" width="2531" format="[general]" html.valueishtml="0"  name=address_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="52" y="229" height="166" width="2541" format="[general]" html.valueishtml="0"  name=group_branch_name_main_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

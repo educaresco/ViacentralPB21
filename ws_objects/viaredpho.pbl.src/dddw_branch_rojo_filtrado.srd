@@ -1,0 +1,16 @@
+﻿$PBExportHeader$dddw_branch_rojo_filtrado.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes name=id_branch dbname="branch.id_branch" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=name_branch dbname="branch.name_branch" )
+ column=(type=char(10) updatewhereclause=yes name=tipo_transmision_agencia_id_branch dbname="tipo_transmision_agencia.id_branch" )
+ column=(type=char(1) updatewhereclause=yes name=tipo_transmision_agencia_tipo_transmisio dbname="tipo_transmision_agencia.tipo_transmision" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"branch~" )  TABLE(NAME=~"tipo_transmision_agencia~" ) COLUMN(NAME=~"branch.id_branch~") COLUMN(NAME=~"branch.name_branch~") COLUMN(NAME=~"tipo_transmision_agencia.id_branch~") COLUMN(NAME=~"tipo_transmision_agencia.tipo_transmision~")    JOIN (LEFT=~"branch.id_branch~"    OP =~"=~"RIGHT=~"tipo_transmision_agencia.id_branch~" )WHERE(    EXP1 =~"(dba.~~~"branch~~~".~~~"id_type_branch~~~"~"   OP =~"=~"    EXP2 =~"'R'~"    LOGIC =~"or~" ) WHERE(    EXP1 =~"( dba.~~~"branch~~~".~~~"id_type_branch~~~"~"   OP =~"=~"    EXP2 =~"'A') )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"tipo_transmision_agencia.tipo_transmision~"   OP =~"=~"    EXP2 =~"'T'~" ) ) ORDER(NAME=~"branch.name_branch~" ASC=yes )  ORDER(NAME=~"branch.id_branch~" ASC=yes ) "  sort="name_branch A " )
+column(band=detail id=1 alignment="2" tabsequence=32766 border="0" color="0" x="5" y="4" height="68" width="325" format="[general]"  name=id_branch edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="338" y="4" height="68" width="768" format="[general]"  name=name_branch edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="1943" y="0" height="56" width="238" format="[general]"  name=tipo_transmision_agencia_id_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="1792" y="12" height="56" width="69" format="[general]"  name=tipo_transmision_agencia_tipo_transmisio edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

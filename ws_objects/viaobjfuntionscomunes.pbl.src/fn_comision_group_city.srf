@@ -1,0 +1,30 @@
+﻿$PBExportHeader$fn_comision_group_city.srf
+global type fn_comision_group_city from function_object
+end type
+
+forward prototypes
+global function double fn_comision_group_city (string ls_grupo, string ls_city_receiver, string ls_modo_pago1, double ld_amount)
+end prototypes
+
+global function double fn_comision_group_city (string ls_grupo, string ls_city_receiver, string ls_modo_pago1, double ld_amount);Double ld_porc = 0, ld_total = 0, ld_fijo = 0
+
+	 SELECT dba.comision_group_city.porcent_payee,   
+         dba.comision_group_city.feet_payee  
+    INTO :ld_porc,   
+         :ld_fijo  
+    FROM dba.comision_group_city  
+   WHERE ( dba.comision_group_city.id_main_branch =  :ls_grupo ) AND  
+         ( dba.comision_group_city.id_city        =  :ls_city_receiver ) AND  
+         ( dba.comision_group_city.id_modo_pago   =  :ls_modo_pago1 ) AND  
+         ( dba.comision_group_city.range_begin    <= :ld_amount ) AND  
+         ( dba.comision_group_city.range_end      >= :ld_amount )   ;
+
+
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	ld_total = (ld_porc * ld_amount) + ld_fijo
+	return ld_total
+end if
+end function
+

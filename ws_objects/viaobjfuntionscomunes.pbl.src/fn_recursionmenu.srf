@@ -1,0 +1,37 @@
+﻿$PBExportHeader$fn_recursionmenu.srf
+global type fn_recursionmenu from function_object
+end type
+
+forward prototypes
+global function integer fn_recursionmenu (menu p_menu)
+end prototypes
+
+global function integer fn_recursionmenu (menu p_menu);
+int li_items, i
+
+li_items = UpperBound(p_menu.item)
+
+for i = 1 to li_items	
+	
+	if p_menu.item[i].enabled then
+		
+		p_menu.item[i].enabled = fn_menuenabled(p_menu.item[i].text)
+
+		if p_menu.item[i].enabled then
+				//messagebox("",p_menu.item[i].text)
+		end if
+	end if
+	if p_menu.item[i].visible then
+		p_menu.item[i].visible = fn_menuenabled(p_menu.item[i].text)	
+	end if
+	
+	if upper(p_menu.item[i].text) = 'WINDOW' then
+		gi_winpos = i
+	end if
+	
+	fn_recursionmenu(p_menu.item[i])
+next
+
+return 0
+end function
+

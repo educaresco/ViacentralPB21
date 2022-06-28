@@ -1,0 +1,29 @@
+﻿$PBExportHeader$dddw_cuentabanco.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=136 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(20) updatewhereclause=yes name=banco_id_banco dbname="BANCO.ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=cuenta_banco_id_cuenta_banco dbname="CUENTA_BANCO.ID_CUENTA_BANCO" )
+ column=(type=char(50) updatewhereclause=yes name=banco_name_banco dbname="BANCO.NAME_BANCO" )
+ column=(type=char(50) updatewhereclause=yes name=cuenta_banco_name_cuenta_banco dbname="CUENTA_BANCO.NAME_CUENTA_BANCO" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"dba.BANCO~" )  TABLE(NAME=~"dba.CUENTA_BANCO~" ) COLUMN(NAME=~"dba.BANCO.ID_BANCO~") COLUMN(NAME=~"dba.CUENTA_BANCO.ID_CUENTA_BANCO~") COLUMN(NAME=~"dba.BANCO.NAME_BANCO~") COLUMN(NAME=~"dba.CUENTA_BANCO.NAME_CUENTA_BANCO~")    JOIN (LEFT=~"dba.BANCO.ID_BANCO~"    OP =~"=~"RIGHT=~"dba.CUENTA_BANCO.ID_BANCO~" )WHERE(    EXP1 =~"dba.BANCO.FLAG_BANCO~"   OP =~"=~"    EXP2 =~"'A'~" ) ) " )
+text(band=header alignment="2" text="Banco
+Id Banco" border="0" color="33554432" x="5" y="4" height="128" width="480" html.valueishtml="0"  name=banco_id_banco_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Cuenta Banco
+Id Cuenta Banco" border="0" color="33554432" x="489" y="4" height="128" width="480" html.valueishtml="0"  name=cuenta_banco_id_cuenta_banco_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Banco
+Name Banco" border="0" color="33554432" x="974" y="4" height="128" width="1166" html.valueishtml="0"  name=banco_name_banco_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Cuenta Banco
+Name Cuenta Banco" border="0" color="33554432" x="2144" y="4" height="128" width="1170" html.valueishtml="0"  name=cuenta_banco_name_cuenta_banco_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="5" y="4" height="68" width="480" format="[general]" html.valueishtml="0"  name=banco_id_banco visible="1" edit.limit=20 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="489" y="4" height="68" width="480" format="[general]" html.valueishtml="0"  name=cuenta_banco_id_cuenta_banco visible="1" edit.limit=20 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="974" y="4" height="68" width="1166" format="[general]" html.valueishtml="0"  name=banco_name_banco visible="1" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="2144" y="4" height="68" width="1170" format="[general]" html.valueishtml="0"  name=cuenta_banco_name_cuenta_banco visible="1" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

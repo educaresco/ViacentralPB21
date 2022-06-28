@@ -1,0 +1,50 @@
+﻿$PBExportHeader$fn_show_folio.srf
+global type fn_show_folio from function_object
+end type
+
+forward prototypes
+global function string fn_show_folio (long ai_id_receiver, string as_id_branch)
+end prototypes
+
+global function string fn_show_folio (long ai_id_receiver, string as_id_branch);string ls_clave_receiver
+
+
+
+string  ls_computername
+
+
+
+
+
+select clave_receiver 
+into :ls_clave_receiver
+from dba.receiver where id_receiver = :ai_id_receiver and id_branch = :as_id_branch;
+
+if isnull(ls_clave_receiver) then ls_clave_receiver = ''
+
+
+
+////////Ejecuta procedimiento almacenado que almacena informacion de la persona que acceso a la pantalla
+
+if len(ls_clave_receiver) > 0 then
+
+RegistryGet("HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\ComputerName\ActiveComputerName", "ComputerName", RegString!, ls_computername)
+
+DECLARE sp_audit_folio_query PROCEDURE FOR dba.spAddAuditFolioQuery 	
+	@ID_Branch = :as_id_branch, 	@ID_Receiver =  :ai_id_receiver, @User =:gs_login, @Host =:ls_computername  , @System = 'VIACENTRAL';
+	
+	
+// Execute it.
+ EXECUTE  sp_audit_folio_query ;
+
+ string s_error
+ s_error = sqlca.sqlerrtext
+//////////////////////////////	
+
+end if
+
+
+
+return ls_clave_receiver 
+end function
+

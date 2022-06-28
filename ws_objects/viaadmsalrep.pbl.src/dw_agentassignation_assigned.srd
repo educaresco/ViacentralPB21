@@ -1,0 +1,34 @@
+﻿$PBExportHeader$dw_agentassignation_assigned.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" dbalias="B.ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_agent_name_branch dbname="BRANCH_AGENT.NAME_BRANCH" dbalias=".NAME_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=branch_agent_id_state dbname="BRANCH_AGENT.ID_STATE" dbalias=".ID_STATE" )
+ column=(type=char(3) update=yes updatewhereclause=yes name=branch_agent_special_branch dbname="BRANCH_AGENT.SPECIAL_BRANCH" dbalias="A.SPECIAL_BRANCH" values="SPECIAL	YES/NORMAL	NO/" )
+ column=(type=char(10) updatewhereclause=yes key=yes name=branch_agent_id_agent dbname="BRANCH_AGENT.ID_AGENT" dbalias="A.ID_AGENT" )
+ column=(type=char(10) updatewhereclause=yes key=yes name=branch_agent_id_branch dbname="BRANCH_AGENT.ID_BRANCH" dbalias="A.ID_BRANCH" )
+ retrieve="SELECT B.ID_BRANCH, NAME_BRANCH, ID_STATE , A.SPECIAL_BRANCH, A.ID_AGENT, A.ID_BRANCH
+FROM dba.BRANCH_AGENT A, DBA.BRANCH B
+WHERE A.ID_BRANCH = B.ID_BRANCH
+AND A.ID_AGENT = :p_idagent
+ORDER BY B.ID_BRANCH" update="dba.BRANCH_AGENT" updatewhere=1 updatekeyinplace=yes arguments=(("p_idagent", number)) )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="101" y="4" height="60" width="101" format="[general]" html.valueishtml="0"  name=branch_agent_id_state visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="215" y="4" height="60" width="229" format="[general]" html.valueishtml="0"  name=branch_id_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="IF( branch_agent_special_branch = 'YES','ESPECIAL', '')"border="0" color="33554432" x="1582" y="4" height="60" width="261" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="466" y="4" height="60" width="1083" format="[general]" html.valueishtml="0"  name=branch_agent_name_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=4 alignment="0" tabsequence=10 border="0" color="0" x="1582" y="4" height="60" width="338" format="[general]" html.valueishtml="0"  name=branch_agent_special_branch visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

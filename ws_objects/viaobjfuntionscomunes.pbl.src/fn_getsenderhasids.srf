@@ -1,0 +1,13 @@
+﻿$PBExportHeader$fn_getsenderhasids.srf
+global type fn_getsenderhasids from function_object
+end type
+
+forward prototypes
+global function boolean fn_getsenderhasids (integer id_sender_global)
+end prototypes
+
+global function boolean fn_getsenderhasids (integer id_sender_global);
+
+return true
+end function
+

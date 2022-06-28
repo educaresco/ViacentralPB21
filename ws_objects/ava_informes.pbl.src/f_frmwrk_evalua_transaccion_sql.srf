@@ -1,0 +1,30 @@
+﻿$PBExportHeader$f_frmwrk_evalua_transaccion_sql.srf
+global type f_frmwrk_evalua_transaccion_sql from function_object
+end type
+
+forward prototypes
+global function boolean f_frmwrk_evalua_transaccion_sql ()
+end prototypes
+
+global function boolean f_frmwrk_evalua_transaccion_sql ();BOOLEAN	lb_retorno
+
+lb_retorno = True
+
+CHOOSE CASE sqlca.sqlcode 
+		
+	CASE - 1 // Si hubo error de base de datos		
+		lb_retorno = False
+		
+	CASE 0 // Si no hubo error en la transaccion		
+		IF sqlca.sqlnrows = 0 THEN // Si no retorno filas
+			lb_retorno = False			
+		END IF			
+		
+	CASE 100 // Si no encontro los datos con el criterio especificado
+		lb_retorno = False				
+										
+END CHOOSE
+
+Return lb_retorno	
+end function
+

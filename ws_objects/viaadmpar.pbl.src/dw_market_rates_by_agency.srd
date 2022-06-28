@@ -1,0 +1,53 @@
+﻿$PBExportHeader$dw_market_rates_by_agency.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=datetime updatewhereclause=yes name=history_market_prices_branch_date_history dbname="HISTORY_MARKET_PRICES_BRANCH.DATE_HISTORY" dbalias=".DATE_HISTORY" )
+ column=(type=char(10) updatewhereclause=yes name=history_market_prices_branch_id_branch dbname="HISTORY_MARKET_PRICES_BRANCH.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=long updatewhereclause=yes name=history_market_prices_branch_id_mt dbname="HISTORY_MARKET_PRICES_BRANCH.ID_MT" dbalias=".ID_MT" )
+ column=(type=char(5) updatewhereclause=yes name=history_market_prices_branch_id_country dbname="HISTORY_MARKET_PRICES_BRANCH.ID_COUNTRY" dbalias=".ID_COUNTRY" )
+ column=(type=char(4) updatewhereclause=yes name=id_payer dbname="HISTORY_MARKET_PRICES_BRANCH.id_payer" dbalias=".id_payer" )
+ column=(type=decimal(4) updatewhereclause=yes name=history_market_prices_branch_rate_value dbname="HISTORY_MARKET_PRICES_BRANCH.RATE_VALUE" dbalias=".RATE_VALUE" )
+ column=(type=char(30) updatewhereclause=yes name=history_market_prices_branch_db_user_name dbname="HISTORY_MARKET_PRICES_BRANCH.DB_USER_NAME" dbalias=".DB_USER_NAME" )
+ column=(type=char(50) updatewhereclause=yes name=money_transmitters_name_mt dbname="MONEY_TRANSMITTERS.NAME_MT" dbalias=".NAME_MT" )
+ retrieve="SELECT dba.HISTORY_MARKET_PRICES_BRANCH.DATE_HISTORY,   
+dba.HISTORY_MARKET_PRICES_BRANCH.ID_BRANCH,   
+dba.HISTORY_MARKET_PRICES_BRANCH.ID_MT,   
+dba.HISTORY_MARKET_PRICES_BRANCH.ID_COUNTRY,   
+id_payer,
+dba.HISTORY_MARKET_PRICES_BRANCH.RATE_VALUE,   
+dba.HISTORY_MARKET_PRICES_BRANCH.DB_USER_NAME,   
+dba.MONEY_TRANSMITTERS.NAME_MT  
+FROM  dba.HISTORY_MARKET_PRICES_BRANCH,   
+dba.MONEY_TRANSMITTERS  
+WHERE (  dba.HISTORY_MARKET_PRICES_BRANCH.ID_MT =  dba.MONEY_TRANSMITTERS.ID_MT )    
+AND convert(datetime,convert(varchar,DATE_HISTORY,101)) = :p_date
+" arguments=(("p_date", date))  sort="history_market_prices_branch_date_history A history_market_prices_branch_id_branch A " )
+text(band=header alignment="2" text="Date History" border="2" color="0" x="18" y="12" height="56" width="425" html.valueishtml="0"  name=history_market_prices_branch_date_history_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Branch" border="2" color="0" x="466" y="12" height="56" width="329" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="MT" border="2" color="0" x="818" y="12" height="56" width="663" html.valueishtml="0"  name=money_transmitters_name_mt_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="18" y="8" height="64" width="425" format="[shortdate] hh:mm" html.valueishtml="0"  name=history_market_prices_branch_date_history visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="466" y="8" height="64" width="329" format="[general]" html.valueishtml="0"  name=history_market_prices_branch_id_branch visible="1" edit.limit=10 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1504" y="12" height="64" width="283" format="[general]" html.valueishtml="0"  name=history_market_prices_branch_id_country visible="1" edit.limit=5 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="818" y="4" height="64" width="663" format="[general]" html.valueishtml="0"  name=money_transmitters_name_mt visible="1" edit.limit=50 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="33554432" x="1810" y="8" height="64" width="699" html.valueishtml="0"  name=id_payer visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Country" border="2" color="0" x="1504" y="12" height="56" width="283" html.valueishtml="0"  name=history_market_prices_branch_id_country_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Payer" border="2" color="0" x="1810" y="12" height="56" width="699" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Rate" border="2" color="0" x="2533" y="12" height="56" width="389" html.valueishtml="0"  name=history_market_prices_branch_rate_value_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="User" border="2" color="0" x="2944" y="12" height="56" width="535" html.valueishtml="0"  name=history_market_prices_branch_db_user_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="33554432" x="2533" y="8" height="64" width="389" format="[general]" html.valueishtml="0"  name=history_market_prices_branch_rate_value visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="2944" y="12" height="64" width="535" format="[general]" html.valueishtml="0"  name=history_market_prices_branch_db_user_name visible="1" edit.limit=30 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

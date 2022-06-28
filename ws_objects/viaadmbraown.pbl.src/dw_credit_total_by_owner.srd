@@ -1,0 +1,57 @@
+﻿$PBExportHeader$dw_credit_total_by_owner.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=char(8000) updatewhereclause=yes name=name dbname="name" )
+ column=(type=decimal(0) updatewhereclause=yes name=owner_ssn dbname="BRANCH_OWNER_INFORMATION.OWNER_SSN" dbalias=".OWNER_SSN" )
+ column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.id_branch" dbalias=".id_branch" )
+ column=(type=char(4) updatewhereclause=yes name=branch_id_main_branch dbname="BRANCH.ID_MAIN_BRANCH" dbalias=".ID_MAIN_BRANCH" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_branch_debt_limit dbname="GROUP_BRANCH.DEBT_LIMIT" dbalias=".DEBT_LIMIT" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_branch_debt_limit_wknd dbname="GROUP_BRANCH.DEBT_LIMIT_WKND" dbalias=".DEBT_LIMIT_WKND" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" dbalias=".NAME_BRANCH" )
+ retrieve="SELECT  replace(owner_fname+ isnull(' '+owner_mname+' ','')+' '+owner_lname+' '+isnull(owner_slname,''),'  ',' ') as name,
+ OWNER_SSN, 
+dba.BRANCH.id_branch ,
+dba.BRANCH.ID_MAIN_BRANCH,
+dba.GROUP_BRANCH.DEBT_LIMIT, 
+dba.GROUP_BRANCH.DEBT_LIMIT_WKND,
+dba.BRANCH.NAME_BRANCH
+FROM dba.BRANCH_OWNER_INFORMATION ,  dba.BRANCH, dba.GROUP_BRANCH
+where dba.BRANCH_OWNER_INFORMATION.id_branch = dba.BRANCH.id_branch
+and dba.BRANCH.ID_MAIN_BRANCH = dba.GROUP_BRANCH.ID_MAIN_BRANCH
+and ID_STATUS_BRANCH = 'O'"  sort="owner_ssn A branch_id_main_branch A " )
+group(level=1 header.height=100 trailer.height=80 by=("owner_ssn" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=0 trailer.height=80 by=("branch_id_main_branch" ) header.color="536870912" trailer.color="536870912" )
+text(band=header.1 alignment="1" text="" border="2" color="33554432" x="5" y="8" height="60" width="2514" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217728" )
+text(band=header.1 alignment="1" text="" border="2" color="33554432" x="9" y="80" height="8" width="2510" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="268435456" )
+compute(band=header.1 alignment="0" expression="right( STRING(owner_ssn) , 4 )"border="0" color="33554432" x="23" y="12" height="52" width="274" format="[GENERAL]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header.1 alignment="0" expression="if(isnull( owner_ssn ),'DO NOT HAVE SSN', name )"border="0" color="33554432" x="338" y="12" height="52" width="1376" format="[GENERAL]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header.1 alignment="2" text="WEEK" border="0" color="0" x="1728" y="12" height="52" width="361" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header.1 alignment="2" text="WEEKEND" border="0" color="0" x="2121" y="12" height="52" width="361" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=header.2 id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="2478" y="8" height="64" width="215" format="[general]" html.valueishtml="0"  name=branch_id_main_branch visible="1" edit.limit=4 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.2 id=5 alignment="1" tabsequence=32766 border="0" color="33554432" x="2802" y="4" height="64" width="274" format="[general]" html.valueishtml="0"  name=group_branch_debt_limit visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.2 id=6 alignment="1" tabsequence=32766 border="0" color="33554432" x="3109" y="8" height="64" width="274" format="[general]" html.valueishtml="0"  name=group_branch_debt_limit_wknd visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="9" y="4" height="64" width="251" format="[general]" html.valueishtml="0"  name=branch_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="293" y="8" height="52" width="1381" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.2 x1="5" y1="76" x2="2533" y2="76"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=trailer.2 alignment="0" text="Total by Branch" border="0" color="33554432" x="1257" y="12" height="52" width="411" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(group_branch_debt_limit for group 2)"border="0" color="33554432" x="1710" y="8" height="64" width="320" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum (group_branch_debt_limit_wknd for group 2)"border="0" color="33554432" x="2103" y="8" height="64" width="320" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=trailer.1 alignment="0" text="Total by Owner" border="0" color="33554432" x="1257" y="8" height="52" width="411" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=trailer.1 x1="9" y1="68" x2="2523" y2="68"  name=l_2 visible="1" pen.style="0" pen.width="14" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum(   group_branch_debt_limit for group 1 )"border="0" color="33554432" x="1710" y="8" height="52" width="320" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(   group_branch_debt_limit_wknd for group 1 )"border="0" color="33554432" x="2098" y="8" height="52" width="320" format="$#,##0.00;($#,##0.00)" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

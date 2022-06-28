@@ -1,0 +1,32 @@
+﻿$PBExportHeader$fn_completar_cadena.srf
+global type fn_completar_cadena from function_object
+end type
+
+forward prototypes
+global function string fn_completar_cadena (readonly string cadena, readonly string posicion, readonly string caracteres, readonly integer tamano)
+end prototypes
+
+global function string fn_completar_cadena (readonly string cadena, readonly string posicion, readonly string caracteres, readonly integer tamano);string ls_cadena,ls_posicion,ls_fill
+integer li_tamano
+
+ls_cadena		=	trim(cadena)
+ls_posicion		=	posicion
+ls_fill			=	caracteres
+li_tamano		=	tamano
+
+if (li_tamano<= len(ls_cadena)) then
+	ls_cadena = mid(ls_cadena,1,li_tamano)
+else
+	if (ls_posicion="D") then
+		do while len(ls_cadena) < li_tamano
+			ls_cadena = ls_cadena + ls_fill
+		loop
+	else
+		do while len(ls_cadena) < li_tamano
+			ls_cadena = ls_fill + ls_cadena 
+		loop
+	end if
+end if
+return ls_cadena
+end function
+

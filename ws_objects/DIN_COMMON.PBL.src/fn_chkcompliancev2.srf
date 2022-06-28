@@ -1,0 +1,1499 @@
+﻿$PBExportHeader$fn_chkcompliancev2.srf
+global type fn_chkcompliancev2 from function_object
+end type
+
+forward prototypes
+global function boolean fn_chkcompliancev2 (string ps_id_branch, decimal pd_id_receiver, string ps_typecheck)
+end prototypes
+
+global function boolean fn_chkcompliancev2 (string ps_id_branch, decimal pd_id_receiver, string ps_typecheck);
+////  -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////  -- ps_typecheck =  'N' For NEW INVOICES
+////  --                 'M' For MODIFICATIONS (Does not check all HOLD reasons)
+////  --                 'T' For TESTING (Only check against previous dates)
+////  -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+string 	ls_reason, ls_id_branch, ls_branch_pay_receiver, ls_id_flag_receiver, ls_phone1_receiver, ls_phone2_receiver, ld_total_receiver, ls_typecheck
+string 	ls_sen_fname, ls_sen_mname, ls_sen_lname, ls_sen_slname, ls_rec_fname, ls_rec_mname, ls_rec_lname, ls_rec_slname, ls_state_source
+string 	ls_paymode, ls_ordercurrencytopay,ls_errcode, ls_errtext
+string		ls_payor_group, ls_id_country, ls_hold
+double 	ld_id_receiver, ld_id_sender, ld_phone1_sender, ld_phone2_sender, ld_id_sender_global
+decimal 	ld_limite_en_dias_investigacion, ld_limite_id_en_dias_investigacion, ld_limite_phonesreceiver_en_dias_investigacion, ld_limite_id2_en_dias_investigacion
+decimal  ld_limite_receiver_en_dias_investigacion, ld_limite_id_receiver_en_dias_investigacion, ld_limite_diario_rec
+decimal  ld_orderfacevalue, ld_ordertotalvalue, ld_orderamounttopay
+datetime ld_date_receiver
+boolean 	lb_hold
+long		ll_dias_investigacion, ll_count, ll_OfacCount, ll_count1, ld_id_hold
+int ld_initOupPut
+
+string ls_ofac_flag
+
+ls_typecheck = ps_typecheck
+lb_hold = false
+
+// CHANGED TABLED ORDER  added 06/27/2013 (it was RECEIVER, SENDER before)
+select dba.receiver.id_branch,
+		 dba.receiver.id_receiver,
+		 dba.receiver.id_sender,
+		 dba.receiver.date_receiver,
+		 dba.receiver.branch_pay_receiver,
+		 dba.sender.sen_fname,
+		 dba.sender.sen_mname,
+		 dba.sender.sen_lname,
+		 dba.sender.sen_slname,
+		 dba.receiver.rec_fname,
+		 dba.receiver.rec_mname,
+		 dba.receiver.rec_lname,
+		 dba.receiver.rec_slname,
+		 dba.sender.phone1_sender,
+		 dba.sender.phone2_sender,
+		 dba.receiver.phone1_receiver ,
+		 dba.receiver.phone2_receiver,
+		 dba.receiver.total_receiver,
+		 dba.receiver.id_flag_receiver,
+		 dba.sender.id_sender_global,
+		 dba.receiver.id_country_receiver,
+		 dba.receiver.mode_pay_receiver,
+		 dba.receiver.mod_pay_currency,
+		 dba.receiver.net_amount_receiver,
+		 dba.receiver.net_amount_receiver + isnull(dba.receiver.telex_receiver,0) + isnull(dba.receiver.exchange_receiver,0) + dba.receiver.total_modo_pago,
+		 dba.receiver.total_pay_receiver
+into 
+		 :ls_id_branch,
+		 :ld_id_receiver,
+		 :ld_id_sender,
+		 :ld_date_receiver,
+		 :ls_branch_pay_receiver,
+		 :ls_sen_fname,
+		 :ls_sen_mname,
+		 :ls_sen_lname,
+		 :ls_sen_slname,
+		 :ls_rec_fname,
+		 :ls_rec_mname,
+		 :ls_rec_lname,
+		 :ls_rec_slname,
+		 :ld_phone1_sender,
+		 :ld_phone2_sender,
+		 :ls_phone1_receiver ,
+		 :ls_phone2_receiver,
+		 :ld_total_receiver,
+		 :ls_id_flag_receiver,
+		 :ld_id_sender_global,
+		 :ls_id_country,
+		 :ls_paymode,
+		 :ls_ordercurrencytopay,
+		 :ld_orderfacevalue,
+		 :ld_ordertotalvalue,
+		 :ld_orderamounttopay
+from dba.sender, dba.receiver 
+where dba.receiver.id_branch = dba.sender.id_branch
+and dba.receiver.id_sender = dba.sender.id_sender
+and dba.receiver.id_receiver = :pd_id_receiver 
+and dba.receiver.id_branch = :ps_id_branch;
+
+// Si por algun motivo fallo (Dead Lock) intenta de nuevo
+//
+//if SQLCA.SQLCode <> 0 then
+//
+//	// Si por algun motivo fallo (Dead Lock) lo pone en HOLD por razon 25
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ps_id_branch,:pd_id_receiver,getdate(),getdate(),'25','HOLD CHECK FAILED');
+//
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 25]","Error Critico, informar a Esteban - no cerrar esta pantalla. "+SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 25]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//end if
+//
+//if isnull(ls_sen_fname) then ls_sen_fname = ''
+//if isnull(ls_sen_mname) then ls_sen_mname = ''
+//if isnull(ls_sen_lname) then ls_sen_lname = ''
+//if isnull(ls_sen_slname) then ls_sen_slname = ''
+//
+//if isnull(ls_rec_fname) then ls_rec_fname = ''
+//if isnull(ls_rec_mname) then ls_rec_mname = ''
+//if isnull(ls_rec_lname) then ls_rec_lname = ''
+//if isnull(ls_rec_slname) then ls_rec_slname = ''
+//
+//if isnull(ld_phone1_sender) then ld_phone1_sender = 0
+//if isnull(ld_phone2_sender) then ld_phone2_sender = 0
+//if isnull(ls_phone1_receiver) then ls_phone1_receiver = ''
+//if isnull(ls_phone2_receiver) then ls_phone2_receiver = ''
+//
+//if isnull(ld_id_sender_global) then ld_id_sender_global = 0
+//
+////	-----------------------------------------------------
+////	-- INITIAL VALUES
+//
+//ll_dias_investigacion = 30
+//ld_limite_en_dias_investigacion = 8000
+//ld_limite_id_en_dias_investigacion = 3000
+//ld_limite_id2_en_dias_investigacion = 4500
+//ld_limite_phonesreceiver_en_dias_investigacion = 8000
+//ld_limite_receiver_en_dias_investigacion = 8000
+//ld_limite_id_receiver_en_dias_investigacion = 3000
+//
+//ld_limite_diario_rec = 1000
+//
+//
+//
+//SELECT id_main_branch
+//INTO :ls_payor_group
+//FROM dba.branch
+//WHERE id_branch = :ls_branch_pay_receiver;
+//
+//SELECT id_state
+//INTO :ls_state_source
+//FROM dba.branch
+//WHERE id_branch = :ls_id_branch;
+//
+//ls_id_branch = trim(ls_id_branch)
+//
+//ls_sen_fname = trim(ls_sen_fname)
+//ls_sen_mname = trim(ls_sen_mname)
+//ls_sen_lname = trim(ls_sen_lname)
+//ls_sen_slname = trim(ls_sen_slname)
+//
+//ls_rec_fname = trim(ls_rec_fname)
+//ls_rec_mname = trim(ls_rec_mname)
+//ls_rec_lname = trim(ls_rec_lname)
+//ls_rec_slname = trim(ls_rec_slname)
+//
+//ls_phone1_receiver = trim(ls_phone1_receiver)
+//ls_phone2_receiver = trim(ls_phone2_receiver)
+//
+////	-----------------------------------------------------
+//
+//
+//// ----- PENDIENTE, EL STATUS DEL GIRO!!!! GIROS A, C NO QUEDAN EN HOLD.
+//
+////****************************************************/
+////carlos sarmiento
+////mod: June 5 /2013
+////check if there 
+//
+//select  isnull(stringvalue,'I')
+//INTO :ls_ofac_flag
+//from  dba.PARAMETERS
+//where idparameter='ERR_OFAC_LESS_FLAG';
+// 
+//if (ls_ofac_flag = 'A' ) then
+//	
+//	lb_hold = true
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'27','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 27]",SQLCA.SQLErrText)
+//		
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 27]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//	end if
+//end if
+//
+////****************************************************/
+///****v1.5*********************************************/
+///**csarmiento
+//    mod: Oct - 28 / 2013
+//46: dodd -frank hold **************************************/
+//   lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'46','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 46]",SQLCA.SQLErrText)
+//		
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 46]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//	end if
+///***v1.5**************************************************/
+//
+//
+///*** v1.4 ***********************************************/
+//  
+//	SELECT  COUNT(*) 
+//	INTO :ll_count
+//	FROM DBA.BRANCH_LIMIT BL
+//	WHERE BL.ID_BRANCH = :ls_id_branch
+//	AND BL.LIMIT <= :ld_orderfacevalue;
+//   
+//	if ll_count > 0 then					
+//
+//		lb_hold = true
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'24','');				
+//
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 24]",SQLCA.SQLErrText)
+//
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 24]'
+//
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//
+//		end if
+// end if 
+// 
+//  /** v1.4 **************************************************/
+//
+////	-- CALL CENTER INVOICE (89)
+//
+//if ls_id_branch = 'A00788' and ps_typecheck <> 'M' then
+//	
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'89','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 89]",SQLCA.SQLErrText)
+//		
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 89]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//	end if
+//
+//
+//		
+//	
+//	// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//	// SI ES UN REMITENTE NUEVO
+//	// CHANGED TABLED ORDER  added 06/27/2013 (it was RECEIVER, SENDER before)
+//	SELECT COUNT(*) 
+//	INTO :ll_count
+//	FROM DBA.SENDER S, DBA.RECEIVER R 
+//	WHERE R.ID_BRANCH = S.ID_BRANCH
+//	AND R.ID_SENDER = S.ID_SENDER
+//	AND S.ID_SENDER = :ld_id_sender
+//	AND R.ID_RECEIVER <> :ld_id_receiver
+//	AND R.ID_FLAG_RECEIVER IN ('T','P');
+//
+//	if ll_count < 1 then					
+//
+//
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'40','');				
+//
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 40]",SQLCA.SQLErrText)
+//
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 40]'
+//
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//
+//		end if
+//
+//
+//	// SI ES UN REMITENTE NUEVO			
+//	else 
+//	// SI NO ES UN REMITENTE NUEVO	
+//
+//
+//		// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//		// SI ES UN PAIS NUEVO
+//		// CHANGED TABLED ORDER  added 06/27/2013 (it was RECEIVER, SENDER before)
+//		SELECT COUNT(*) 
+//		INTO :ll_count1
+//		FROM DBA.SENDER S, DBA.RECEIVER R
+//		WHERE R.ID_BRANCH = S.ID_BRANCH
+//		AND R.ID_SENDER = S.ID_SENDER
+//		AND S.ID_SENDER = :ld_id_sender
+//		AND R.ID_COUNTRY_RECEIVER = :ls_id_country
+//		AND R.ID_FLAG_RECEIVER IN ('T','P');
+//	
+//		// Si el pais del nuevo la pone en hold de revision
+//		if ll_count1 < 1 then					
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'42','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 42]",SQLCA.SQLErrText)
+//							
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 42]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//		 
+//			end if			
+//			
+//		end if
+//		
+//		// SI ES UN PAIS NUEVO		
+//		// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//		
+//
+//
+//		// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//		// SI ES UN BENEFICIARIO NUEVO
+//		// CHANGED TABLED ORDER  added 06/27/2013 (it was RECEIVER, SENDER before)
+//		
+//		SELECT COUNT(*) 
+//		INTO :ll_count1
+//		FROM DBA.SENDER S, DBA.RECEIVER R
+//		WHERE R.ID_BRANCH = S.ID_BRANCH
+//		AND R.ID_SENDER = S.ID_SENDER
+//		AND S.ID_SENDER = :ld_id_sender
+//		AND R.ID_COUNTRY_RECEIVER = :ls_id_country
+//		AND R.ID_RECEIVER <> :ld_id_receiver
+//		AND R.rec_fname = :ls_rec_fname
+//		AND isnull(R.rec_mname,'') = :ls_rec_mname
+//		AND R.rec_lname = :ls_rec_lname
+//		AND isnull(R.rec_slname,'') = :ls_rec_slname
+//		AND R.ID_FLAG_RECEIVER IN ('T','P');
+//				
+//		if ll_count1 < 1 then					
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'41','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 41]",SQLCA.SQLErrText)
+//							
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 41]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//		 
+//			end if			
+//			
+//		end if		
+//		
+//		// SI ES UN BENEFICIARIO NUEVO		
+//		// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//						
+//						
+//				
+//	end if
+//	// SI NO ES UN REMITENTE NUEVO
+//	// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+//
+//
+//
+//
+//	// TYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTY
+//	// 07-20-2010: Caso especial, este cliente no debe enviar a mexico.
+//	if ls_id_branch = 'A00788' and ld_id_sender = 933 and ls_id_country <> 'COL'  then					
+//		
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'43','');				
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 43]",SQLCA.SQLErrText)
+//						
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 43]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//    
+//		end if			
+//		
+//	end if
+//	// TYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTYTY
+//
+//
+//
+//	
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- DUMMY AGENCY (72)
+//
+//if ls_id_branch = 'A00765' or ls_id_branch = 'TS01' &
+//	or ls_id_branch = 'TS02'  or ls_id_branch = 'TS03' &
+//	or ls_id_branch = 'TS04'  or ls_id_branch = 'TS05' &
+//	or ls_id_branch= 'TS06'  or ls_id_branch = 'TS07' then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'72','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 72]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 72]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//		
+//	end if
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- CLEARTALK (aKos)
+//
+//if ls_id_branch = 'A00003' then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'87','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 87]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 87]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//		
+//	end if
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- RETENER GIROS dba.wait_invoice (22)
+//
+//SELECT count(*)  
+//INTO :ll_count
+//FROM dba.wait_invoice  
+//WHERE id_branch = :ls_id_branch
+//AND id_receiver = :ld_id_receiver;
+//
+//if ll_count > 0 and ps_typecheck <> 'M' then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'22','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 22]",SQLCA.SQLErrText)
+//
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 22]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//end if
+//
+////	-----------------------------------------------------
+////	-- AGENCIA EN HOLD (20)
+//
+//string ls_flag_agencia
+//
+//SELECT id_flag_branch
+//INTO :ls_flag_agencia
+//FROM dba.branch  
+//WHERE id_branch = :ls_id_branch;
+//
+//if ls_flag_agencia = 'H' and ps_typecheck <> 'M' then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'20','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 20]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 20]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);		
+//		
+//	end if
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- PAGADOR DESACTIVADO (60)
+//
+//SELECT id_flag_branch   
+//INTO :ls_flag_agencia
+//FROM  dba.branch  
+//WHERE id_branch = :ls_branch_pay_receiver;
+//
+//if ls_flag_agencia <> 'A' and ps_typecheck <> 'M' then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'60','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 60]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 60]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//end if
+//
+////	-----------------------------------------------------
+////	-- BLACK LIST SENDER (19)
+//
+//// 05/10/2011 -> Valida que el pais coincida! (menos para los que no tienen pais)
+//
+//string 	ls_dummystring
+//long		ll_count2
+//
+//
+//ls_dummystring = ls_sen_fname+' '+ls_sen_mname+' '+ls_sen_lname+' '+ls_sen_slname
+//ls_dummystring = '%'+fn_replace(ls_dummystring,' ','%')+'%'
+//
+//SELECT COUNT(*)
+//INTO :ll_count1
+//FROM dba.blacklist
+//WHERE name_blacklist like :ls_dummystring
+//AND ISNULL(ID_COUNTRY,'USA') = 'USA';
+//
+//ls_dummystring = ls_sen_lname+' '+ls_sen_slname+' '+ls_sen_fname+' '+ls_sen_mname
+//ls_dummystring = '%'+fn_replace(ls_dummystring,' ','%')+'%'
+//
+//SELECT COUNT(*)
+//INTO :ll_count2
+//FROM dba.blacklist
+//WHERE name_blacklist like :ls_dummystring
+//AND ISNULL(ID_COUNTRY,'USA') = 'USA';
+//				
+//if (ll_count1 + ll_count2) > 0 then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'19','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 19]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 19]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- BLACK LIST RECEIVER (21)
+//
+//// 05/10/2011 -> Valida que el pais coincida! (menos para los que no tienen pais)
+//
+//ls_dummystring = ls_rec_fname+' '+ls_rec_mname+' '+ls_rec_lname+' '+ls_rec_slname
+//ls_dummystring = '%'+fn_replace(ls_dummystring,' ','%')+'%'
+//
+//SELECT COUNT(*)
+//INTO :ll_count1
+//FROM dba.blacklist
+//WHERE name_blacklist like :ls_dummystring
+//AND ISNULL(ID_COUNTRY,:ls_id_country) = :ls_id_country;
+//
+//ls_dummystring = ls_rec_lname+' '+ls_rec_slname+' '+ls_rec_fname+' '+ls_rec_mname
+//ls_dummystring = '%'+fn_replace(ls_dummystring,' ','%')+'%'
+//
+//SELECT COUNT(*)
+//INTO :ll_count2
+//FROM dba.blacklist
+//WHERE name_blacklist like :ls_dummystring
+//AND ISNULL(ID_COUNTRY,:ls_id_country) = :ls_id_country;
+//			
+//if (ll_count1 + ll_count2) > 0 then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'21','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 21]",SQLCA.SQLErrText)
+//
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 21]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+////	-- LIMITE POR ID (8,9)
+//
+//
+//Decimal ld_monto_limite
+//
+//SELECT isnull(limit_send_rate,-1)
+//INTO :ld_monto_limite
+//FROM dba.rate  
+//WHERE id_country = :ls_id_country;
+// 
+//if ld_monto_limite = -1 then
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'8','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 8]",SQLCA.SQLErrText)
+//
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 8]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);				
+//	end if
+//
+//	// -- Si no se pudo determinar el monto limite es porque falta un registro en dba.RATE para 
+//	// -- el pais evaluado, se pone el minimo que es COLOMBIA y REP.DOM
+//    ld_monto_limite = 1000
+//
+//end if
+//
+//
+////	-----------------------------------------------------
+//
+//if ll_dias_investigacion <> 0 then
+//
+////	-----------------------------------------------------
+//// -- Revisa Limites de ID por SENDER
+//
+//datetime ld_dateinvestigacion1
+//datetime ld_dateinvestigacion2
+//decimal	ld_acumulado, ld_acumulado_diario
+//
+//ld_dateinvestigacion1 = datetime(relativedate(date(ld_date_receiver),ll_dias_investigacion* -1),time('00:00:00'))
+//ld_dateinvestigacion2 = datetime(relativedate(date(ld_date_receiver),ll_dias_investigacion),time('23:59:59'))
+//
+//if ps_typecheck = 'T' then //-- Testing check is only backwards
+//	ld_dateinvestigacion2 = ld_date_receiver
+//end if
+//
+//	// WITH (NOLOCK) added 05/04/2012 for performance
+//
+//	//-- Obtiene el acumulado del PERIODO (30 Dias)
+//	SELECT isnull(SUM(r.total_receiver),0)
+//	INTO :ld_acumulado
+//	FROM dba.sender s WITH (NOLOCK), 
+//	dba.receiver r WITH (NOLOCK)
+//	WHERE r.id_sender = s.id_sender
+//	AND r.id_branch = s.id_branch
+//	AND (( s.id_sender = :ld_id_sender AND s.id_branch = :ls_id_branch )
+//			OR
+//			( s.id_sender_global = :ld_id_sender_global AND :ld_id_sender_global <> 0 ))
+//	AND r.date_receiver >= :ld_dateinvestigacion1
+//	AND r.date_receiver <= :ld_dateinvestigacion2
+//	AND r.id_flag_receiver <> 'A';
+//
+//
+//	// WITH (NOLOCK) added 05/04/2012 for performance
+//
+////-- Obtiene el acumulado del DIA
+//	SELECT isnull(SUM(r.total_receiver),0)
+//	INTO :ld_acumulado_diario
+//	FROM dba.sender s WITH (NOLOCK), 
+//	dba.receiver r WITH (NOLOCK)
+//	WHERE r.id_sender = s.id_sender
+//	AND r.id_branch = s.id_branch
+//	AND (( s.id_sender = :ld_id_sender AND s.id_branch = :ls_id_branch )
+//			OR
+//			( s.id_sender_global = :ld_id_sender_global AND :ld_id_sender_global <> 0 ))
+//	AND convert(varchar,r.date_receiver,101) = convert(varchar,convert(datetime,:ld_date_receiver),101)
+//	AND r.id_flag_receiver <> 'A';
+//
+//	// Verifica el acumulado mensual contra el limite permitido (8000)
+//	if ld_acumulado > ld_limite_en_dias_investigacion and ps_typecheck <> 'M' then
+//		//-- El envio sobrepado 8000 acumulados
+//		lb_hold = true
+//		
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'1','');				
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 1]",SQLCA.SQLErrText)
+//
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 1]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);					
+//		end if
+//	end if
+//
+//	// -- Verifica el acumulado diario contra limite 30 dias (3000)
+//	if ld_acumulado_diario >= ld_limite_id_en_dias_investigacion and ps_typecheck <> 'M' then
+//		// -- Requiere 2 Ids
+//		lb_hold = true
+//		
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'12','');				
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 12]",SQLCA.SQLErrText)
+//			
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 12]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);					
+//		end if
+//
+//	else
+//		// -- Verificar el acumulado diario contra limite de id (1000 o 3000)
+//		if ld_acumulado_diario >= ld_monto_limite and ps_typecheck <> 'M' then
+//			// -- Requiere 1 Id
+//			lb_hold = true
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'11','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 11]",SQLCA.SQLErrText)
+//				
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 11]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//			end if
+//		else
+//  
+//			// -- Verifica el acumulado de 30 dias contra limite1 de 30 dias (4500)
+//			if ld_acumulado >= ld_limite_id2_en_dias_investigacion and ps_typecheck <> 'M' then
+//			// -- Requiere 2 Id
+//				lb_hold = true
+//				
+//				INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//				VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'12','');				
+//				
+//				if SQLCA.SQLCode <> 0 then
+//					Messagebox("Error Inserting [motivo_hold 12]",SQLCA.SQLErrText)
+//					
+//					ls_errcode = String(SQLCA.SQLCode)
+//					ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 12]'
+//					
+//					INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//					VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);							
+//				end if
+//			else
+//				
+//				// -- Verifica el acumulado de 30 dias contra limite de 30 dias (3000)
+//				if ld_acumulado >= ld_limite_id_en_dias_investigacion and ps_typecheck <> 'M' then
+//				// -- Requiere 1 Id
+//					lb_hold = true
+//					
+//					INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//					VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'11','');				
+//					
+//					if SQLCA.SQLCode <> 0 then
+//						Messagebox("Error Inserting [motivo_hold 11]",SQLCA.SQLErrText)
+//						
+//						ls_errcode = String(SQLCA.SQLCode)
+//						ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 11]'
+//						
+//						INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//						VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);								
+//					end if
+//				end if
+//
+//			end if
+//
+//		end if
+//	end if
+//
+//
+//	// -----------------------------------------------------
+//	// -- Revisa Limites de ID por RECIPIENT 
+//	
+//	string ls_iso_country_rec
+//	
+//	SELECT ISO_C3
+//	INTO :ls_iso_country_rec
+//	FROM dba.country, dba.receiver
+//	WHERE dba.country.id_country = dba.receiver.id_country_receiver
+//	AND id_branch = :ls_id_branch
+//	AND id_receiver = :ld_id_receiver;
+//	
+//	ls_dummystring = ls_rec_fname+' '+ls_rec_mname+' '+ls_rec_lname+' '+ls_rec_slname
+//
+//	ls_dummystring = fn_replace(ls_dummystring,'   ',' ')
+//	ls_dummystring = trim(fn_replace(ls_dummystring,'  ',' '))
+//	
+//	decimal ld_acumulado_rec, ld_acumulado_diario_rec
+//	
+//	
+//	// WITH (NOLOCK) added 05/04/2012 for performance
+//	
+//	// -- Obtiene el acumulado del PERIODO (30 Dias)
+//	// 06/27/2013 - Change Table order (it was RECEIVER, COUNTRY before)
+//	SELECT isnull(SUM(r.total_receiver),0)
+//	INTO :ld_acumulado_rec
+//	FROM dba.country c,
+//	dba.receiver r WITH (NOLOCK)	
+//	WHERE r.id_country_receiver = c.id_country
+//	AND ISO_C3 = :ls_iso_country_rec
+//	AND r.name_receiver = :ls_dummystring
+//	AND r.date_receiver >= :ld_dateinvestigacion1
+//	AND r.date_receiver <= :ld_dateinvestigacion2
+//	AND r.id_flag_receiver <> 'A';    
+//
+//	//carlos sarmiento
+//	//mod: Jun 4 /2013
+//	//req: 460-Accumulated by recipient
+//	//-- Obtiene el acumulado del DIA por Receiver, se realiza unicamente por nombres exactos y pais.
+//	SELECT isnull(SUM(r.total_receiver),0)
+//	INTO :ld_acumulado_diario_rec
+//	FROM dba.receiver r WITH (NOLOCK)
+//	WHERE  r.ID_COUNTRY_RECEIVER = :ls_id_country
+//	AND r.name_receiver = :ls_dummystring
+//	AND ( convert(varchar,r.date_receiver,101) = convert(varchar,convert(datetime,:ld_date_receiver),101) )
+//	AND ( r.id_flag_receiver <> 'A' );
+//	/*****************************************/	
+//		
+//	if ld_acumulado_rec > ld_limite_en_dias_investigacion then
+//	// -- El envio sobrepado 8000 acumulados
+//		lb_hold = true
+//		
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'10','');				
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 10]",SQLCA.SQLErrText)
+//			
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 10]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);					
+//		end if
+//
+//	end if
+//
+//	//carlos sarmiento
+//	//req: 460 
+//	//mod: June 4/2013
+//	if (  (ls_id_country = 'COL' or ls_id_country = 'RD') and ( ld_acumulado_diario_rec >= ld_limite_diario_rec) )then 
+//			// -- Requiere 1 Id
+//			lb_hold = true
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'13','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 13]",SQLCA.SQLErrText)
+//				
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 13]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//			end if
+//			/*****************************************/	
+//	else
+//			// -- Verifica el acumulado mensual permitido por beneficiario (8000)
+//			if (ld_acumulado_rec >= ld_limite_receiver_en_dias_investigacion) then
+//				lb_hold = true
+//				
+//				INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//				VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'4','');				
+//				
+//				if SQLCA.SQLCode <> 0 then
+//					Messagebox("Error Inserting [motivo_hold 4]",SQLCA.SQLErrText)
+//		
+//					ls_errcode = String(SQLCA.SQLCode)
+//					ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 4]'
+//					
+//					INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//					VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);					
+//				end if
+//		
+//			else
+//				
+//				//06/09/2010
+//				// -- Verifica el acumulado mensual permitido por beneficiario (3000)
+//				if (ld_acumulado_rec >= ld_limite_id_receiver_en_dias_investigacion) then
+//					lb_hold = true
+//					
+//					INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//					VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'6','');				
+//					
+//					if SQLCA.SQLCode <> 0 then
+//						Messagebox("Error Inserting [motivo_hold 6]",SQLCA.SQLErrText)
+//			
+//						ls_errcode = String(SQLCA.SQLCode)
+//						ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 6]'
+//						
+//						INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//						VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);					
+//					end if
+//				end if
+//			
+//				
+//			end if
+//		end if
+//
+//	// -----------------------------------------------------
+//	
+//	// -- LIMITE MAXIMO PHONE SENDER (8000) (2)
+//	
+//
+//	if (ld_phone1_sender <> 0) AND (ld_phone1_sender > 1000000) and ps_typecheck <> 'M' then
+//
+//		// WITH (NOLOCK) added 05/04/2012 for performance
+//		// 06/27/2013 - Change Table order (it was RECEIVER, SENDER before)
+//		SELECT isnull(SUM(r.total_receiver),0)
+//		INTO :ld_acumulado
+//		FROM dba.sender s WITH (NOLOCK),
+//		dba.receiver r  WITH (NOLOCK)
+//		WHERE s.id_sender = r.id_sender
+//		AND s.id_branch = r.id_branch
+//		AND LTRIM(STR(:ld_phone1_sender)) NOT IN (SELECT PHONE_NUMBER FROM DBA.INVALID_PHONES)
+//		AND (( s.phone1_sender = :ld_phone1_sender ) OR ( s.phone2_sender = :ld_phone1_sender ))
+//		AND r.date_receiver >= :ld_dateinvestigacion1
+//		AND r.date_receiver <= :ld_dateinvestigacion2
+//		AND r.id_flag_receiver <> 'A';
+//
+//		if (ld_acumulado >= ld_limite_phonesreceiver_en_dias_investigacion) then
+//			lb_hold = true
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'2','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 2]",SQLCA.SQLErrText)
+//				
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 2]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//			end if
+//			
+//			
+//		else // si no acumula por el primer telefono revisa el segundo telefono
+//			
+//
+//			
+//			if (ld_phone2_sender <> 0) AND (ld_phone2_sender > 1000000) AND ps_typecheck <> 'M' then
+//		
+//				// WITH (NOLOCK) added 05/04/2012 for performance
+//				// 06/27/2013 - Change Table order (it was RECEIVER, SENDER before)
+//				SELECT isnull(SUM(r.total_receiver),0)
+//				INTO :ld_acumulado
+//				FROM dba.sender s  WITH (NOLOCK),
+//				dba.receiver r  WITH (NOLOCK)
+//				WHERE s.id_sender = r.id_sender
+//				AND s.id_branch = r.id_branch
+//				AND LTRIM(STR(:ld_phone2_sender)) NOT IN (SELECT PHONE_NUMBER FROM DBA.INVALID_PHONES)
+//				AND (( s.phone1_sender = :ld_phone2_sender ) OR ( s.phone2_sender = :ld_phone2_sender ))
+//				AND r.date_receiver >= :ld_dateinvestigacion1
+//				AND r.date_receiver <= :ld_dateinvestigacion2
+//				AND r.id_flag_receiver <> 'A';
+//		
+//				if (ld_acumulado >= ld_limite_phonesreceiver_en_dias_investigacion) and ps_typecheck <> 'M' then
+//						lb_hold = true
+//						
+//						INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//						VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'2','');				
+//						
+//						if SQLCA.SQLCode <> 0 then
+//							Messagebox("Error Inserting [motivo_hold 2]",SQLCA.SQLErrText)
+//							
+//							ls_errcode = String(SQLCA.SQLCode)
+//							ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 2]'
+//							
+//							INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//							VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);							
+//						end if
+//				end if
+//		
+//			end if			
+//						
+//		end if
+//
+//	end if
+//
+//
+//
+//
+//	//	-----------------------------------------------------
+//	//	-- LIMITE MAXIMO PHONE RECEIVER (8000) (3)
+//
+//	if  ls_phone1_receiver <> '' AND (len(ls_phone1_receiver) > 5) AND ps_typecheck <> 'M' then
+//	
+//		// WITH (NOLOCK) added 05/04/2012 for performance
+//	    // 06/27/2013 - Change Table order (it was RECEIVER, SENDER before)
+//		SELECT isnull(SUM(r.total_receiver),0)
+//		INTO :ld_acumulado
+//		FROM dba.sender s  WITH (NOLOCK),
+//		dba.receiver r WITH (NOLOCK)
+//		WHERE s.id_sender = r.id_sender
+//		AND s.id_branch = r.id_branch
+//		AND :ls_phone1_receiver NOT IN (SELECT PHONE_NUMBER FROM DBA.INVALID_PHONES)
+//		AND (( r.phone1_receiver = :ls_phone1_receiver ) OR ( r.phone2_receiver = :ls_phone1_receiver ))
+//		AND r.date_receiver >= :ld_dateinvestigacion1
+//		AND r.date_receiver <= :ld_dateinvestigacion2
+//		AND r.id_flag_receiver <> 'A';
+//	
+//		if (ld_acumulado >= ld_limite_phonesreceiver_en_dias_investigacion) then
+//			lb_hold = true
+//			
+//			INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//			VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'3','');				
+//			
+//			if SQLCA.SQLCode <> 0 then
+//				Messagebox("Error Inserting [motivo_hold 3]",SQLCA.SQLErrText)
+//				
+//				ls_errcode = String(SQLCA.SQLCode)
+//				ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 3]'
+//				
+//				INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//				VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//			end if
+//
+//		else // si no acumula por el telefono1 busca en el telefono2
+//			
+//			
+//			if ls_phone2_receiver <> '' AND (len(ls_phone2_receiver) > 5) AND ps_typecheck <> 'M' then
+//			
+//				// WITH (NOLOCK) added 05/04/2012 for performance
+//			    // 06/27/2013 - Change Table order (it was RECEIVER, SENDER before)
+//				SELECT isnull(SUM(r.total_receiver),0)
+//				INTO :ld_acumulado
+//				FROM dba.sender s WITH (NOLOCK), 
+//				dba.receiver r WITH (NOLOCK)
+//				WHERE s.id_sender = r.id_sender
+//				AND s.id_branch = r.id_branch
+//				AND :ls_phone2_receiver NOT IN (SELECT PHONE_NUMBER FROM DBA.INVALID_PHONES)
+//				AND (( r.phone1_receiver = :ls_phone2_receiver ) OR ( r.phone2_receiver = :ls_phone2_receiver ))
+//				AND r.date_receiver >= :ld_dateinvestigacion1
+//				AND r.date_receiver <= :ld_dateinvestigacion2
+//				AND r.id_flag_receiver <> 'A' ;
+//			
+//				if (ld_acumulado >= ld_limite_phonesreceiver_en_dias_investigacion) then
+//					lb_hold = true
+//					
+//					INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//					VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'3','');				
+//					
+//					if SQLCA.SQLCode <> 0 then
+//						Messagebox("Error Inserting [motivo_hold 3]",SQLCA.SQLErrText)
+//		
+//						ls_errcode = String(SQLCA.SQLCode)
+//						ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 3]'
+//						
+//						INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//						VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//					end if
+//				end if
+//			
+//			end if			
+//			
+//			
+//		end if
+//
+//	end if
+//	
+//	
+//	
+//
+//	// -----------------------------------------------------
+//
+//end if // --IF @ll_dias_investigacion <> 0
+//
+//				
+////	-----------------------------------------------------
+//
+////	--###################################################		
+////	-- OFAC SENDER (62)
+//
+////string ls_name_ofac, ls_lastnames_ofac, ls_dummystring2
+//
+//if ps_typecheck <> 'M' then //-- Solo estamos modificando beneficiarios
+//
+//	
+//	ll_OfacCount = 0
+//	
+//	// New Ofac Check!
+//	 DECLARE spCalcOfacSender PROCEDURE FOR dba.spCalOfacMatchesOrder  
+//         LS_ID_BRANCH = :ls_id_branch,   
+//         LD_ID_RECEIVER = :ld_id_receiver,   
+//         LD_ID_SENDER = :ld_id_sender,   
+//         PS_TYPE = 'S',   
+//         PS_FNAME = :ls_sen_fname,   
+//         PS_MNAME = :ls_sen_mname,   
+//         PS_LNAME = :ls_sen_lname,   
+//         PS_SLNAME = :ls_sen_slname;
+//	
+//	Execute spCalcOfacSender;
+//	
+//	if SQLCA.SQLCode <> 0 then			
+//		fn_email_notification2("ebernal@viamericas.com","ERROR Executing New Ofac SP","Error on Execute spCalcOfacSender: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+//	end if
+//	
+//	
+//
+//	// not sure why this, replace by the select below
+//	//Fetch spCalcOfacSender INTO :ll_OfacCount;
+//	
+//	SELECT count(*) 
+//	INTO :ll_OfacCount
+//	FROM dba.OFAC_HIT
+//	WHERE ID_BRANCH =:ls_id_branch
+//	AND ID_RECEIVER = :ld_id_receiver
+//	AND TYPE_HIT = 'S'
+//	//csarmiento: Jun 18/2013
+//	//to check if there is a clearance.. if the order exists in motivo hold history is because there is a clearance, no motivo_hold will be inserted	
+//	AND NOT EXISTS(
+//	                SELECT 'G'
+//	                  FROM DBA.MOTIVO_HOLD_HISTORY M
+//	                 WHERE M.ID_BRANCH = DBA.OFAC_HIT.ID_BRANCH
+//	                   AND M.ID_RECEIVER = DBA.OFAC_HIT.ID_RECEIVER
+//	                   AND M.ID_SENDER = DBA.OFAC_HIT.ID_SENDER
+//	                   AND M.TYPE_MOTIVO_HOLD = 62
+//	               )	;  	
+//	//end csarmiento
+//
+//	if ll_OfacCount > 0 then // Ofac Hit
+//		
+//		lb_hold = true
+//		
+//		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//		VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'62','');				
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			Messagebox("Error Inserting [motivo_hold 62]",SQLCA.SQLErrText)
+//			
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 62]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//		end if		
+//		
+//	elseif ll_OfacCount < 0 then // Ofac was not checked because first or last name are missing	
+//
+//		fn_email_notification2("ebernal@viamericas.com","ERROR Executing New Ofac Check","Sender has incompleted names: "+ls_id_branch+'-'+String(ld_id_sender))		
+//		
+//	end if
+//	
+//	Close spCalcOfacSender;
+//	
+//	
+//	
+//end if
+//// --###################################################
+//
+////	-----------------------------------------------------
+//
+////	--###################################################		
+////	-- OFAC RECEIVER (65)
+//
+//ll_OfacCount = 0
+//
+//// New Ofac Check!
+// DECLARE spCalcOfacReceiver PROCEDURE FOR dba.spCalOfacMatchesOrder  
+//		LS_ID_BRANCH = :ls_id_branch,   
+//		LD_ID_RECEIVER = :ld_id_receiver,   
+//		LD_ID_SENDER = :ld_id_sender,   
+//		PS_TYPE = 'R',   
+//		PS_FNAME = :ls_rec_fname,   
+//		PS_MNAME = :ls_rec_mname,   
+//		PS_LNAME = :ls_rec_lname,   
+//		PS_SLNAME = :ls_rec_slname;
+//
+//Execute spCalcOfacReceiver;
+//
+//if SQLCA.SQLCode <> 0 then			
+//	fn_email_notification2("ebernal@viamericas.com","ERROR Executing New Ofac SP","Error on Execute spCalcOfacReceiver: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+//end if
+//
+//
+//// not sure why this, replace by the select below
+////Fetch spCalcOfacReceiver INTO :ll_OfacCount;
+//
+//SELECT count(*) 
+//INTO :ll_OfacCount
+//FROM dba.OFAC_HIT
+//WHERE ID_BRANCH =:ls_id_branch
+//AND ID_RECEIVER = :ld_id_receiver
+//AND TYPE_HIT = 'R'
+////csarmiento: Jun 18/2013
+////to check if there is a clearance.. if the order exists in motivo hold history is because there is a clearance, no motivo_hold will be inserted
+//AND NOT EXISTS(
+//	                SELECT 'G'
+//	                  FROM DBA.MOTIVO_HOLD_HISTORY M
+//	                 WHERE M.ID_BRANCH = DBA.OFAC_HIT.ID_BRANCH
+//	                   AND M.ID_RECEIVER = DBA.OFAC_HIT.ID_RECEIVER
+//	                   AND M.ID_SENDER = DBA.OFAC_HIT.ID_SENDER
+//	                   AND M.TYPE_MOTIVO_HOLD = 65
+//	               );  
+//  //end: csarmiento						
+//
+//if ll_OfacCount > 0 then // Ofac Hit
+//
+//	lb_hold = true
+//	
+//	INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//	VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),'65','');				
+//	
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [motivo_hold 65]",SQLCA.SQLErrText)
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [motivo_hold 65]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);						
+//	end if		
+//	
+//elseif ll_OfacCount < 0 then // Ofac was not checked because first or last name are missing	
+//
+//	fn_email_notification2("ebernal@viamericas.com","ERROR Executing New Ofac Check","Receiver has incompleted names: "+ls_id_branch+'-'+String(ld_id_receiver))		
+//	
+//end if
+//
+//Close spCalcOfacReceiver;
+//
+//
+//
+//// --###################################################
+//
+//
+//
+//// Returns 	TRUE if the order pass the PAYER-COUNTRY limits
+//// 			FALSE if the order does not pass the limits
+//
+//String	ls_limit_id,ls_limit_payer,ls_limit_country,ls_limit_currency,ls_limit_paymode,ls_limit_message,ls_limit_message_tittle,ls_limit_block, ls_limit_source_state
+//Double	ld_limit_amount, ld_amountToCheck
+//Long 		ll_limit_field
+//
+//
+//DECLARE CUR_PAYER_LIMIT CURSOR FOR  
+//SELECT dba.RECEIVER_LIMIT.LIMIT_ID,   
+//dba.RECEIVER_LIMIT.LIMIT_PAYER,   
+//dba.RECEIVER_LIMIT.LIMIT_COUNTRY,   
+//dba.RECEIVER_LIMIT.LIMIT_FIELD,   
+//dba.RECEIVER_LIMIT.LIMIT_AMOUNT,   
+//dba.RECEIVER_LIMIT.LIMIT_CURRENCY,
+//dba.RECEIVER_LIMIT.LIMIT_PAYMODE,
+//dba.RECEIVER_LIMIT.LIMIT_MESSAGE,
+//dba.RECEIVER_LIMIT.LIMIT_MESSAGE_TITTLE,
+//dba.RECEIVER_LIMIT.LIMIT_BLOCK,
+//dba.RECEIVER_LIMIT.LIMIT_SOURCE_STATE,
+//dba.RECEIVER_LIMIT.LIMIT_TIPO_HOLD
+//FROM dba.RECEIVER_LIMIT 
+//WHERE LIMIT_TIPO_HOLD is not null
+//ORDER BY dba.RECEIVER_LIMIT.LIMIT_BLOCK DESC, dba.RECEIVER_LIMIT.LIMIT_ID ASC;
+//
+//OPEN CUR_PAYER_LIMIT;
+//
+//FETCH CUR_PAYER_LIMIT INTO :ls_limit_id, :ls_limit_payer,:ls_limit_country, :ll_limit_field, :ld_limit_amount, :ls_limit_currency, :ls_limit_paymode, :ls_limit_message, :ls_limit_message_tittle, :ls_limit_block, :ls_limit_source_state, :ls_hold;
+//
+//DO WHILE SQLCA.SQLCODE = 0 
+//	
+//	// Si el pagador es el mismo o la restriccion es para todos los pagadores
+//	if ls_limit_payer = ls_payor_group or isnull(ls_limit_payer) then	
+//		
+//		// Si el pais es el mismo o la restriccion es para todos los paises
+//		if ls_limit_country = ls_id_country or isnull(ls_limit_country) then
+//			
+//			// Si el estado Origen es el mismo o la restriccion es para todos los estados
+//			if ls_limit_source_state = ls_state_source or isnull(ls_limit_source_state) then			
+//			
+//				// Si el modo de pago es el mismo
+//				if ls_paymode = ls_limit_paymode then
+//				
+//					// Si la moneda es la misma (NACIONAL/DOLLAR)
+//					if ls_ordercurrencytopay = ls_limit_currency then
+//				
+//						// Revisa por cual de los valores es el limite (1:OrderFace u$, 2:Order+Comm u$, 3:AmountToBePaid u$ or NAT)
+//						if ll_limit_field = 1 then						
+//							ld_amountToCheck = ld_orderfacevalue
+//						elseif ll_limit_field = 2 then
+//							ld_amountToCheck = ld_ordertotalvalue					
+//						elseif ll_limit_field = 3 then
+//							ld_amountToCheck = ld_orderamounttopay
+//						else
+//							// Error en el campo ll_limit_field 
+//							ld_amountToCheck = 0
+//						end if
+//										
+//						// Chequeo del Limite y Despliegue del Mensaje
+//						if ld_amountToCheck >= ld_limit_amount then
+//						
+//							lb_hold = true
+//							
+//							INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+//							VALUES (:ld_id_sender,:ls_id_branch,:ld_id_receiver,getdate(),getdate(),:ls_hold,'');				
+//							
+//							if SQLCA.SQLCode <> 0 then
+//								Messagebox("Error Inserting [motivo_hold "+ls_hold+"]",SQLCA.SQLErrText)
+//								
+//								ls_errcode = String(SQLCA.SQLCode)
+//								ls_errtext = SQLCA.SQLErrText + ' [motivo_hold '+ls_hold+']'
+//								
+//								INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//								VALUES(GETDATE(),:ls_id_branch,:ld_id_receiver,:ls_errcode,:ls_errtext);										
+//							end if									
+//						
+//						end if	
+//						
+//					end if								
+//
+//				end if
+//
+//			end if
+//
+//		end if				
+//		
+//	end if
+//
+//	FETCH CUR_PAYER_LIMIT INTO :ls_limit_id, :ls_limit_payer,:ls_limit_country, :ll_limit_field, :ld_limit_amount, :ls_limit_currency, :ls_limit_paymode, :ls_limit_message, :ls_limit_message_tittle, :ls_limit_block, :ls_limit_source_state, :ls_hold;
+//	
+//LOOP
+//
+//CLOSE CUR_PAYER_LIMIT;
+//	
+//
+//
+//
+//// Si detecto alguna razon hold lo mete en el history y actualiza su status
+//if lb_hold = true then		
+//
+//	INSERT INTO dba.history_invoice(id_branch,id_receiver,id_flag_old,id_flag_new,id_cashier,date_change,time_change)
+//		  VALUES (:ps_id_branch,:pd_id_receiver,'I','H','CH1',getdate(),getdate());
+//
+//	if SQLCA.SQLCode <> 0 then
+//		Messagebox("Error Inserting [history_invoice]",SQLCA.SQLErrText)
+//	end if
+//
+//	UPDATE dba.receiver
+//	SET dba.receiver.id_flag_receiver = 'H'
+//	WHERE dba.receiver.id_branch = :ps_id_branch
+//	AND dba.receiver.id_receiver = :pd_id_receiver;
+//
+//	if SQLCA.SQLCode <> 0 then
+//		
+//		ls_errcode = String(SQLCA.SQLCode)
+//		ls_errtext = SQLCA.SQLErrText + ' [update receiver 1st try]'
+//		
+//		INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//		VALUES(GETDATE(),:ps_id_branch,:pd_id_receiver,:ls_errcode,:ls_errtext);		
+//				
+//		// Repite el update!
+//		UPDATE dba.receiver
+//		SET dba.receiver.id_flag_receiver = 'H'
+//		WHERE dba.receiver.id_branch = :ps_id_branch
+//		AND dba.receiver.id_receiver = :pd_id_receiver;
+//		
+//		if SQLCA.SQLCode <> 0 then
+//			
+//			ls_errcode = String(SQLCA.SQLCode)
+//			ls_errtext = SQLCA.SQLErrText + ' [update receiver 2nd try]'
+//			
+//			INSERT INTO dba.LOG_COMPLIACECHECK_ERRORS( DATE_AUDIT,ID_BRANCH,ID_RECEIVER,ERR_CODE,ERR_TEXT)
+//			VALUES(GETDATE(),:ps_id_branch,:pd_id_receiver,:ls_errcode,:ls_errtext);	
+//			
+//			Messagebox("Error Updating [receiver]",SQLCA.SQLErrText)
+//			
+//		end if
+//		
+//	end if
+//	
+//end if
+
+/********************************************************
+Carlos Sarmiento
+Mod: 10/04/2013
+Check Compliance --> this has to be done to have the code on the database
+********************************************************/
+
+
+
+ld_initOupPut=0
+ DECLARE spChkcompliance PROCEDURE FOR dba.sp_chkcompliancev2  
+         @pd_id_receiver = :ld_id_receiver,   
+         @ps_id_branch = :ls_id_branch,   
+	   @ps_typecheck = :ls_typecheck,			
+         @initOupPut  = :ld_initOupPut OUTPUT;
+	
+	Execute spChkcompliance;
+	if SQLCA.SQLCode <> 0 then			
+		fn_email_notification2("ebernal@viamericas.com;appdev@viamericas.com","ERROR Executing Compliance Check ","Error on Execute sp_chkcompliancev2: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+	else
+			FETCH spChkcompliance INTO :ld_initOupPut;
+			
+	end if
+	CLOSE spChkcompliance;
+	
+	if (ld_initOupPut>0) then
+		lb_hold = true
+	end if
+	
+/******************************************************/
+
+
+
+/********************************************************
+Carlos Sarmiento
+Mod: 10/02/2013
+FRAUD check
+********************************************************/
+ld_id_hold=0
+ DECLARE spCalFraudOrdersCheck PROCEDURE FOR dba.spCalFraudOrdersCheck  
+         @psBranch = :ls_id_branch,   
+         @plReceiver = :ld_id_receiver,   
+         @pbHold = :ld_id_hold OUTPUT;
+	
+	Execute spCalFraudOrdersCheck;
+	if SQLCA.SQLCode <> 0 then			
+		fn_email_notification2("ebernal@viamericas.com; appdev@viamericas.com","ERROR Executing Fraud Check ","Error on Execute spCalFraudOrdersCheck: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+	else
+			FETCH spCalFraudOrdersCheck INTO :ld_id_hold;
+	end if
+	CLOSE spCalFraudOrdersCheck;
+	
+	if (ld_id_hold >0) then
+		lb_hold = true
+	end if
+	
+	
+
+/******************************************************/
+
+
+return lb_hold
+
+end function
+

@@ -1,0 +1,59 @@
+﻿$PBExportHeader$fn_zipfile.srf
+global type fn_zipfile from function_object
+end type
+
+forward prototypes
+global subroutine fn_zipfile (string ls_in_filename, string ls_out_filename, string ls_encr_code, integer ls_encr_mode)
+end prototypes
+
+global subroutine fn_zipfile (string ls_in_filename, string ls_out_filename, string ls_encr_code, integer ls_encr_mode);// ::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}
+// ::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}
+/// Comprime los archivos!!!
+
+//ls_encr_mode = 0 (weak)
+//ls_encr_mode = 1 (AES)
+
+int li_result
+oleObject xceedzip
+
+string ls_path, ls_file
+
+ls_path = left(ls_in_filename,lastpos(ls_in_filename,"\"))
+ls_file = fn_replace(ls_in_filename,left(ls_in_filename,lastpos(ls_in_filename,"\")),"")
+
+
+
+
+xceedzip = CREATE OleObject
+xceedzip.ConnectToNewObject("XceedSoftware.XceedZip.5")
+
+xceedzip.License( "ZIP61-L4KD7-HTAJN-H8BA" )
+
+xceedzip.ZipFileName = ls_out_filename
+
+xceedzip.ProcessSubfolders(FALSE)
+
+xceedzip.DeleteZippedFiles(FALSE)
+
+if ls_encr_code <> "" then
+	if ls_encr_mode = 1 then xceedzip.EncryptionMethod = 1
+	xceedzip.EncryptionPassword = ls_encr_code
+end if
+
+xceedzip.BasePath(ls_path)
+
+//xceedzip.FilesToprocess("*.txt")
+
+xceedzip.FilesToprocess(ls_file)
+
+li_result = xceedzip.zip()
+
+
+// result es 0 para ok, 526 para No files
+//messagebox("",string(li_result))
+				
+/// Comprime los archivos!!!
+// ::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}
+// ::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}::{}
+end subroutine
+

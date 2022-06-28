@@ -1,0 +1,78 @@
+﻿$PBExportHeader$dw_payerwirerateverification.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=80 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=84 color="536870912" )
+table(column=(type=decimal(0) updatewhereclause=yes key=yes name=transaccion_diaria_banco_payee_cons_trans_diaria dbname="TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA" )
+ column=(type=char(20) updatewhereclause=yes name=transaccion_diaria_banco_payee_id_banco dbname="TRANSACCION_DIARIA_BANCO_PAYEE.ID_BANCO" )
+ column=(type=char(20) updatewhereclause=yes name=transaccion_diaria_banco_payee_id_cuenta_banco dbname="TRANSACCION_DIARIA_BANCO_PAYEE.ID_CUENTA_BANCO" )
+ column=(type=char(10) updatewhereclause=yes name=transaccion_diaria_banco_payee_deposit_code dbname="TRANSACCION_DIARIA_BANCO_PAYEE.DEPOSIT_CODE" )
+ column=(type=datetime updatewhereclause=yes name=transaccion_diaria_banco_payee_reconciliationdate dbname="TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE" )
+ column=(type=datetime updatewhereclause=yes name=transaccion_diaria_banco_payee_date_trans_diaria dbname="TRANSACCION_DIARIA_BANCO_PAYEE.DATE_TRANS_DIARIA" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=transaccion_diaria_banco_payee_exchange_rate dbname="TRANSACCION_DIARIA_BANCO_PAYEE.EXCHANGE_RATE" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=transaccion_diaria_banco_payee_isvalidatedwithbanks dbname="TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHBANKS" values="	Y/	N" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=transaccion_diaria_banco_payee_isvalidatedwithpayer dbname="TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHPAYER" values="	Y/	N" )
+ column=(type=char(1) updatewhereclause=yes name=transaccion_diaria_banco_payee_original_value_bank dbname="TRANSACCION_DIARIA_BANCO_PAYEE.original_value_bank" )
+ column=(type=char(1) updatewhereclause=yes name=transaccion_diaria_banco_payee_original_value_payer dbname="TRANSACCION_DIARIA_BANCO_PAYEE.original_value_payer" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=decimal(4) updatewhereclause=yes name=transaccion_diaria_payee_debit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA" )
+ column=(type=decimal(0) updatewhereclause=yes name=transaccion_diaria_payee_cons_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA" )
+ retrieve="SELECT dba.TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ID_BANCO,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ID_CUENTA_BANCO,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.DEPOSIT_CODE,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.DATE_TRANS_DIARIA,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.EXCHANGE_RATE,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHBANKS,   
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHPAYER , 
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHBANKS  as original_value_bank,
+dba.TRANSACCION_DIARIA_BANCO_PAYEE.ISVALIDATEDWITHPAYER as original_value_payer,
+dba.group_branch.NAME_MAIN_BRANCH,
+dba.TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA,
+dba.TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA,
+dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA
+FROM dba.TRANSACCION_DIARIA_BANCO_PAYEE,   
+dba.TRANSACCION_DIARIA_PAYEE, 
+DBA.group_branch  
+WHERE ( dba.TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA = dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA )  
+AND ( dba.group_branch.id_main_branch =  dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA )
+AND ( id_concepto_contable = 'DP' )
+AND ( dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :s_id_group or :s_id_group = '-ALL-')
+AND ( dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE >= :date_from )
+AND ( dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE <= :date_to )  
+" update="dba.TRANSACCION_DIARIA_BANCO_PAYEE" updatewhere=0 updatekeyinplace=no arguments=(("s_id_group", string),("date_from", datetime),("date_to", datetime)) )
+text(band=header alignment="2" text="Ref." border="2" color="33554432" x="142" y="24" height="52" width="329" html.valueishtml="0"  name=transaccion_diaria_banco_payee_cons_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Payer" border="2" color="33554432" x="489" y="24" height="52" width="750" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="System Date" border="2" color="33554432" x="3872" y="24" height="52" width="352" html.valueishtml="0"  name=transaccion_diaria_banco_payee_date_trans_diaria_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Validated with Payer" border="2" color="33554432" x="2967" y="24" height="52" width="526" html.valueishtml="0"  name=transaccion_diaria_banco_payee_isvalidatedwithpayer_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Validated with Banks" border="2" color="33554432" x="2432" y="24" height="52" width="517" html.valueishtml="0"  name=transaccion_diaria_banco_payee_isvalidatedwithbanks_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Exc. Rate" border="2" color="33554432" x="2085" y="24" height="52" width="329" html.valueishtml="0"  name=transaccion_diaria_banco_payee_exchange_rate_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Amount" border="2" color="33554432" x="1627" y="24" height="52" width="439" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id Banco" border="2" color="33554432" x="3511" y="24" height="52" width="343" html.valueishtml="0"  name=transaccion_diaria_banco_payee_id_banco_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Bank Date" border="2" color="33554432" x="1257" y="24" height="52" width="352" html.valueishtml="0"  name=transaccion_diaria_banco_payee_reconciliationdate_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="1" tabsequence=32766 border="0" color="33554432" x="142" y="12" height="64" width="288" format="[general]" html.valueishtml="0"  name=transaccion_diaria_banco_payee_cons_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=40 border="0" color="33554432" x="489" y="12" height="64" width="750" format="[general]" html.valueishtml="0"  name=group_branch_name_main_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=30 border="0" color="33554432" x="3223" y="12" height="64" width="96" format="[general]" html.valueishtml="0" protect="0~tif( transaccion_diaria_banco_payee_original_value_payer = 'Y',1,0)"  name=transaccion_diaria_banco_payee_isvalidatedwithpayer visible="1" checkbox.text="" checkbox.on="Y" checkbox.off="N" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=20 border="0" color="33554432" x="2661" y="12" height="64" width="96" format="[general]" html.valueishtml="0" protect="0~tif( transaccion_diaria_banco_payee_original_value_bank ='Y',1,0)"  name=transaccion_diaria_banco_payee_isvalidatedwithbanks visible="1" checkbox.text="" checkbox.on="Y" checkbox.off="N" checkbox.scale=no checkbox.threed=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=10 border="2" color="33554432" x="2085" y="12" height="64" width="329" format="0.00~tif( transaccion_diaria_banco_payee_exchange_rate > 100, ~"###,##0.00~", ~"###,##0.0000~")" html.valueishtml="0" protect="0~tif ( transaccion_diaria_banco_payee_isvalidatedwithpayer  = 'Y',1,0)"  name=transaccion_diaria_banco_payee_exchange_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=13 alignment="1" tabsequence=50 border="0" color="33554432" x="1627" y="12" height="64" width="402" format="[currency]" html.valueishtml="0"  name=transaccion_diaria_payee_debit_trans_diaria visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="3511" y="12" height="64" width="343" format="[general]" html.valueishtml="0"  name=transaccion_diaria_banco_payee_id_banco visible="1" edit.limit=20 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="33554432" x="1257" y="12" height="64" width="352" format="[shortdate]" html.valueishtml="0"  name=transaccion_diaria_banco_payee_reconciliationdate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="3872" y="12" height="64" width="352" format="[shortdate]" html.valueishtml="0"  name=transaccion_diaria_banco_payee_date_trans_diaria visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=60 border="2" color="33554432" x="4238" y="12" height="64" width="1152" format="[general]" html.valueishtml="0"  name=transaccion_diaria_payee_des_trans_diaria visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+button(band=detail text="Delete" enabled=yes action="0" border="0" color="0" x="5422" y="8" height="68" width="238" vtextalign="0" htextalign="0"  name=b_delete visible="1~tif( transaccion_diaria_banco_payee_isvalidatedwithbanks  = 'Y' and  transaccion_diaria_banco_payee_isvalidatedwithpayer = 'Y' ,0,1) "  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

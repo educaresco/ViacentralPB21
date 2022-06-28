@@ -1,0 +1,36 @@
+﻿$PBExportHeader$fn_browseforfolder.srf
+global type fn_browseforfolder from function_object
+end type
+
+forward prototypes
+global function string fn_browseforfolder (window awi_parent, string as_caption)
+end prototypes
+
+global function string fn_browseforfolder (window awi_parent, string as_caption);browseinfo lstr_bi
+itemidlist lstr_idl
+unsignedlong ll_pidl
+unsignedlong ll_r
+Integer li_pos
+String ls_Path
+unsignedlong ll_Null
+
+SetNull( ll_Null )
+
+lstr_bi.hOwner = Handle( awi_Parent )
+lstr_bi.pidlRoot = 0
+lstr_bi.lpszTitle = as_caption
+lstr_bi.ulFlags = 1
+lstr_bi.pszDisplayName = Space( 255 )
+lstr_bi.lpfn = ll_Null
+
+ll_pidl = SHBrowseForFolderA( lstr_bi )
+
+ls_Path = Space( 255 )
+ll_R = SHGetPathFromIDListA( ll_pidl, ls_Path )
+
+CoTaskMemFree( ll_pidl )
+
+RETURN ls_Path
+
+end function
+

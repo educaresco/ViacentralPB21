@@ -1,0 +1,24 @@
+﻿$PBExportHeader$fn_parametro_rate.srf
+$PBExportComments$Rates
+global type fn_parametro_rate from function_object
+end type
+
+forward prototypes
+global function double fn_parametro_rate (string ls_country1)
+end prototypes
+
+global function double fn_parametro_rate (string ls_country1);double		ld_rate_actual = 0 
+		
+		  SELECT dba.rate.rate  
+    	  INTO :ld_rate_actual  
+    	  FROM dba.rate  
+  		  WHERE dba.rate.id_country = :ls_country1 ;
+					
+					
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_rate_actual
+end if
+end function
+

@@ -1,0 +1,55 @@
+﻿$PBExportHeader$dw_rep_topoustandingdays.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=yes )
+header(height=380 color="536870912" )
+summary(height=100 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=state_state_ dbname="State_" )
+ column=(type=datetime updatewhereclause=yes name=date_ dbname="DATE_" )
+ column=(type=long updatewhereclause=yes name=orders dbname="Orders" )
+ column=(type=decimal(4) updatewhereclause=yes name=volume dbname="Volume" )
+ retrieve="SELECT B.ID_STATE State_, 
+		 DATE_,
+		 COUNT(r.ID_RECEIVER) AS Orders,
+       SUM(r.NET_AMOUNT_RECEIVER)AS Volume       
+  FROM DBA.RECEIVER R, DBA.BRANCH B, dba.sfGetDates(:p_date1, :p_date2)
+ WHERE r.ID_BRANCH = B.ID_BRANCH
+   AND r.ID_FLAG_RECEIVER <> 'A'
+   AND r.DATE_RECEIVER < DATE_
+   AND ISNULL(r.PAYMENT_DATE,ISNULL(r.DATE_CANCEL,GETDATE())) > DATE_
+   AND r.ID_RECEIVER > 0
+	AND (b.ID_STATE = :p_state OR :p_state = '-ALL-')
+ group by B.ID_STATE, DATE_
+
+" arguments=(("p_date1", datetime),("p_date2", datetime),("p_state", string)) )
+group(level=1 header.height=168 trailer.height=120 by=("state_state_" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Top Oustanding Days" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2459" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=header.1 id=1 alignment="2" tabsequence=32766 border="2" color="33554432" x="1061" y="40" height="52" width="1696" format="[general]" html.valueishtml="0"  name=state_state_ visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="15780518" )
+text(band=header.1 alignment="2" text="Volume" border="2" color="0" x="2194" y="108" height="52" width="562" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Orders" border="2" color="0" x="1815" y="108" height="52" width="361" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Date" border="2" color="0" x="1061" y="108" height="52" width="736" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="2194" y="4" height="60" width="562" format="[currency]" html.valueishtml="0"  name=volume visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="0" x="1815" y="4" height="60" width="361" format="[general]" html.valueishtml="0"  name=orders visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="1061" y="4" height="60" width="736" format="mmmm dd, yyyy" html.valueishtml="0"  name=date_ visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+line(band=trailer.1 x1="923" y1="4" x2="2816" y2="4"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="'TOTAL FOR ' +  state_state_ +':'"border="0" color="33554432" x="901" y="20" height="60" width="896" format="[GENERAL]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(orders for group 1)"border="0" color="33554432" x="1815" y="20" height="60" width="361" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(volume for group 1)"border="0" color="33554432" x="2194" y="20" height="60" width="562" format="[currency]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="923" y1="4" x2="2816" y2="4"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=summary x1="923" y1="12" x2="2816" y2="12"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=summary alignment="1" text="TOTAL: " border="0" color="0" x="754" y="24" height="52" width="1042" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=summary alignment="1" expression="sum(orders for all)"border="0" color="33554432" x="1815" y="24" height="52" width="361" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(volume for all)"border="0" color="33554432" x="2194" y="24" height="52" width="562" format="[currency]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

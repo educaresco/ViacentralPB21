@@ -1,0 +1,28 @@
+﻿$PBExportHeader$fn_comision_group_state.srf
+global type fn_comision_group_state from function_object
+end type
+
+forward prototypes
+global function double fn_comision_group_state (string ls_grupo, string ls_country_receiver, string ls_state_receiver, string ls_mod_currency, string ls_modo_pago1, double ld_amount)
+end prototypes
+
+global function double fn_comision_group_state (string ls_grupo, string ls_country_receiver, string ls_state_receiver, string ls_mod_currency, string ls_modo_pago1, double ld_amount);Double ld_porc_modo_pago= 0, ld_total = 0
+
+  SELECT dba.comision_group_state.porcent_comision_payee  
+    INTO :ld_porc_modo_pago
+    FROM dba.comision_group_state  
+   WHERE ( dba.comision_group_state.id_country = :ls_country_receiver ) AND  
+         ( dba.comision_group_state.id_state = :ls_state_receiver ) AND  
+         ( dba.comision_group_state.id_main_branch = :ls_grupo ) AND  
+         ( dba.comision_group_state.mod_pay_currency = :ls_mod_currency ) AND  
+         ( dba.comision_group_state.id_modo_pago = :ls_modo_pago1 )   ;
+			
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	ld_total = (ld_porc_modo_pago * ld_amount)
+	return ld_total
+end if
+end function
+

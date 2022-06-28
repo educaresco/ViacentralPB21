@@ -1,0 +1,72 @@
+﻿$PBExportHeader$fn_asignpinnumber.srf
+global type fn_asignpinnumber from function_object
+end type
+
+forward prototypes
+global function boolean fn_asignpinnumber (string ls_idcountry, string ls_idmainbranch, string ls_idbranch, ref string ls_out_pin, ref string ls_out_tollfree)
+end prototypes
+
+global function boolean fn_asignpinnumber (string ls_idcountry, string ls_idmainbranch, string ls_idbranch, ref string ls_out_pin, ref string ls_out_tollfree);string companycode, ls_country, ls_payer
+boolean lb_result
+long ll_cont
+
+ls_country = '*'+trim(ls_idcountry)+'*'
+ls_payer = '*'+trim(ls_idmainbranch)+'*'
+
+lb_result = FALSE
+setnull(ls_out_pin)
+setnull(ls_out_tollfree)
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// Chequea que la agencia sea de digitacion en la central/telrojo
+SELECT count(*)
+INTO :ll_cont
+FROM DBA.TIPO_TRANSMISION_AGENCIA
+WHERE ID_BRANCH = :ls_idbranch;
+
+if isnull(ll_cont) or ll_cont <> 1 then
+	return lb_result
+end if
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+SELECT min(dba.callingcard.cod_company),
+		 min(dba.callingcard.pin_number)
+INTO :companycode,
+	  :ls_out_pin
+FROM  dba.callingcard  
+WHERE dba.callingcard.flag_uso <> 'U'
+AND (flag_trans = 'T')
+AND (id_branch = :ls_idbranch)
+AND (to_countries = '*ANY COUNTRY*' OR charindex(:ls_country,to_countries) > 0 )
+AND (to_payers = '*ANY PAYER*' OR charindex(:ls_payer,to_payers) > 0 );	
+
+if SQLCA.SQLCode = 0 then
+	SELECT dba.tollfree.phone
+	INTO :ls_out_tollfree  
+	FROM dba.tollfree 
+	WHERE dba.tollfree.cod_company = :companycode;		
+	
+	UPDATE dba.callingcard  
+	SET dba.callingcard.flag_uso = 'U'
+	WHERE ( dba.callingcard.cod_company = :companycode ) AND  
+			( dba.callingcard.pin_number = :ls_out_pin ) AND
+		   (id_branch = :ls_idbranch);
+	
+	if SQLCA.SQLCode <> 0 then
+		setnull(ls_out_pin)
+		setnull(ls_out_tollfree)			
+	end if
+else
+	//messagebox("Debug",SQLCA.SQLErrText)
+	setnull(ls_out_pin)
+	setnull(ls_out_tollfree)	
+end if
+
+if not isnull(ls_out_pin) then
+	//messagebox("Debug","PIN " + ls_out_pin + " was asigned")
+	lb_result = TRUE
+end if
+
+return lb_result
+end function
+

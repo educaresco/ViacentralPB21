@@ -1,0 +1,154 @@
+﻿$PBExportHeader$fn_chkcompliance.srf
+global type fn_chkcompliance from function_object
+end type
+
+forward prototypes
+global subroutine fn_chkcompliance (string ps_id_branch, decimal pd_id_receiver)
+end prototypes
+
+global subroutine fn_chkcompliance (string ps_id_branch, decimal pd_id_receiver);// ------------------------------------------------------------------------------------------
+// Valida el cumplimiento legal de una transaccion.
+// La marca en Hold y actualiza el history_invoice si es necesario
+// ------------------------------------------------------------------------------------------
+
+string ls_hold_reasons, ls_hold_reasons_mk, ls_reason
+integer li_pos_ini, li_pos_fin
+boolean lb_hold
+decimal ld_id_sender
+
+lb_hold = false
+
+select dba.sfChkCompliance ('N',
+		 dba.receiver.id_branch,
+		 dba.receiver.id_receiver,
+		 dba.receiver.id_sender,
+		 dba.receiver.date_receiver,
+		 dba.receiver.branch_pay_receiver,
+		 dba.sender.sen_fname,
+		 dba.sender.sen_mname,
+		 dba.sender.sen_lname,
+		 dba.sender.sen_slname,
+		 dba.receiver.rec_fname,
+		 dba.receiver.rec_mname,
+		 dba.receiver.rec_lname,
+		 dba.receiver.rec_slname,
+		 dba.sender.phone1_sender,
+		 dba.sender.phone2_sender,
+		 dba.receiver.phone1_receiver ,
+		 dba.receiver.phone2_receiver,
+		 dba.receiver.total_receiver,
+		 dba.receiver.id_flag_receiver),
+     dba.sender.id_sender
+into :ls_hold_reasons, :ld_id_sender
+from dba.receiver, dba.sender
+where dba.receiver.id_branch = dba.sender.id_branch
+and dba.receiver.id_sender = dba.sender.id_sender
+and dba.receiver.id_receiver = :pd_id_receiver 
+and dba.receiver.id_branch = :ps_id_branch;
+
+// Si por algun motivo fallo (Dead Lock) intenta de nuevo
+
+if SQLCA.SQLCode <> 0 then
+
+	select dba.sfChkCompliance ('N',
+			 dba.receiver.id_branch,
+			 dba.receiver.id_receiver,
+			 dba.receiver.id_sender,
+			 dba.receiver.date_receiver,
+			 dba.receiver.branch_pay_receiver,
+			 dba.sender.sen_fname,
+			 dba.sender.sen_mname,
+			 dba.sender.sen_lname,
+			 dba.sender.sen_slname,
+			 dba.receiver.rec_fname,
+			 dba.receiver.rec_mname,
+			 dba.receiver.rec_lname,
+			 dba.receiver.rec_slname,
+			 dba.sender.phone1_sender,
+			 dba.sender.phone2_sender,
+			 dba.receiver.phone1_receiver ,
+			 dba.receiver.phone2_receiver,
+			 dba.receiver.total_receiver,
+			 dba.receiver.id_flag_receiver),
+		  dba.sender.id_sender
+	into :ls_hold_reasons, :ld_id_sender
+	from dba.receiver, dba.sender
+	where dba.receiver.id_branch = dba.sender.id_branch
+	and dba.receiver.id_sender = dba.sender.id_sender
+	and dba.receiver.id_receiver = :pd_id_receiver 
+	and dba.receiver.id_branch = :ps_id_branch;
+
+	// Si por algun motivo fallo (Dead Lock) lo pone en HOLD por razon 25
+
+	if SQLCA.SQLCode <> 0 then
+	
+		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+     	VALUES (:ld_id_sender,:ps_id_branch,:pd_id_receiver,getdate(),getdate(),'25','HOLD CHECK FAILED');
+
+		if SQLCA.SQLCode <> 0 then
+			Messagebox("Error Inserting [motivo_hold 25]","Error Critico, informar a Esteban - no cerrar esta pantalla. "+SQLCA.SQLErrText)
+		end if
+
+	end if
+
+end if
+
+
+ls_hold_reasons_mk = ''
+
+li_pos_ini = pos(ls_hold_reasons,"*")
+li_pos_fin = pos(ls_hold_reasons,"*",li_pos_ini+1)
+
+//messagebox(string(li_pos_ini),string(li_pos_fin))
+
+// Recorre la cadena con las
+do while li_pos_fin <> 0 and li_pos_ini <> 0
+
+	ls_reason = mid(ls_hold_reasons,li_pos_ini + 1,li_pos_fin - li_pos_ini - 1)
+
+	if pos(ls_hold_reasons_mk,'*'+ls_reason+'*') = 0 then
+
+		//messagebox("Aplicada",ls_reason)
+		ls_hold_reasons_mk=ls_hold_reasons_mk+'*'+ls_reason+'*'
+		lb_hold = true
+
+		INSERT INTO dba.motivo_hold (id_sender,id_branch,id_receiver,date_motivo_hold,time_motivo_hold,type_motivo_hold,desc_motivo_hold)
+     	VALUES (:ld_id_sender,:ps_id_branch,:pd_id_receiver,getdate(),getdate(),:ls_reason,'');				
+
+		if SQLCA.SQLCode <> 0 then
+			Messagebox("Error Inserting [motivo_hold]",SQLCA.SQLErrText)
+		end if
+		
+	else
+		//messagebox("Descartada",ls_reason)
+	end if
+
+	//messagebox(string(li_pos_ini),string(li_pos_fin))
+
+	li_pos_ini = pos(ls_hold_reasons,"*",li_pos_fin+1)
+	li_pos_fin = pos(ls_hold_reasons,"*",li_pos_ini+1)	
+	
+loop
+
+// Si detecto alguna razon hold lo mete en el history y actualiza su status
+if lb_hold = true then		
+
+	INSERT INTO dba.history_invoice (id_branch,id_receiver,id_flag_old,id_flag_new,id_cashier,date_change,time_change)
+		  VALUES (:ps_id_branch,:pd_id_receiver,'I','H','CH1',getdate(),getdate());
+
+	if SQLCA.SQLCode <> 0 then
+		Messagebox("Error Inserting [history_invoice]",SQLCA.SQLErrText)
+	end if
+
+	UPDATE dba.receiver
+		SET dba.receiver.id_flag_receiver = 'H'
+	 WHERE (dba.receiver.id_branch = :ps_id_branch)
+		AND (dba.receiver.id_receiver = :pd_id_receiver);
+
+	if SQLCA.SQLCode <> 0 then
+		Messagebox("Error Updating [receiver]",SQLCA.SQLErrText)
+	end if
+	
+end if	
+end subroutine
+

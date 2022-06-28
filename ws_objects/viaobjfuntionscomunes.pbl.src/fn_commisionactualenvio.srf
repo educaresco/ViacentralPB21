@@ -1,0 +1,317 @@
+﻿$PBExportHeader$fn_commisionactualenvio.srf
+global type fn_commisionactualenvio from function_object
+end type
+
+forward prototypes
+global function double fn_commisionactualenvio (string ls_idbranch, double ld_idreceiver, string ls_type)
+end prototypes
+
+global function double fn_commisionactualenvio (string ls_idbranch, double ld_idreceiver, string ls_type);// ---------------------------------------------------------------------------------
+// fn_commissionactualenvio																EST3B4N
+//
+// Indica cual es la commission de acuerdo a los datos actuales de las tablas de 
+// comisiones.
+//
+// PARAMETERS:
+// ls_idbranch
+// ld_idreceiver
+// ls_type --> valor solicitado, valores posibles:
+//					CO: COMISION (% - EXCHANGE)
+//					FE: FEET (TELEX)
+//					CC: COMISION COMPANY (% - EXCHANGE)
+//					FC: FEET COMPANY (TELEX)
+//
+// VARIABLE:			  -- COLUMNA EQUIVALENTE (RECEIVER)			  
+// ld_amount			  -- net_amount_receiver
+// ls_mod_currency 	  -- mod_pay_currency
+// ls_modo_pago        -- mode_pay_receiver
+// ls_idcountry 		  -- id_country_receiver
+// ls_idcity			  -- id_city_receiver
+// ---------------------------------------------------------------------------------
+
+string ls_modo_pago, ls_idcountry, ls_mod_currency, ls_idcity
+double ld_amount
+
+
+SELECT net_amount_receiver, mod_pay_currency, mode_pay_receiver, id_country_receiver, id_city_receiver
+INTO :ld_amount, :ls_mod_currency, :ls_modo_pago, :ls_idcountry, :ls_idcity
+FROM DBA.RECEIVER
+WHERE id_receiver = :ld_idreceiver 
+AND id_branch = :ls_idbranch;
+
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  Comisiones por el envio  ////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	
+	double ld_total_receiver 		= 0
+ 	double ld_total_pay_receiver 	= 0
+ 	long ll_cont_delivery	 		= 0
+	long ll_contagent_group       = 0
+	long ll_cont 					   = 0
+	double ld_feet            		= 0
+	double ld_feet_comp       		= 0 
+	double ld_porcentaje      		= 0
+	double ld_porcentaje_comp 		= 0
+	double ld_comision        		= 0
+	double ld_comision_comp	 		= 0
+	double ld_vlr_modo_pago 		= 0
+	double ld_vlr_modo_pago_comp  = 0	
+	string ls_propia, ls_grupo
+	boolean lb_comision_delivery = False	
+	
+   double ld_porc_modo_pago   
+   double ld_telex_modo_pago
+	double ld_porc_modo_pago_comp
+   double ld_telex_modo_pago_comp 	
+	string ls_standar_exclusion
+	
+	
+	ls_propia = fn_agencia_propia(ls_idbranch)
+	ll_contagent_group = 0
+	
+	SELECT Count(*)  
+    INTO :ll_contagent_group
+    FROM dba.comision_agent_modo_pago_grupo comision_agent_modo_pago_grupo  
+   WHERE ( comision_agent_modo_pago_grupo.id_branch = :ls_idbranch ) AND  
+         ( comision_agent_modo_pago_grupo.id_main_branch = :ls_grupo ) AND  
+         ( comision_agent_modo_pago_grupo.id_country = :ls_idcountry ) AND  
+         ( comision_agent_modo_pago_grupo.mod_pay_currency = :ls_mod_currency  ) AND  
+         ( comision_agent_modo_pago_grupo.id_modo_pago = :ls_modo_pago ) AND  
+         ( comision_agent_modo_pago_grupo.range_begin_comision_pay <= :ld_amount ) AND  
+         ( comision_agent_modo_pago_grupo.range_end_comision_pay >= :ld_amount )   ;
+
+IF ll_contagent_group > 0 then   // ANULA TODAS LAS TABLAS
+	
+	  SELECT comision_agent_modo_pago_grupo.porcent_comision_comp,   
+         comision_agent_modo_pago_grupo.feet_comision_comp,   
+         comision_agent_modo_pago_grupo.porcent_comision_agente,   
+         comision_agent_modo_pago_grupo.feet_comision_agente  
+    INTO :ld_porcentaje_comp,   
+         :ld_feet_comp ,   
+         :ld_porcentaje,   
+         :ld_feet  
+    FROM dba.comision_agent_modo_pago_grupo comision_agent_modo_pago_grupo  
+      WHERE ( comision_agent_modo_pago_grupo.id_branch = :ls_idbranch ) AND  
+         ( comision_agent_modo_pago_grupo.id_main_branch = :ls_grupo ) AND  
+         ( comision_agent_modo_pago_grupo.id_country = :ls_idcountry ) AND  
+         ( comision_agent_modo_pago_grupo.mod_pay_currency = :ls_mod_currency  ) AND  
+         ( comision_agent_modo_pago_grupo.id_modo_pago = :ls_modo_pago ) AND  
+         ( comision_agent_modo_pago_grupo.range_begin_comision_pay <= :ld_amount ) AND  
+         ( comision_agent_modo_pago_grupo.range_end_comision_pay >= :ld_amount )   ;
+
+			ld_comision       = ( ld_amount * ld_porcentaje )   				
+			ld_comision_comp	= ( ld_amount * ld_porcentaje_comp )	
+	
+ELSE
+
+			SELECT Count(*)  
+    		INTO :ll_cont
+    		FROM dba.comision  
+   		WHERE ( dba.comision.id_branch = :ls_idbranch ) 		AND 
+					( dba.comision.id_country = :ls_idcountry )  AND  
+         		( dba.comision.range_begin_comision <= :ld_amount ) AND  
+         		( dba.comision.range_end_comision >= :ld_amount )   AND
+					( dba.comision.mod_pay_currency	= :ls_mod_currency )  ;
+			
+			if ll_cont <> 0 then  ////////////// Verifica si esta en la tabla de Exclusion.
+				ld_feet = fn_feet(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+				ld_feet_comp = fn_feet_company(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+				ld_porcentaje = fn_comision(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+				ld_porcentaje_comp = fn_comision_company(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+				ld_comision = ( ld_amount * ld_porcentaje )   				
+				ld_comision_comp	= ( ld_amount * ld_porcentaje_comp )	
+			else
+				ld_feet = fn_fee_standar(ls_idcountry,ld_amount,ls_mod_currency)
+				ld_feet_comp = fn_fee_company_standar(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+				ld_porcentaje = fn_comision_standar(ls_idcountry,ld_amount,ls_mod_currency)
+				ld_porcentaje_comp = fn_comision_company_standar(ls_idcountry,ld_amount,ls_mod_currency)
+				ld_comision = ( ld_amount * ld_porcentaje )   				
+				ld_comision_comp	= ( ld_amount * ld_porcentaje_comp )	
+			end if
+		
+			//SI ESTA EN LA TABLA COMISION_DELIVERY ANULAR LA STANDAR Y EXCLUSION
+
+				ll_cont = 0
+				lb_comision_delivery = False		
+									
+				SELECT Count(*)  
+    			INTO :ll_cont  
+    			FROM dba.comision_delivery comision_delivery  
+   			WHERE ( comision_delivery.id_country = :ls_idcountry ) AND  
+         			( comision_delivery.id_modo_pago = :ls_modo_pago ) AND  
+         			( comision_delivery.range_begin <= :ld_amount ) AND  
+         			( comision_delivery.range_end >= :ld_amount )   ;
+									
+				if ll_cont > 0 then				
+					
+					lb_comision_delivery = True	
+					
+					   SELECT comision_delivery.porcent_comp,   
+         			 comision_delivery.feet_comp,   
+         			 comision_delivery.porcent_agente,   
+         			 comision_delivery.feet_agente  
+    					INTO :ld_porcentaje_comp,   
+         				  :ld_feet_comp,   
+         				  :ld_porcentaje,   
+         				  :ld_feet  
+    					FROM dba.comision_delivery comision_delivery  
+   					WHERE ( comision_delivery.id_country = :ls_idcountry ) AND  
+         					( comision_delivery.id_modo_pago = :ls_modo_pago ) AND  
+         					( comision_delivery.range_begin <= :ld_amount ) AND  
+         					( comision_delivery.range_end >= :ld_amount )   ;
+
+					ld_comision = ( ld_amount * ld_porcentaje )   				
+					ld_comision_comp	= ( ld_amount * ld_porcentaje_comp )	
+				end if
+
+			
+////aca voy
+
+			////////////////////////////  Costo dependiendo del Modo de Pago  ///////////////////////
+		
+   				   SELECT dba.comision_modo_pago_grupo.porcent_comision_agente,   
+         	 				 dba.comision_modo_pago_grupo.feet_comision_agente, 
+								 dba.comision_modo_pago_grupo.porcent_comision_comp,   
+         	  				 dba.comision_modo_pago_grupo.feet_comision_comp  
+    					INTO :ld_porc_modo_pago,   
+          		 		  :ld_telex_modo_pago, 
+							  :ld_porc_modo_pago_comp,   
+           				  :ld_telex_modo_pago_comp 
+    					FROM dba.comision_modo_pago_grupo  
+  						WHERE ( dba.comision_modo_pago_grupo.id_main_branch 				 = :ls_grupo ) 			  	AND  
+         					( dba.comision_modo_pago_grupo.id_country 					 = :ls_idcountry ) 	AND  
+         					( dba.comision_modo_pago_grupo.mod_pay_currency 			 = :ls_mod_currency ) 		AND  
+         					( dba.comision_modo_pago_grupo.id_modo_pago 				 = :ls_modo_pago ) 			AND  
+         					( dba.comision_modo_pago_grupo.range_begin_comision_pay <= :ld_amount ) 				AND  
+         					( dba.comision_modo_pago_grupo.range_end_comision_pay   >= :ld_amount )   ;
+
+	 		 				if isnull(ld_porc_modo_pago) then  ld_porc_modo_pago  = 0
+	 		 				if isnull(ld_telex_modo_pago) then ld_telex_modo_pago = 0
+	  						if isnull(ld_porc_modo_pago_comp) then  ld_porc_modo_pago_comp  = 0
+	  						if isnull(ld_telex_modo_pago_comp) then ld_telex_modo_pago_comp = 0
+	  					
+	 		 				ld_vlr_modo_pago      = (ld_amount * ld_porc_modo_pago)      + ld_telex_modo_pago
+  							ld_vlr_modo_pago_comp = (ld_amount * ld_porc_modo_pago_comp) + ld_telex_modo_pago_comp
+	  
+
+	 		//////////////////////////////////////////////////////////////////////////////////// 
+			///// Verificar Nuevamente si al tomar el Delivery aplica la exclusion o la Standar 
+ 	
+			ls_standar_exclusion = ''
+	
+			SELECT standar_exclusion   
+         INTO 	 :ls_standar_exclusion   
+    		FROM 	 dba.comision_modo_pago_grupo  
+  						WHERE ( dba.comision_modo_pago_grupo.id_main_branch 				 = :ls_grupo ) 				AND  
+         					( dba.comision_modo_pago_grupo.id_country 					 = :ls_idcountry ) 	AND  
+         					( dba.comision_modo_pago_grupo.mod_pay_currency 			 = :ls_mod_currency ) 		AND  
+         					( dba.comision_modo_pago_grupo.id_modo_pago 				 = :ls_modo_pago ) 			AND  
+         					( dba.comision_modo_pago_grupo.range_begin_comision_pay <= :ld_amount ) 				AND  
+         					( dba.comision_modo_pago_grupo.range_end_comision_pay   >= :ld_amount )   ;
+
+				if lb_comision_delivery then
+					ls_standar_exclusion = ''
+				end if
+
+				if ls_standar_exclusion = 'S' and Not(lb_comision_delivery) then
+					ld_feet = fn_fee_standar(ls_idcountry,ld_amount,ls_mod_currency)
+					ld_feet_comp = fn_fee_company_standar(ls_idcountry,ls_idbranch,ld_amount,ls_mod_currency)
+					ld_porcentaje = fn_comision_standar(ls_idcountry,ld_amount,ls_mod_currency)
+					ld_porcentaje_comp = fn_comision_company_standar(ls_idcountry,ld_amount,ls_mod_currency)
+					ld_comision = ( ld_amount * ld_porcentaje )   				
+					ld_comision_comp	= ( ld_amount * ld_porcentaje_comp )	
+				end if
+	 
+END IF	
+
+
+
+	double ld_porcentaje_comp_city = 0
+   double ld_feet_comp_city= 0
+   double ld_porcentaje_city= 0
+   double ld_feet_city = 0		
+	double ld_comision_city = 0
+	double ld_comision_comp_city = 0
+	
+	//LA TABLA COMISION_CITY ES UN ADICIONAL A LO QUE ESTE
+	ll_cont = 0 
+	ld_porcentaje_comp_city = 0
+   ld_feet_comp_city= 0
+   ld_porcentaje_city= 0
+   ld_feet_city = 0		
+	ld_comision_city = 0
+	ld_comision_comp_city = 0
+	
+	SELECT Count(*)  
+    INTO :ll_cont  
+    FROM dba.comision_city comision_city  
+   WHERE ( comision_city.id_city = :ls_idcity ) AND  
+         ( comision_city.id_modo_pago = :ls_modo_pago ) AND  
+         ( comision_city.range_begin <= :ld_amount ) AND  
+         ( comision_city.range_end >= :ld_amount )   ;
+			
+	if ll_cont > 0 then
+		
+		SELECT comision_city.porcent_comp,   
+        comision_city.feet_comp,   
+        comision_city.porcent_agente,   
+        comision_city.feet_agente  
+    	INTO :ld_porcentaje_comp_city,   
+           :ld_feet_comp_city,   
+           :ld_porcentaje_city,   
+           :ld_feet_city  
+    	FROM dba.comision_city comision_city  
+  		WHERE ( comision_city.id_city = :ls_idcity ) AND  
+         	( comision_city.id_modo_pago = :ls_modo_pago ) AND  
+         	( comision_city.range_begin <= :ld_amount ) AND  
+         	( comision_city.range_end >= :ld_amount )   ;
+				
+	ld_comision_city        = ( ld_amount * ld_porcentaje_city )   				
+	ld_comision_comp_city	= ( ld_amount * ld_porcentaje_comp_city )			
+				
+	else
+			ld_porcentaje_comp_city = 0
+         ld_feet_comp_city= 0
+         ld_porcentaje_city= 0
+         ld_feet_city = 0		
+			ld_comision_city = 0
+			ld_comision_comp_city = 0
+	end if
+	
+	ld_comision        = ld_comision        + ld_comision_city
+	ld_feet            = ld_feet            + ld_feet_city
+	ld_comision_comp   = ld_comision_comp   + ld_comision_comp_city
+	ld_feet_comp       = ld_feet_comp       + ld_feet_comp_city
+	
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+	 
+	 if ls_propia = 'S' then   // si es una agencia propia iguala las comisiones
+		ld_comision_comp      = ld_comision
+		ld_porcentaje_comp 	 = ld_porcentaje
+		ld_feet_comp 			 = ld_feet
+		ld_vlr_modo_pago_comp = ld_vlr_modo_pago
+	end if
+	
+	double ld_result
+	
+	IF ls_type = 'CO' then
+		ld_result = ld_comision
+	ELSEIF ls_type = 'FE' then
+		ld_result = ld_feet
+	ELSEIF ls_type = 'CC' then
+		ld_result = ld_comision_comp
+	ELSEIF ls_type = 'FC' then
+		ld_result = ld_feet_comp
+	ELSE
+		ld_result = 0
+	END IF
+		
+return ld_result
+end function
+

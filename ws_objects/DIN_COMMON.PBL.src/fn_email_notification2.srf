@@ -1,0 +1,19 @@
+﻿$PBExportHeader$fn_email_notification2.srf
+global type fn_email_notification2 from function_object
+end type
+
+forward prototypes
+global subroutine fn_email_notification2 (string p_address, string p_subject, string p_text)
+end prototypes
+
+global subroutine fn_email_notification2 (string p_address, string p_subject, string p_text);String 	ls_FileName
+Long		ll_FileNum
+p_address = fn_replace(p_address,"@","\@")
+ls_FileName = "S:\AUTOFAX\EML_NOT2_"+string(today(),"yyyymmdd_hhmmss")+".TXT"
+ll_FileNum = FileOpen(ls_FileName,LineMode!,Write!,LockReadWrite!,Replace!)			
+FileWrite(ll_filenum,"@F212 "+trim(p_address)+" @@F307 "+p_subject+"@")
+FileWrite(ll_FileNum,p_text)
+FileClose(ll_FileNum)
+
+end subroutine
+

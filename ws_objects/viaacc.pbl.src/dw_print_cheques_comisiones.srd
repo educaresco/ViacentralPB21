@@ -1,0 +1,65 @@
+﻿$PBExportHeader$dw_print_cheques_comisiones.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 0 print.margin.right = 0 print.margin.top = 0 print.margin.bottom = 0 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=3936 color="536870912~tIF(MOD(GETROW(),2)=0,RGB(240,240,240),RGB(255,255,255))" height.autosize=yes )
+table(column=(type=char(4) updatewhereclause=yes name=group_branch_id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(50) updatewhereclause=yes name=transaccion_diaria_payee_comm_des_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DES_TRANS_DIARIA" )
+ column=(type=decimal(2) updatewhereclause=yes name=transaccion_diaria_payee_comm_debit_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.DEBIT_TRANS_DIARIA" )
+ column=(type=char(5) updatewhereclause=yes name=group_branch_state_group_branch dbname="GROUP_BRANCH.STATE_GROUP_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=transaccion_diaria_payee_comm_cons_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE_COMM.CONS_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_branch_balance_group dbname="GROUP_BRANCH.BALANCE_GROUP" )
+ column=(type=char(1) updatewhereclause=yes name=transaccion_diaria_payee_comm_allow_print dbname="TRANSACCION_DIARIA_PAYEE_COMM.ALLOW_PRINT" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=cons_print dbname="CONS_PRINT" )
+ column=(type=char(150) updatewhereclause=yes name=address_branch dbname="address_branch" )
+ column=(type=char(60) updatewhereclause=yes name=payableto dbname="PayableTo" )
+ column=(type=char(42) updatewhereclause=yes name=check_number dbname="Check_Number" )
+ column=(type=datetime updatewhereclause=yes name=datefrom dbname="DateFrom" )
+ column=(type=datetime updatewhereclause=yes name=dateto dbname="DateTo" )
+ column=(type=char(20) updatewhereclause=yes name=postalcode dbname="PostalCode" )
+ retrieve="select 	G.ID_MAIN_BRANCH,G.NAME_MAIN_BRANCH,T.DES_TRANS_DIARIA,T.DEBIT_TRANS_DIARIA, G.STATE_GROUP_BRANCH,T.CONS_TRANS_DIARIA,G.BALANCE_GROUP,T.ALLOW_PRINT ,ISNULL(T.CONS_PRINT,0) AS CONS_PRINT,
+			dba.sfGetGroupCheckAddress(id_main_branch) as address_branch,
+			 dba.sfGetGroupCheckPayableTo(id_main_branch) as PayableTo,
+			 '-'+isnull(check_number,'-')+'-' as Check_Number,
+			 convert(datetime,substring(T.DES_TRANS_DIARIA, (charindex('FROM ',T.DES_TRANS_DIARIA,0)+5 ),10)) DateFrom,
+			 convert(datetime,substring(T.DES_TRANS_DIARIA, (charindex('TO ',T.DES_TRANS_DIARIA,0)+3 ),10)) DateTo,
+			 dba.sfGetGroupCheckAddressZipFormatted(id_main_branch) as PostalCode
+from 		dba.transaccion_diaria_payee_comm T,dba.group_branch G
+where    T.id_group_trans_diaria = G.id_main_branch
+and		T.id_concepto_contable 	= 'DAC'
+and      isnull(T.ALLOW_PRINT ,'F') = 'T'
+and      CONVERT(DATETIME,CONVERT(VARCHAR,T.date_trans_diaria,101) )    = :p_date
+ORDER BY G.NAME_MAIN_BRANCH ASC  " filter=" transaccion_diaria_payee_comm_allow_print = 'T'"arguments=(("p_date", datetime)) )
+group(level=1 header.height=0 trailer.height=0 by=("group_branch_id_main_branch" ) newpage=yes header.color="536870912" trailer.color="536870912" )
+text(band=detail alignment="0" text="ViaNews" border="0" color="0" x="206" y="2472" height="56" width="357" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="2" background.color="16777215" )
+report(band=detail dataobject="dw_print_detalle_cheques_comisiones" x="2377" y="1500" height="568" width="1166" border="0"  height.autosize=yes criteria="" nest_arguments=((" group_branch_id_main_branch "),(" transaccion_diaria_payee_comm_cons_trans_diaria ")) trail_footer = yes  name=dw_1 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_print_detalle_cheques_comisiones_topc" x="1257" y="1500" height="568" width="1102" border="0"  height.autosize=yes criteria="" nest_arguments=((" group_branch_id_main_branch "),(" datefrom "),(" dateto ")) trail_footer = yes  name=dw_2 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_print_detalle_cheques_comisiones_day" x="192" y="1500" height="568" width="1047" border="0"  height.autosize=yes criteria="" nest_arguments=((" group_branch_id_main_branch "),(" datefrom "),(" dateto ")) trail_footer = yes  name=dw_3 visible="1"  slideup=directlyabove )
+compute(band=detail alignment="0" expression="fn_getchecktext(1)"border="0" color="0" x="206" y="2560" height="212" width="2085" format="[GENERAL]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127"  height.autosize=yes)
+compute(band=detail alignment="0" expression="fn_getchecktext(2)"border="0" color="0" x="206" y="2800" height="212" width="2085" format="[GENERAL]" html.valueishtml="0"  name=compute_6 visible="1"  moveable=1  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127"  height.autosize=yes)
+compute(band=detail alignment="0" expression="fn_getchecktext(3)"border="0" color="0" x="206" y="3040" height="212" width="2085" format="[GENERAL]" html.valueishtml="0"  name=compute_7 visible="1"  moveable=1  font.face="Tahoma" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127"  height.autosize=yes)
+bitmap(band=detail filename="C:\ViamericasMT\Graphics\checkimage.bmp" x="0" y="4" height="1248" width="3584" border="0"  name=p_check visible="1" )
+compute(band=detail alignment="0" expression="RIGHT('***************'+string(  transaccion_diaria_payee_comm_debit_trans_diaria ,'#,##0.00'),12)"border="0" color="0" x="2939" y="440" height="60" width="471" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="1" expression="string(today(),'MM/DD/YYYY')"border="0" color="0" x="2889" y="256" height="56" width="503" format="[General]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="LEFT( transaccion_diaria_payee_comm_des_trans_diaria + ' ***********************************************************************************************************************************************************************************************************************************************************************************************',200)"border="0" color="0" x="155" y="792" height="76" width="1943" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+compute(band=detail alignment="0" expression="LEFT(fn_spellnumber(string( transaccion_diaria_payee_comm_debit_trans_diaria) )+ '***********************************************************************************************************************************************************************************************************************************************************************************************',200)"border="0" color="0" x="155" y="564" height="72" width="2889" format="[GENERAL]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="0" x="448" y="444" height="76" width="2135" format="[general]" html.valueishtml="0"  name=payableto visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="0" x="3099" y="3828" height="56" width="375" format="[general]" html.valueishtml="0"  name=check_number visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+bitmap(band=detail filename="C:\ViamericasMT\graphics\pdsigna.bmp" x="2395" y="756" height="348" width="914" border="0"  name=p_1 visible="1" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="0" x="379" y="3596" height="128" width="2139" format="[general]" html.valueishtml="0"  name=postalcode visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="CCodePostnet" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="439" y="3768" height="164" width="1381" format="[general]" html.valueishtml="0"  name=address_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="434" y="3692" height="76" width="1280" format="[general]" html.valueishtml="0"  name=group_branch_name_main_branch visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

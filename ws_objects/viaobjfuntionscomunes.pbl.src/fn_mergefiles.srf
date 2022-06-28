@@ -1,0 +1,30 @@
+﻿$PBExportHeader$fn_mergefiles.srf
+global type fn_mergefiles from function_object
+end type
+
+forward prototypes
+global function integer fn_mergefiles (string ls_file1, string ls_file2, string ls_filemerged)
+end prototypes
+
+global function integer fn_mergefiles (string ls_file1, string ls_file2, string ls_filemerged);SetPointer(HourGlass!)
+
+integer li_FileNum
+String ls_batname
+
+ls_batname = "D:\Temp\VCBats\Merge"+String(1000000+Rand(10000)) + ".bat"
+
+// Crea el .bat que reconecta la unidad
+li_FileNum = FileOpen(ls_batname, LineMode!, Write!, LockWrite!, Replace!)
+FileWrite(li_FileNum, "COPY /B "+ls_file1+"+"+ls_file2 + " " + ls_filemerged)
+FileWrite(li_FileNum, "EXIT")
+FileClose(li_FileNum)
+
+Run(ls_batname,Minimized!)
+
+// Espera 7 segundos mienras el bat termina
+sleep(7000)
+
+SetPointer(Arrow!)
+return 0
+end function
+

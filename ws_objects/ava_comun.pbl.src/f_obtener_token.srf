@@ -1,0 +1,42 @@
+﻿$PBExportHeader$f_obtener_token.srf
+global type f_obtener_token from function_object
+end type
+
+forward prototypes
+global function string f_obtener_token (string p_string, string p_delimiter, integer p_number)
+end prototypes
+
+global function string f_obtener_token (string p_string, string p_delimiter, integer p_number);integer i, li_posini, li_posfin
+string ls_cadena
+boolean lb_end
+
+if p_number > 0 then
+	ls_cadena = p_string
+	
+	li_posini = 0
+	li_posfin = 0
+	lb_end = false
+	
+	for i = 1 to (p_number - 1)
+		li_posini = Pos(ls_cadena, p_delimiter, li_posini + 1)
+		if li_posini = 0 then lb_end = true
+	next
+	
+	li_posfin = Pos(ls_cadena, p_delimiter, li_posini + 1)
+	
+	if li_posfin = 0 then li_posfin = len(ls_cadena) + 1
+	
+	if lb_end and p_number > 1 then
+		ls_cadena = ''
+	else
+		ls_cadena = mid(ls_cadena, ( li_posini + 1 ), (li_Posfin - li_posini - 1))
+	end if
+else
+	ls_cadena = ''
+end if
+
+return ls_cadena
+
+
+end function
+

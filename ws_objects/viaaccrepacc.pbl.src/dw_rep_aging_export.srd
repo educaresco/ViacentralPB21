@@ -1,0 +1,137 @@
+﻿$PBExportHeader$dw_rep_aging_export.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 60 print.margin.right = 60 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=428 color="536870912" )
+summary(height=84 color="536870912" )
+footer(height=104 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=branch_id_main_branch dbname="id_main_branch" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="id_branch" )
+ column=(type=char(60) updatewhereclause=yes name=name_group dbname="name_group" )
+ column=(type=decimal(2) updatewhereclause=yes name=balance dbname="balance" )
+ column=(type=decimal(2) updatewhereclause=yes name=dso dbname="dso" )
+ column=(type=decimal(2) updatewhereclause=yes name=day0 dbname="day0" )
+ column=(type=decimal(2) updatewhereclause=yes name=day1 dbname="day1" )
+ column=(type=decimal(2) updatewhereclause=yes name=day2 dbname="day2" )
+ column=(type=decimal(2) updatewhereclause=yes name=day3 dbname="day3" )
+ column=(type=decimal(2) updatewhereclause=yes name=day4 dbname="day4" )
+ column=(type=decimal(2) updatewhereclause=yes name=day5 dbname="day5" )
+ column=(type=decimal(2) updatewhereclause=yes name=day6 dbname="day6" )
+ column=(type=decimal(2) updatewhereclause=yes name=day7 dbname="day7" )
+ column=(type=char(2) updatewhereclause=yes name=collect_method dbname="Collect_Method" )
+ column=(type=char(2) updatewhereclause=yes name=secondary_collect_method dbname="Secondary_Collect_Method" )
+ column=(type=decimal(2) updatewhereclause=yes identity=yes name=amt_to_be_reconciled dbname="Amt_to_be_Reconciled" )
+ column=(type=char(13) updatewhereclause=yes name=branch_status dbname="Branch_Status" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_credit dbname="Group_Credit" )
+ column=(type=decimal(4) updatewhereclause=yes name=group_credit_wknds dbname="Group_Credit_Wknds" )
+ column=(type=char(100) updatewhereclause=yes name=group_email dbname="Group_EMail" )
+ column=(type=char(15) updatewhereclause=yes name=branch_phone dbname="Branch_Phone" )
+ column=(type=char(15) updatewhereclause=yes name=branch_fax dbname="Branch_Fax" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address dbname="Branch_Address" )
+ column=(type=char(40) updatewhereclause=yes name=branch_city dbname="Branch_City" )
+ column=(type=char(5) updatewhereclause=yes name=branch_state dbname="Branch_State" )
+ column=(type=decimal(0) updatewhereclause=yes name=branch_zip dbname="Branch_Zip" )
+ column=(type=char(40) updatewhereclause=yes name=sales_representative dbname="Sales_Representative" )
+ column=(type=char(8) updatewhereclause=yes name=branch_bank dbname="Branch_Bank" )
+ column=(type=char(25) updatewhereclause=yes name=payment_schedule dbname="Payment_Schedule" )
+ column=(type=char(1) updatewhereclause=yes name=monthly_commissions dbname="Monthly_Commissions" )
+ column=(type=char(2) updatewhereclause=yes name=financialstatus dbname="FinancialStatus" )
+ column=(type=char(30) updatewhereclause=yes name=groupbranches dbname="GroupBranches" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=inactive_days dbname="Inactive_days" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=number_of_inactivations dbname="Number_of_inactivations" )
+ column=(type=datetime updatewhereclause=yes name=date_receiver dbname="date_receiver" )
+ column=(type=datetime updatewhereclause=yes name=date_cre_branch dbname="date_cre_branch" )
+ column=(type=char(2) updatewhereclause=yes name=tipo_transmision dbname="tipo_transmision" )
+ retrieve="select dba.sfCalRecDSO.*, 
+dba.group_branch.fin_collectmethod Collect_Method,
+dba.group_branch.fin_collectmethod_2 Secondary_Collect_Method,
+isnull(dba.group_branch.fin_amttobereconciled,0) Amt_to_be_Reconciled,		 
+CASE dba.branch.id_status_branch WHEN 'O' THEN 
+	CASE dba.branch.id_flag_branch WHEN 'A' THEN 
+	'OPEN'
+	ELSE 
+	'OPEN-INACTIVE' END
+	ELSE 'CLOSED' END Branch_Status,		 
+dba.group_branch.debt_limit Group_Credit,
+dba.group_branch.debt_limit_wknd Group_Credit_Wknds,
+dba.group_branch.EMAIL_GROUP Group_EMail,
+dba.branch.phone1_branch Branch_Phone,
+dba.branch.fax_branch Branch_Fax,
+dba.branch.address_branch Branch_Address,
+dba.city.name_city Branch_City,
+dba.branch.id_state Branch_State,
+dba.branch.zip_branch Branch_Zip,
+dba.sfGetSalesRepresentative(dba.branch.id_branch) Sales_Representative,
+dba.sfGetBranchBank(dba.branch.id_branch) as Branch_Bank,
+dba.group_branch.FIN_SCHEDULE as Payment_Schedule, 
+dba.group_branch.FIN_MONTHLYCLOSING	as Monthly_Commissions,
+FIN_STATUS as FinancialStatus,
+dba.sfGetGroupChilds(dba.group_branch.id_main_branch) GroupBranches,
+DBA.sfgetinactivedays(dba.branch.id_branch) AS Inactive_days,
+DBA.sfgetnumberinactivations(dba.branch.id_branch) AS Number_of_inactivations,
+c.date_receiver,//dba.sfgetlasttransactiondate(dba.branch.id_branch) AS Last_transaction_date,
+date_cre_branch,
+case when TIPO_TRANSMISION = 'R' then 'RP' else 'PC' end as tipo_transmision
+from dba.sfCalRecDSO(:p_date), 
+dba.group_branch,
+dba.branch  left outer join
+dba.tipo_transmision_agencia as B on dba.branch.id_branch = b.id_branch  left outer join
+dba.branch_last_transaction as C on dba.branch.id_branch = c.id_branch,
+dba.city
+where dba.sfCalRecDSO.id_main_branch = dba.group_branch.id_main_branch
+and dba.sfCalRecDSO.id_branch = dba.branch.id_branch
+and dba.city.id_country = dba.branch.id_country
+and dba.city.id_state = dba.branch.id_state
+and dba.city.id_city = dba.branch.id_city
+" arguments=(("p_date", datetime))  sort="balance D dso D name_group A " )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="3927" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3927" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression=" ~"Date ~" + string(p_date,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="76" width="3671" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Aging Report" border="0" color="0" x="1001" y="8" height="76" width="3671" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="0 Days" border="2" color="0" x="1746" y="364" height="52" width="352" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="1 Day" border="2" color="0" x="2112" y="364" height="52" width="352" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="2 Days" border="2" color="0" x="2478" y="364" height="52" width="352" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="3 Days" border="2" color="0" x="2843" y="364" height="52" width="352" html.valueishtml="0"  name=t_12 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="4 Days" border="2" color="0" x="3209" y="364" height="52" width="352" html.valueishtml="0"  name=t_13 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="5 Days" border="2" color="0" x="3575" y="364" height="52" width="352" html.valueishtml="0"  name=t_14 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="6 Days" border="2" color="0" x="3941" y="364" height="52" width="352" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="7 Days" border="2" color="0" x="4306" y="364" height="52" width="352" html.valueishtml="0"  name=t_16 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Balance" border="2" color="0" x="1157" y="364" height="52" width="416" html.valueishtml="0"  name=receiver_id_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="DSO" border="2" color="0" x="1586" y="364" height="52" width="146" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Group Name" border="2" color="0" x="18" y="364" height="52" width="1125" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="2478" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day2 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=32766 border="0" color="0" x="2843" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day3 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="1" tabsequence=32766 border="0" color="0" x="3209" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day4 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="0" x="3575" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day5 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="1" tabsequence=32766 border="0" color="0" x="3941" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day6 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="1746" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day0 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="2112" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day1 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="1157" y="8" height="52" width="411" format="[currency]" html.valueishtml="0"  name=balance visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0~tif(  dso > 29.99, RGB(150,0,0),RGB(0,0,0))" x="1586" y="8" height="52" width="146" format="[general]" html.valueishtml="0"  name=dso visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="18" y="8" height="52" width="1125" format="[general]" html.valueishtml="0"  name=name_group visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="1" tabsequence=32766 border="0" color="0" x="4306" y="8" height="52" width="352" format="[currency]" html.valueishtml="0"  name=day7 visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="5" y1="4" x2="4654" y2="4"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day7 for all)"border="0" color="0" x="4306" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day6 for all)"border="0" color="0" x="3941" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day5 for all)"border="0" color="0" x="3575" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day4 for all)"border="0" color="0" x="3209" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day3 for all)"border="0" color="0" x="2843" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day2 for all)"border="0" color="0" x="2478" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day1 for all)"border="0" color="0" x="2112" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(day0 for all)"border="0" color="0" x="1746" y="24" height="52" width="352" format="[currency]" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(balance for all)"border="0" color="0" x="1157" y="24" height="52" width="416" format="[currency]" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=footer alignment="1" text="Account - Aging Report" border="0" color="0" x="3017" y="44" height="52" width="1641" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

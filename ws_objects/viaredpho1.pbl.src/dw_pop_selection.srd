@@ -1,0 +1,138 @@
+﻿$PBExportHeader$dw_pop_selection.srd
+release 12.5;
+datawindow(units=0 timer_interval=0 color=1073741824 brushmode=0 transparency=0 gradient.angle=0 gradient.color=8421504 gradient.focus=0 gradient.repetition.count=0 gradient.repetition.length=100 gradient.repetition.mode=0 gradient.scale=100 gradient.spread=100 gradient.transparency=0 picture.blur=0 picture.clip.bottom=0 picture.clip.left=0 picture.clip.right=0 picture.clip.top=0 picture.mode=0 picture.scale.x=100 picture.scale.y=100 picture.transparency=0 processing=8 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.background=no print.preview.background=no print.preview.outline=yes hidegrayline=yes showbackcoloronxp=no picture.file="" )
+header(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+summary(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+footer(height=0 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" )
+detail(height=76 color="536870912" transparency="0" gradient.color="8421504" gradient.transparency="0" gradient.angle="0" brushmode="0" gradient.repetition.mode="0" gradient.repetition.count="0" gradient.repetition.length="100" gradient.focus="0" gradient.scale="100" gradient.spread="100" height.autosize=yes )
+table(column=(type=char(10) updatewhereclause=yes name=branch_id_branch dbname="BRANCH.ID_BRANCH" dbalias=".ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" dbalias=".NAME_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address_branch dbname="BRANCH.ADDRESS_BRANCH" dbalias=".ADDRESS_BRANCH" )
+ column=(type=char(1) updatewhereclause=yes name=branch_currency_pay_branch dbname="BRANCH.CURRENCY_PAY_BRANCH" dbalias=".CURRENCY_PAY_BRANCH" )
+ column=(type=char(5) updatewhereclause=yes name=cubrimiento_branch_id_city dbname="CUBRIMIENTO_BRANCH.ID_CITY" dbalias=".ID_CITY" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" dbalias=".NAME_MAIN_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=group_branch_prioridad_group_branch dbname="GROUP_BRANCH.PRIORIDAD_GROUP_BRANCH" dbalias=".PRIORIDAD_GROUP_BRANCH" )
+ column=(type=char(4) updatewhereclause=yes name=group_branch_id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" dbalias=".ID_MAIN_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=branch_phone1_branch dbname="BRANCH.PHONE1_BRANCH" dbalias=".PHONE1_BRANCH" )
+ column=(type=char(200) updatewhereclause=yes name=branch_business_hours dbname="BRANCH.BUSINESS_HOURS" dbalias=".BUSINESS_HOURS" )
+ column=(type=char(100) updatewhereclause=yes name=payer_title dbname="PAYER_TITLE" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_country dbname="BRANCH.ID_COUNTRY" dbalias=".ID_COUNTRY" )
+ column=(type=char(1) updatewhereclause=yes name=cranch_id_country dbname="BRANCH." dbalias="." )
+ column=(type=char(1) updatewhereclause=yes name=agent_id_state dbname="BRANCH.AGENT_ID_STATE" dbalias=".AGENT_ID_STATE" )
+ column=(type=long updatewhereclause=yes identity=yes name=cgent_id_state dbname="BRANCH." dbalias="." )
+ column=(type=long updatewhereclause=yes identity=yes name=cgent_id_state dbname="BRANCH." dbalias="." )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=rate dbname="Rate" )
+ column=(type=char(15) updatewhereclause=yes name=limit_amount dbname="LIMIT_AMOUNT" )
+ column=(type=char(52) updatewhereclause=yes name=limite_punto_pago dbname="limite_punto_pago" )
+ retrieve="SELECT 
+DBA.BRANCH.ID_BRANCH,
+DBA.BRANCH.NAME_BRANCH,
+DBA.BRANCH.ADDRESS_BRANCH,
+DBA.BRANCH.CURRENCY_PAY_BRANCH,
+--DBA.CUBRIMIENTO_BRANCH.ID_ZONA,
+--DBA.MODO_PAGO_BRANCH.MODO_PAGO,
+DBA.CUBRIMIENTO_BRANCH.ID_CITY,
+DBA.GROUP_BRANCH.NAME_MAIN_BRANCH,
+DBA.GROUP_BRANCH.PRIORIDAD_GROUP_BRANCH,
+DBA.GROUP_BRANCH.ID_MAIN_BRANCH,
+DBA.BRANCH.PHONE1_BRANCH,
+DBA.BRANCH.BUSINESS_HOURS,
+--DBA.BRANCH.LOCATION_NOTES,
+--DBA.BRANCH.PAYER_CAPTION,
+ISNULL(DBA.BRANCH.PAYER_CAPTION, DBA.GROUP_BRANCH.NAME_MAIN_BRANCH) as PAYER_TITLE,
+DBA.BRANCH.ID_COUNTRY,
+:P_ID_AGENT,
+:P_AGENT_ID_STATE  AGENT_ID_STATE,
+:P_AMOUNT,
+:id_curRate,
+[dba].[sfGetReceiverRateValue] (:P_ID_AGENT , DBA.MODO_PAGO_BRANCH.MODO_PAGO , DBA.BRANCH.CURRENCY_PAY_BRANCH , DBA.BRANCH.ID_BRANCH) Rate,
+DBA.BRANCH.ID_MAIN_BRANCH+'|'+ DBA.MODO_PAGO_BRANCH.MODO_PAGO +'|'+ DBA.BRANCH.ID_COUNTRY  +'|'+ DBA.BRANCH.CURRENCY_PAY_BRANCH as LIMIT_AMOUNT,
+'Limite: $' + convert(varchar, format(pl.AMOUNT, 'N0')) + CASE WHEN pl.MOD_PAY_CURRENCY = 'D' THEN ' USD' ELSE ' Moneda Local' END as limite_punto_pago
+FROM DBA.BRANCH with (nolock)
+		inner join DBA.CUBRIMIENTO_BRANCH with(nolock) on DBA.CUBRIMIENTO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH
+				AND DBA.CUBRIMIENTO_BRANCH.ID_CITY = :P_ID_CITY
+		inner join 	DBA.MODO_PAGO_BRANCH with(nolock) on DBA.MODO_PAGO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH  
+		inner join DBA.GROUP_BRANCH with(nolock) on DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.BRANCH.ID_MAIN_BRANCH
+		inner join DBA.MODO_PAGO with(nolock) on DBA.MODO_PAGO_BRANCH.MODO_PAGO = DBA.MODO_PAGO.ID_MODO_PAGO
+			and DBA.MODO_PAGO.USE_CUBRIMIENTO = 'S'
+		left outer join DBA.POP_LIMIT pl with(nolock) ON pl.ID_BRANCH = DBA.BRANCH.ID_BRANCH AND pl.MOD_PAY_CURRENCY = DBA.BRANCH.CURRENCY_PAY_BRANCH
+WHERE DBA.BRANCH.ID_FLAG_BRANCH = 'A'
+AND DBA.MODO_PAGO_BRANCH.MODO_PAGO = :P_ID_MODO_PAGO
+AND DBA.BRANCH.CURRENCY_PAY_BRANCH IN ('A',:P_CURRENCY)
+AND DBA.BRANCH.ID_TYPE_BRANCH IN ('P','A')
+
+UNION
+
+SELECT 
+DBA.BRANCH.ID_BRANCH,
+DBA.BRANCH.NAME_BRANCH,
+DBA.BRANCH.ADDRESS_BRANCH,
+DBA.BRANCH.CURRENCY_PAY_BRANCH,
+--DBA.CUBRIMIENTO_BRANCH.ID_ZONA,
+--DBA.MODO_PAGO_BRANCH.MODO_PAGO,
+dba.branch.id_city ,
+DBA.GROUP_BRANCH.NAME_MAIN_BRANCH,
+DBA.GROUP_BRANCH.PRIORIDAD_GROUP_BRANCH,
+DBA.GROUP_BRANCH.ID_MAIN_BRANCH,
+DBA.BRANCH.PHONE1_BRANCH,
+DBA.BRANCH.BUSINESS_HOURS,
+--DBA.BRANCH.LOCATION_NOTES,
+--DBA.BRANCH.PAYER_CAPTION,
+ISNULL(DBA.BRANCH.PAYER_CAPTION,DBA.GROUP_BRANCH.NAME_MAIN_BRANCH) as PAYER_TITLE,
+DBA.BRANCH.ID_COUNTRY,
+:P_ID_AGENT,
+:P_AGENT_ID_STATE  AGENT_ID_STATE,
+ :P_AMOUNT,
+:id_curRate,
+[dba].[sfGetReceiverRateValue] (:P_ID_AGENT , DBA.MODO_PAGO_BRANCH.MODO_PAGO , DBA.BRANCH.CURRENCY_PAY_BRANCH , DBA.BRANCH.ID_BRANCH) Rate,
+DBA.BRANCH.ID_MAIN_BRANCH+'|'+ DBA.MODO_PAGO_BRANCH.MODO_PAGO +'|'+ DBA.BRANCH.ID_COUNTRY  +'|'+ DBA.BRANCH.CURRENCY_PAY_BRANCH as LIMIT_AMOUNT,
+'Limite: $' + convert(varchar, format(pl.AMOUNT, 'N0')) + CASE WHEN pl.MOD_PAY_CURRENCY = 'D'  THEN ' USD' ELSE ' Moneda Local' END as limite_punto_pago
+FROM DBA.BRANCH with(nolock)
+		inner join DBA.MODO_PAGO_BRANCH with(nolock) on DBA.MODO_PAGO_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH
+		inner join DBA.GROUP_BRANCH with(nolock) on DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.BRANCH.ID_MAIN_BRANCH
+		inner join DBA.MODO_PAGO  with(nolock)  on DBA.MODO_PAGO_BRANCH.MODO_PAGO = DBA.MODO_PAGO.ID_MODO_PAGO
+				AND DBA.MODO_PAGO_BRANCH.MODO_PAGO = DBA.MODO_PAGO.ID_MODO_PAGO
+				AND DBA.MODO_PAGO.USE_CUBRIMIENTO = 'N'
+		left outer join DBA.POP_LIMIT pl with(nolock) ON pl.ID_BRANCH = DBA.BRANCH.ID_BRANCH AND pl.MOD_PAY_CURRENCY = DBA.BRANCH.CURRENCY_PAY_BRANCH
+WHERE DBA.BRANCH.ID_FLAG_BRANCH = 'A'
+AND DBA.MODO_PAGO_BRANCH.MODO_PAGO = :P_ID_MODO_PAGO
+AND DBA.BRANCH.ID_COUNTRY = :P_ID_COUNTRY
+AND DBA.BRANCH.CURRENCY_PAY_BRANCH IN ('A',:P_CURRENCY) 
+AND DBA.BRANCH.ID_TYPE_BRANCH IN ('P','A') 
+
+ORDER BY DBA.GROUP_BRANCH.PRIORIDAD_GROUP_BRANCH ASC,   
+ISNULL(DBA.BRANCH.PAYER_CAPTION,NAME_MAIN_BRANCH) ASC,   
+DBA.BRANCH.NAME_BRANCH ASC  
+
+
+
+" arguments=(("P_ID_AGENT", string),("P_ID_MODO_PAGO", string),("P_ID_CITY", string),("P_CURRENCY", string),("P_ID_COUNTRY", string),("P_AMOUNT", number),("id_curRate", number),("P_AGENT_ID_STATE", string))  sort="group_branch_prioridad_group_branch A payer_title A branch_name_branch A cubrimiento_branch_id_city A " )
+group(level=1 header.height=96 trailer.height=0 by=("payer_title" ) header.color="17926399" header.transparency="0" header.gradient.color="8421504" header.gradient.transparency="0" header.gradient.angle="0" header.brushmode="0" header.gradient.repetition.mode="0" header.gradient.repetition.count="0" header.gradient.repetition.length="100" header.gradient.focus="0" header.gradient.scale="100" header.gradient.spread="100" trailer.color="536870912" trailer.transparency="0" trailer.gradient.color="8421504" trailer.gradient.transparency="0" trailer.gradient.angle="0" trailer.brushmode="0" trailer.gradient.repetition.mode="0" trailer.gradient.repetition.count="0" trailer.gradient.repetition.length="100" trailer.gradient.focus="0" trailer.gradient.scale="100" trailer.gradient.spread="100" )
+column(band=header.1 id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="137" y="8" height="80" width="1957" format="[general]" html.valueishtml="0"  name=payer_title visible="1" edit.limit=40 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header.1 alignment="2" text="Tasa:~tif (fn_getlang() = 'EN','Rate:','Tasa:')" border="0" color="16777215" x="2112" y="8" height="76" width="357" html.valueishtml="0"  name=t_5 visible="1~tif ( P_CURRENCY  = 'N' ,1,0)"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+compute(band=header.1 alignment="1" expression=" if ( P_CURRENCY  = 'N' , rate ,0) "border="0" color="0" x="2496" y="8" height="76" width="457" format="#,##0.00" html.valueishtml="0"  name=compute_1 visible="1~tif ( P_CURRENCY  = 'N' ,1,0)"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header.1 alignment="2" text="Adicional:~tif (fn_getlang() = 'EN','Additional:','Adicional:')" border="0" color="16777215" x="3022" y="8" height="76" width="370" html.valueishtml="0"  name=t_3 visible="1~tif ( P_CURRENCY  = 'N' ,if (compute_2 <> 0, 1,0)  ,0)"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=header.1 alignment="2" text="[Moneda local]~tif (fn_getlang() = 'EN','[Local Currency]','[Moneda Local]')" border="0" color="16777215~tif (compute_2 < 0 , RGB(255,0,0), RGB(0,150,0))" x="4037" y="20" height="64" width="553" html.valueishtml="0"  name=txtlocalcurrency visible="1~tif ( P_CURRENCY  = 'N' ,if (compute_2 <> 0, 1,0)  ,0)"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+compute(band=header.1 alignment="1" expression=" P_AMOUNT * (   rate -  id_curRate )"border="0" color="0~tif (compute_2 < 0 , RGB(255,0,0), RGB(0,150,0))" x="3410" y="8" height="76" width="603" format="#,##0.00" html.valueishtml="0"  name=compute_2 visible="1~tif ( P_CURRENCY  = 'N' ,if (compute_2 <> 0, 1,0)  ,0)"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+compute(band=header.1 alignment="0" expression="IF ( NOT ISNULL(limit_amount) AND  len(limit_amount) > 0 , 
+fn_limit_payer(limit_amount)
+, '') "border="0" color="33554432" x="4667" y="8" height="76" width="4178" format="[GENERAL]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="215" y="8" height="52" width="1125" format="[general]" html.valueishtml="0"  name=branch_name_branch_1 visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2871" y="8" height="52" width="1687" format="[general]" html.valueishtml="0"  name=branch_business_hours_1 visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="1362" y="8" height="52" width="1486" format="[general]" html.valueishtml="0"  name=branch_address_branch_1 visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=detail alignment="0" text="Phone:" border="0" color="0" x="4576" y="8" height="52" width="155" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="4745" y="8" height="52" width="421" format="[general]" html.valueishtml="0"  name=branch_phone1_branch visible="1" edit.limit=15 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+text(band=detail alignment="0" text="Add. Info:" border="0" color="0" x="5198" y="8" height="52" width="247" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+column(band=detail id=19 alignment="0" tabsequence=32766 border="0" color="33554432" x="5513" y="8" height="52" width="2391" format="[general]" html.valueishtml="0"  name=limite_punto_pago visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" background.transparency="0" background.gradient.color="8421504" background.gradient.transparency="0" background.gradient.angle="0" background.brushmode="0" background.gradient.repetition.mode="0" background.gradient.repetition.count="0" background.gradient.repetition.length="100" background.gradient.focus="0" background.gradient.scale="100" background.gradient.spread="100" tooltip.backcolor="134217752" tooltip.delay.initial="0" tooltip.delay.visible="32000" tooltip.enabled="0" tooltip.hasclosebutton="0" tooltip.icon="0" tooltip.isbubble="0" tooltip.maxwidth="0" tooltip.textcolor="134217751" tooltip.transparency="0" transparency="0" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+tree(type=1 showconnectlines=yes showleafnodeconnectLines=yes  indent=128 showtreenodeicon=no defaultexpandtolevel=1 stateiconalignmode=0 selectnodebymouse=no rtollayout=no 
+) 

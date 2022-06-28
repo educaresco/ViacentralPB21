@@ -1,0 +1,17 @@
+﻿$PBExportHeader$fn_controlprocess2.srf
+global type fn_controlprocess2 from function_object
+end type
+
+forward prototypes
+global subroutine fn_controlprocess2 (string ls_name, string ls_process_desc, string ls_timeout)
+end prototypes
+
+global subroutine fn_controlprocess2 (string ls_name, string ls_process_desc, string ls_timeout);long ll_file
+
+ll_file = FileOpen("S:\_ViaProcessLogs\"+ls_name+".ctl",LineMode!,Write!,LockWrite!,Replace!)
+
+FileWrite(ll_file,ls_process_desc+'|'+string(today(),'mm/dd/yyyy')+' '+string(now(),'hh:mm:ss')+'|'+ls_timeout)
+
+FileClose(ll_file)
+end subroutine
+

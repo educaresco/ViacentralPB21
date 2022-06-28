@@ -1,0 +1,77 @@
+﻿$PBExportHeader$dw_viachecktools.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=844 color="536870912" )
+table(column=(type=long updatewhereclause=yes identity=yes name=checkid dbname="CheckID" )
+ column=(type=long updatewhereclause=yes name=batchid dbname="BatchId" )
+ column=(type=decimal(0) updatewhereclause=yes name=cdcheckplus dbname="CDCheckPlus" )
+ column=(type=char(255) updatewhereclause=yes name=routing dbname="Routing" )
+ column=(type=char(255) updatewhereclause=yes name=accountnumber dbname="AccountNumber" )
+ column=(type=char(255) updatewhereclause=yes name=checknumber dbname="CheckNumber" )
+ column=(type=decimal(4) updatewhereclause=yes name=amount dbname="Amount" )
+ column=(type=long updatewhereclause=yes name=checkstatus dbname="CheckStatus" )
+ column=(type=decimal(0) updatewhereclause=yes name=vcpcheckstatus dbname="VCPCheckStatus" )
+ column=(type=number updatewhereclause=yes name=reprocesar dbname="Reprocesar" )
+ column=(type=number updatewhereclause=yes name=vcpreprocesar dbname="VCPReprocesar" )
+ column=(type=number updatewhereclause=yes name=vcpsncambioinfo dbname="VCPSNCambioInfo" )
+ column=(type=number updatewhereclause=yes name=vcpsnendosovalido dbname="VCPSNEndosoValido" )
+ retrieve="SELECT 
+CHECKID CheckID, 
+BATCHID BatchId, 
+CDCHECK_PLUS CDCheckPlus, 
+TRANSIT Routing, 
+ACCOUNT AccountNumber, 
+CHECK_ CheckNumber, 
+AMOUNT Amount,
+CHECKSTATUS CheckStatus, 
+CDESTADO_CHEQUE VCPCheckStatus,
+VIACHECKS.DBO.CHECKTABLE.REPROCESAR Reprocesar,
+VIACHECKS.DBO.TVCP_CHEQUES.REPROCESAR VCPReprocesar,
+SNCAMBIOINFO VCPSNCambioInfo,
+SNENDOSOVALIDO VCPSNEndosoValido
+
+FROM VIACHECKS.DBO.CHECKTABLE
+LEFT OUTER JOIN VIACHECKS.DBO.TVCP_CHEQUES ON CDCHECK_PLUS = CDCHEQUE
+WHERE ((CHECKID = :p_checkid and :p_type_query = 'VC') OR (CDCHECK_PLUS = :p_checkid_vcp and :p_type_query = 'VCP'))" arguments=(("p_checkid", number),("p_checkid_vcp", number),("p_type_query", string)) )
+text(band=detail alignment="2" text="VIACHECK" border="2" color="33554432" x="37" y="24" height="52" width="1216" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=detail alignment="2" text="VIACHECK PLUS" border="2" color="33554432" x="1285" y="24" height="52" width="1216" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=detail alignment="0" text="Checkid:" border="0" color="33554432" x="37" y="96" height="52" width="434" html.valueishtml="0"  name=checkid_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Cdcheckplus:" border="0" color="33554432" x="1285" y="96" height="52" width="434" html.valueishtml="0"  name=cdcheckplus_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="96" height="64" width="745" format="[general]" html.valueishtml="0"  name=checkid visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1829" y="96" height="64" width="736" format="[general]" html.valueishtml="0"  name=cdcheckplus visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Checkstatus:" border="0" color="33554432" x="37" y="204" height="52" width="434" html.valueishtml="0"  name=checkstatus_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vcpcheckstatus:" border="0" color="33554432" x="1285" y="204" height="52" width="434" html.valueishtml="0"  name=vcpcheckstatus_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Routing:" border="0" color="33554432" x="37" y="280" height="52" width="434" html.valueishtml="0"  name=routing_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Accountnumber:" border="0" color="33554432" x="37" y="356" height="52" width="434" html.valueishtml="0"  name=accountnumber_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Checknumber:" border="0" color="33554432" x="37" y="432" height="52" width="434" html.valueishtml="0"  name=checknumber_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Amount:" border="0" color="33554432" x="37" y="508" height="52" width="434" html.valueishtml="0"  name=amount_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="204" height="64" width="745" format="[general]" html.valueishtml="0"  name=checkstatus visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="280" height="64" width="745" format="[general]" html.valueishtml="0"  name=routing visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="356" height="64" width="745" format="[general]" html.valueishtml="0"  name=accountnumber visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="432" height="64" width="745" format="[general]" html.valueishtml="0"  name=checknumber visible="1" edit.limit=255 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="507" y="508" height="64" width="745" format="[currency]" html.valueishtml="0"  name=amount visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="1829" y="204" height="64" width="736" format="[general]" html.valueishtml="0"  name=vcpcheckstatus visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Reprocesar:" border="0" color="8421504" x="37" y="584" height="52" width="434" html.valueishtml="0"  name=reprocesar_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vcpreprocesar:" border="0" color="8421504" x="1285" y="584" height="52" width="434" html.valueishtml="0"  name=vcpreprocesar_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vcpsncambioinfo:" border="0" color="8421504" x="1285" y="652" height="52" width="448" html.valueishtml="0"  name=vcpsncambioinfo_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="8421504" x="507" y="584" height="64" width="745" format="[general]" html.valueishtml="0"  name=reprocesar visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="8421504" x="1829" y="584" height="64" width="736" format="[general]" html.valueishtml="0"  name=vcpreprocesar visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="8421504" x="1829" y="652" height="64" width="736" format="[general]" html.valueishtml="0"  name=vcpsncambioinfo visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="8421504" x="1829" y="724" height="64" width="736" format="[general]" html.valueishtml="0"  name=vcpsnendosovalido visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vcpsnendosovalido:" border="0" color="8421504" x="1285" y="736" height="52" width="507" html.valueishtml="0"  name=vcpsnendosovalido_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="8421504" x="507" y="724" height="64" width="745" format="[general]" html.valueishtml="0"  name=batchid visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Batchid:" border="0" color="8421504" x="37" y="736" height="52" width="434" html.valueishtml="0"  name=batchid_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

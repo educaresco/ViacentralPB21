@@ -1,0 +1,90 @@
+﻿$PBExportHeader$fn_name_bancocredito.srf
+global type fn_name_bancocredito from function_object
+end type
+
+forward prototypes
+global function string fn_name_bancocredito (string ls_cadena)
+end prototypes
+
+global function string fn_name_bancocredito (string ls_cadena);long		ll_pos1
+string	ls_nombre, ls_parte2 = "", ls_parte3 = "" , ls_parte4 = "", ls_apellido ="", ls_parte5 = ""
+
+ll_pos1 = Pos(ls_cadena, " ")
+		
+		if ll_pos1 > 0 then
+			ls_nombre = Left(ls_cadena, ll_pos1 - 1)
+			ls_cadena = Mid(ls_cadena, ll_pos1 + 1)
+		else
+			ls_nombre = ls_cadena
+			ls_cadena = ""
+		end if
+	
+ll_pos1 = Pos(ls_cadena, " ")
+
+		if ll_pos1 > 0 and ls_cadena <> "" then
+			ls_parte2 = Left(ls_cadena, ll_pos1 - 1)
+			ls_cadena = Mid(ls_cadena, ll_pos1 + 1)
+		else
+			ls_parte2 = ls_cadena
+			ls_cadena = ""
+		end if
+		
+ll_pos1 = Pos(ls_cadena, " ")
+
+		if ll_pos1 > 0 and ls_cadena <> "" then
+			ls_parte3 = Left(ls_cadena, ll_pos1 - 1)
+			ls_cadena = Mid(ls_cadena, ll_pos1 + 1)
+		else
+			ls_parte3 = ls_cadena
+			ls_cadena = ""
+		end if	
+		
+ll_pos1 = Pos(ls_cadena, " ")
+
+		if ll_pos1 > 0 and ls_cadena <> "" then
+			ls_parte4 = Left(ls_cadena, ll_pos1 - 1)
+			ls_cadena = Mid(ls_cadena, ll_pos1 + 1)
+		else
+			ls_parte4 = ls_cadena
+			ls_cadena = ""
+		end if		
+		
+		if ll_pos1 > 0 and ls_cadena <> "" then
+			ls_parte5 = Left(ls_cadena, ll_pos1 - 1)
+			ls_cadena = Mid(ls_cadena, ll_pos1 + 1)
+		else
+			ls_parte5 = ls_cadena
+			ls_cadena = ""
+		end if		
+
+if ls_parte4 = "" then
+	
+	if ls_parte3 = "" then
+		ls_apellido = ls_parte2
+	else
+		ls_apellido = ls_parte2 +" "+ls_parte3
+		
+	end if
+	
+else
+	if ls_parte3 = 'DE' then
+			ls_apellido = ls_parte2 + " "+ ls_parte3 + " " +ls_parte4
+	else
+			ls_nombre   = ls_nombre + " " + ls_parte2
+			ls_apellido = ls_parte3 + " " +ls_parte4
+	end if
+end if
+
+if ls_parte5 <> "" Then
+	if ls_parte4 = 'DE' then
+			ls_nombre  = ls_nombre + " " + ls_parte2 
+			ls_apellido = ls_parte3 + " " + ls_parte4 + " " +ls_parte5
+	else
+			ls_nombre  = ls_nombre + " " + ls_parte2 + " "+ ls_parte3
+			ls_apellido = ls_parte4 + " " +ls_parte5
+	end if
+end if
+
+Return ls_nombre
+end function
+

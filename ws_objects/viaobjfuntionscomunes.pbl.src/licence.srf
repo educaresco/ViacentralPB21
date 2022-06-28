@@ -1,0 +1,23 @@
+﻿$PBExportHeader$licence.srf
+global type licence from function_object
+end type
+
+forward prototypes
+global function string licence (string ls_branch)
+end prototypes
+
+global function string licence (string ls_branch);string licencia
+
+licencia =''
+  SELECT dba.licencia.licencia_name  
+    INTO :licencia  
+    FROM dba.branch_licencia,   
+         dba.licencia  
+   WHERE ( dba.branch_licencia.id_licencia = dba.licencia.id_licencia ) and  
+         ( ( dba.branch_licencia.id_branch = :ls_branch ) )   ;
+
+return licencia;
+
+
+end function
+

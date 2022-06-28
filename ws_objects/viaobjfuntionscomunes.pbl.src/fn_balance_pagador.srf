@@ -1,0 +1,34 @@
+﻿$PBExportHeader$fn_balance_pagador.srf
+global type fn_balance_pagador from function_object
+end type
+
+forward prototypes
+global function double fn_balance_pagador (string arg_group, string arg_fecha)
+end prototypes
+
+global function double fn_balance_pagador (string arg_group, string arg_fecha);double		Ld_debito, ld_credito, ld_balance
+Datetime		ld_corte
+
+ld_corte = 	Datetime(date(arg_fecha),time('23:59:59'))
+
+  
+    SELECT SUM(dba.transaccion_diaria_payee.debit_trans_diaria),   
+         SUM(dba.transaccion_diaria_payee.credit_trans_diaria)  
+     INTO :ld_debito,   
+         :ld_credito  
+     FROM dba.transaccion_diaria_payee  
+     WHERE dba.transaccion_diaria_payee.date_trans_diaria < :ld_corte and
+			  dba.transaccion_diaria_payee.id_group_trans_diaria  = :arg_group ;
+			  
+IF ISNULL(ld_debito) then ld_debito = 0
+IF ISNULL(ld_credito) then ld_credito = 0
+
+
+ld_balance = ld_credito - ld_debito
+
+
+return ld_balance
+
+
+end function
+

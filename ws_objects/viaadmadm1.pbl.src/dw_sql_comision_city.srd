@@ -1,0 +1,52 @@
+﻿$PBExportHeader$dw_sql_comision_city.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=id_city dbname="COMISION_CITY.ID_CITY" dbalias=".ID_CITY" )
+ column=(type=char(2) updatewhereclause=yes name=id_modo_pago dbname="COMISION_CITY.ID_MODO_PAGO" dbalias=".ID_MODO_PAGO" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_begin dbname="COMISION_CITY.RANGE_BEGIN" dbalias=".RANGE_BEGIN" )
+ column=(type=decimal(4) updatewhereclause=yes name=range_end dbname="COMISION_CITY.RANGE_END" dbalias=".RANGE_END" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_comp dbname="COMISION_CITY.PORCENT_COMP" dbalias=".PORCENT_COMP" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_comp dbname="COMISION_CITY.FEET_COMP" dbalias=".FEET_COMP" )
+ column=(type=decimal(4) updatewhereclause=yes name=porcent_agente dbname="COMISION_CITY.PORCENT_AGENTE" dbalias=".PORCENT_AGENTE" )
+ column=(type=decimal(4) updatewhereclause=yes name=feet_agente dbname="COMISION_CITY.FEET_AGENTE" dbalias=".FEET_AGENTE" )
+ retrieve="  SELECT DBA.COMISION_CITY.ID_CITY,   
+         DBA.COMISION_CITY.ID_MODO_PAGO,   
+         DBA.COMISION_CITY.RANGE_BEGIN,   
+         DBA.COMISION_CITY.RANGE_END,   
+         DBA.COMISION_CITY.PORCENT_COMP,   
+         DBA.COMISION_CITY.FEET_COMP,   
+         DBA.COMISION_CITY.PORCENT_AGENTE,   
+         DBA.COMISION_CITY.FEET_AGENTE  
+    FROM DBA.COMISION_CITY   WITH (NOLOCK)
+" )
+text(band=header alignment="2" text="Id City" border="0" color="0" x="5" y="4" height="56" width="137" html.valueishtml="0"  name=id_city_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Modo Pago" border="0" color="0" x="146" y="4" height="56" width="293" html.valueishtml="0"  name=id_modo_pago_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Range Begin" border="0" color="0" x="443" y="4" height="56" width="279" html.valueishtml="0"  name=range_begin_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Range End" border="0" color="0" x="727" y="4" height="56" width="274" html.valueishtml="0"  name=range_end_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Porcent Comp" border="0" color="0" x="1010" y="4" height="56" width="302" html.valueishtml="0"  name=porcent_comp_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Feet Comp" border="0" color="0" x="1321" y="4" height="56" width="270" html.valueishtml="0"  name=feet_comp_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Porcent Agente" border="0" color="0" x="1600" y="4" height="56" width="343" html.valueishtml="0"  name=porcent_agente_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Feet Agente" border="0" color="0" x="1947" y="4" height="56" width="274" html.valueishtml="0"  name=feet_agente_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="5" y="4" height="68" width="137" format="[general]" html.valueishtml="0"  name=id_city visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="146" y="4" height="68" width="69" format="[general]" html.valueishtml="0"  name=id_modo_pago visible="1" edit.limit=2 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=30 border="0" color="0" x="443" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=range_begin visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=40 border="0" color="0" x="727" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=range_end visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=50 border="0" color="0" x="1010" y="4" height="68" width="270" format="[general]" html.valueishtml="0"  name=porcent_comp visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="1" tabsequence=60 border="0" color="0" x="1321" y="4" height="68" width="270" format="[general]" html.valueishtml="0"  name=feet_comp visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=70 border="0" color="0" x="1600" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=porcent_agente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=80 border="0" color="0" x="1947" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=feet_agente visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

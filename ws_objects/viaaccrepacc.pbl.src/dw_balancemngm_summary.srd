@@ -1,0 +1,108 @@
+﻿$PBExportHeader$dw_balancemngm_summary.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 1 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=328 color="536870912" )
+summary(height=176 color="536870912" )
+footer(height=84 color="536870912" )
+detail(height=0 color="536870912" )
+table(column=(type=char(40) updatewhereclause=yes name=name_main_branch dbname="GROUP_BRANCH.NAME_MAIN_BRANCH" )
+ column=(type=char(16) updatewhereclause=yes name=collmethod dbname="COLLMETHOD" )
+ column=(type=char(50) updatewhereclause=yes name=bank dbname="BANK" )
+ column=(type=decimal(4) updatewhereclause=yes name=balance_group dbname="GROUP_BRANCH.BALANCE_GROUP" )
+ column=(type=decimal(2) updatewhereclause=yes name=fin_dso dbname="GROUP_BRANCH.FIN_DSO" )
+ column=(type=char(8) updatewhereclause=yes name=flag_group dbname="FLAG_GROUP" )
+ column=(type=decimal(2) updatewhereclause=yes name=fin_amttobereconciled dbname="GROUP_BRANCH.fin_amttobereconciled" )
+ column=(type=decimal(2) updatewhereclause=yes name=fin_ajusteddso dbname="GROUP_BRANCH.FIN_AJUSTEDDSO" )
+ column=(type=long updatewhereclause=yes name=orderby dbname="Orderby" )
+ column=(type=char(4) updatewhereclause=yes name=id_main_branch dbname="GROUP_BRANCH.ID_MAIN_BRANCH" )
+ column=(type=decimal(4) updatewhereclause=yes name=debt_limit dbname="GROUP_BRANCH.DEBT_LIMIT" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_agent dbname="GROUP_BRANCH.NAME_AGENT" )
+ column=(type=char(8) updatewhereclause=yes name=vw_group_deposit_bank_shortname_banco dbname="VW_GROUP_DEPOSIT_BANK.SHORTNAME_BANCO" )
+ column=(type=char(10) updatewhereclause=yes name=vw_group_agents_id_branch dbname="VW_GROUP_AGENTS.ID_BRANCH" )
+ retrieve="SELECT DBA.GROUP_BRANCH.NAME_MAIN_BRANCH AS NAME_MAIN_BRANCH, 
+	CASE FIN_STATUS WHEN 'CO' THEN
+		'IN COLLECTION'
+	ELSE
+		CASE FIN_COLLECTMETHOD 
+			  WHEN 'DE' THEN 'DEPOSIT'
+			  WHEN 'AC' THEN 'ACH'
+			  WHEN 'CA' THEN 'ARMORED CAR'
+			  WHEN 'EA' THEN 'ELECTRONIC CHECK'
+			  ELSE 'OTHER' END 
+	END AS COLLMETHOD,
+	CASE FIN_COLLECTMETHOD 
+		  WHEN 'DE' THEN fin_depdescription
+		  WHEN 'AC' THEN ''
+		  WHEN 'CA' THEN ''
+		  ELSE '' END AS BANK,
+	BALANCE_GROUP,
+	FIN_DSO,
+	CASE FLAG_GRUPO
+	 WHEN 'A' THEN 'ACTIVE'
+	 WHEN 'I' THEN 'INACTIVE'
+	 WHEN 'C' THEN 'CLOSE'
+	 ELSE 'UNKNOWN' END AS FLAG_GROUP,
+	fin_amttobereconciled,
+	FIN_AJUSTEDDSO,
+	CASE FIN_STATUS WHEN 'CO' THEN
+		5
+	ELSE
+		CASE FIN_COLLECTMETHOD 
+			  WHEN 'DE' THEN 1
+			  WHEN 'AC' THEN 2
+			  WHEN 'EA' THEN 3
+			  WHEN 'CA' THEN 4
+			  ELSE 4 END
+	END AS Orderby,
+	DBA.GROUP_BRANCH.ID_MAIN_BRANCH AS ID_MAIN_BRANCH,
+	DEBT_LIMIT,
+	NAME_AGENT,
+	DBA.VW_GROUP_DEPOSIT_BANK.SHORTNAME_BANCO,
+   DBA.VW_GROUP_AGENTS.ID_BRANCH
+FROM DBA.GROUP_BRANCH, 
+     DBA.VW_GROUP_AGENTS, 
+     DBA.VW_GROUP_DEPOSIT_BANK
+WHERE DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.VW_GROUP_AGENTS.ID_MAIN_BRANCH
+AND DBA.GROUP_BRANCH.ID_MAIN_BRANCH = DBA.VW_GROUP_DEPOSIT_BANK.ID_MAIN_BRANCH
+AND DBA.GROUP_BRANCH.GROUP_TYPE IN ('R','A')
+AND (:ls_collmet = 'ALL' or :ls_collmet = DBA.GROUP_BRANCH.FIN_COLLECTMETHOD)
+AND (:ls_incoll = 'ANY' or :ls_incoll = FIN_STATUS)
+AND (:ls_disputed = 'N' or abs(fin_amttobereconciled) > 0)
+AND (abs(round(DBA.GROUP_BRANCH.BALANCE_GROUP,2)) <> 0)" arguments=(("ls_collmet", string),("ls_incoll", string),("ls_disputed", string))  sort="orderby A collmethod A group_branch_name_agent A balance_group D " )
+group(level=1 header.height=68 trailer.height=80 by=("collmethod" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=0 trailer.height=72 by=("group_branch_name_agent" ) header.color="536870912" trailer.color="536870912" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+compute(band=header alignment="2" expression="~"Agency Balance Management (Summary) as of ~" + string(relativedate(today(), -1),~"mm/dd/yyyy~")"border="0" color="0" x="1001" y="8" height="112" width="3547" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-14" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="3803" y="184" height="64" width="745" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3803" y="252" height="60" width="745" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="1" text="Note:" border="0" color="0" x="2107" y="148" height="52" width="155" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="~"Includes orders transmitted up to midnight ~" + string(relativedate(today(), -1),'mm/dd/yyyy')"border="0" color="0" x="2267" y="148" height="64" width="1595" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="~"Includes all deposits made and posted up to ~" +string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2267" y="208" height="64" width="1595" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="16777215" x="4549" y="0" height="52" width="1079" format="[general]" html.valueishtml="0"  name=group_branch_name_agent visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="22567000" )
+compute(band=trailer.2 alignment="1" expression="sum(balance_group for group 2)"border="0" color="0" x="2222" y="8" height="52" width="370" format="[currency]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="~"Subtotal for ~" +   group_branch_name_agent  "border="0" color="0" x="946" y="8" height="52" width="1216" format="[general]" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(fin_amttobereconciled for group 2)"border="0" color="0" x="2665" y="8" height="52" width="370" format="[currency]" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.2 alignment="1" expression="sum(if  (flag_group = 'ACTIVE',1,0) for group 2)"border="0" color="0" x="3113" y="8" height="52" width="261" format="[general]" html.valueishtml="0"  name=countactive visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=trailer.1 alignment="1" expression="sum(balance_group for group 1)"border="0" color="0" x="2222" y="8" height="60" width="370" format="[currency]" html.valueishtml="0"  name=compute_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="~"Subtotal ~" +  collmethod"border="0" color="0" x="946" y="8" height="52" width="1216" format="[general]" html.valueishtml="0"  name=compute_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(fin_amttobereconciled for group 1)"border="0" color="0" x="2665" y="8" height="60" width="370" format="[currency]" html.valueishtml="0"  name=compute_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=trailer.1 alignment="1" expression="sum(if  (flag_group = 'ACTIVE',1,0) for group 1)"border="0" color="0" x="3113" y="12" height="52" width="261" format="[general]" html.valueishtml="0"  name=compute_12 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=trailer.1 x1="2181" y1="0" x2="3442" y2="0"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(balance_group for all)"border="0" color="0" x="2222" y="24" height="60" width="370" format="[currency]" html.valueishtml="0"  name=compute_13 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="Total" border="0" color="0" x="946" y="24" height="60" width="1216" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(fin_amttobereconciled for all)"border="0" color="0" x="2665" y="24" height="60" width="370" format="[currency]" html.valueishtml="0"  name=compute_14 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(if  (flag_group = 'ACTIVE',1,0) for all)"border="0" color="0" x="3113" y="24" height="52" width="261" format="[general]" html.valueishtml="0"  name=compute_15 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=summary x1="2181" y1="0" x2="3442" y2="0"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+line(band=summary x1="2181" y1="8" x2="3442" y2="8"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+text(band=footer alignment="1" text="Account - Agency Balance Management (Summary)" border="0" color="0" x="3049" y="16" height="52" width="1499" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="2" background.color="16777215" )
+column(band=header.1 id=2 alignment="0" tabsequence=32766 border="2" color="16777215" x="37" y="4" height="56" width="2167" format="[general]" html.valueishtml="0"  name=collmethod visible="1" edit.limit=11 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="22567000" )
+text(band=header.1 alignment="2" text="Balance" border="2" color="0" x="2222" y="4" height="56" width="425" html.valueishtml="0"  name=balance_group_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="2" text="Amt. in Dispute" border="2" color="0" x="2670" y="4" height="56" width="425" html.valueishtml="0"  name=fin_amttobereconciled_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header.1 alignment="2" text="Active Groups" border="2" color="0" x="3113" y="4" height="56" width="379" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

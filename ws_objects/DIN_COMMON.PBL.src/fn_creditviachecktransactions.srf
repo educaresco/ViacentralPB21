@@ -1,0 +1,387 @@
+﻿$PBExportHeader$fn_creditviachecktransactions.srf
+global type fn_creditviachecktransactions from function_object
+end type
+
+forward prototypes
+global subroutine fn_creditviachecktransactions ()
+end prototypes
+
+global subroutine fn_creditviachecktransactions ();
+String ls_id_branch, ls_creditDesc, ls_locationuser, ls_checkstatus, ls_prev_id_branch, ls_prev_locationuser
+DateTime ld_datetran, ld_prev_datetran
+Double ld_creditid, ld_creditTransactionId, ld_creditAmount, ld_onHoldAmount, ld_batchid, ld_checkid, ld_checkamount, ld_prev_batchid, ld_cons_trans
+Double ll_amt_small, ll_amt_big, ll_amt_small_treasury, ll_amt_big_treasury
+Long	ll_creditItems, ll_cont, ll_onHoldItems, ll_cont_branch, ll_cont_prev_branch, ll_count_small, ll_count_big, ll_count_small_treasury, ll_count_big_treasury 
+Integer li_istreasure
+Boolean lb_salir
+
+
+/*****csarmiento*******/
+/***** mod: Oct/15/2013 
+		get the database connection string from a file for Viachecks
+**/
+String  ls_servername, ls_id, ls_password, ls_db
+
+
+//ls_servername=ProfileString('ViaCentral.ini','VIACHECKS','ServerName','')
+//ls_id=ProfileString('ViaCentral.ini','VIACHECKS','LogId','')
+//ls_password=ProfileString('ViaCentral.ini','VIACHECKS','LogPass','')
+//ls_db=ProfileString('ViaCentral.ini','VIACHECKS','Database','')
+
+/*****************/
+
+SetPointer(HourGlass!)
+
+// :::::::::::::::::::::::::::::::::::::::::
+// LOGIN DB CONNECTION
+//n_tr		SQLVIACHECKS
+//n_common_connect	gnv_common_connect  
+
+//Don (11-07-2013) - Added logic for .INI File functionality and removing redundancy.  *******
+IF NOT IsValid(SQLVIACHECKS)	THEN
+	SQLVIACHECKS 	= CREATE n_tr
+	
+	IF NOT IsValid(gnv_common_connect)	THEN
+		gnv_common_connect = CREATE n_common_connect
+	END IF
+	
+	gnv_common_connect.of_connect_SQLVIACHECKS()
+END IF
+
+//SQLVIACHECKS.DBMS 			= "SNC SQL Native Client(OLE DB)"
+//SQLVIACHECKS.ServerName	= ls_servername //'192.168.11.100'
+//SQLVIACHECKS.LogId 			= ls_id //'vcviacentral'
+//SQLVIACHECKS.LogPass 		= ls_password // 'r3mot3#@'
+//SQLVIACHECKS.DBParm 		= "Database='"+ls_db+"',TrimSpaces=1,Provider='SQLNCLI10',AppName='ViaTransmitir'"
+//SQLVIACHECKS.AutoCommit 	= True
+
+
+//********************************************************************
+
+
+
+/*
+if SQLVIACHECKS.of_connect() <> 0 then
+//	MessageBox("Cannot Connect", "Cannot Connect to ViaChecks Database~n~r" + SQLVIACHECKS.sqlerrtext,stopsign!)	
+	fn_email_notification2("ebernal@viamericas.com;appdev@viamericas.com","ALERTA - VIATRANSMITIR: Error de Conexion a ViaChecks","cb_balance -> fn_creditviachecktransactions no ha logrado establecer una conexion con la BD ViaChecks~n~r"+SQLVIACHECKS.sqlerrtext)
+	return	
+end if
+*/
+
+
+
+
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// Inicializacion
+ll_cont 				= 0
+ld_creditAmount 	= 0
+ll_creditItems 		= 0
+ld_onHoldAmount 	= 0
+ll_onHoldItems 		= 0
+lb_salir 				= false
+ll_cont_branch 		= 0
+ll_cont_prev_branch = 0
+
+// Obtiene el proximo CheckID
+SELECT ISNULL(MAX(creditId),0) + 1
+  INTO :ld_creditid
+  FROM viachecks.dbo.balanceCreditItems
+ USING SQLVIACHECKS;   
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+// Lista de Cheques no acreditados, ordenados por Agencia (o.name) y Usuario (u.username)
+// checkStatus	IN (0,1,2,5) = Scanned, Pending, SendToBank, OnHold
+
+DECLARE curPendingChecks CURSOR FOR
+SELECT o.name,
+u.username,
+b.batchid,
+b.created,		
+c.checkID,
+c.amount, 
+checkStatus,
+viachecks.dbo.sfGetIsTreasuryCheck2(TRANSIT,ACCOUNT)
+FROM viachecks.dbo.batchTable b (nolock), 
+viachecks.dbo.checkTable c (nolock), 
+viachecks.dbo.customer_location o (nolock),
+viachecks.dbo.csr u (nolock)
+WHERE b.batchID = c.batchID
+AND o.id = b.locationID
+AND b.agentid = u.id 
+AND checkStatus	IN (0,1,2,5)
+AND credited = 0
+AND b.created > getdate()-60
+AND o.name not in ('A00001','A00011','A00012')
+ORDER BY o.name, u.username, b.batchid
+USING SQLVIACHECKS;  
+
+//	 	 --AND NOT EXISTS (SELECT 'x' FROM viachecks.dbo.exportedBatches e WHERE b.batchID = e.batchID )
+//	 --AND NOT EXISTS (SELECT 'x' FROM viachecks.dbo.balanceCreditItems e WHERE c.checkID = e.checkID )
+
+	 
+OPEN curPendingChecks;
+    
+if SQLCA.SQLCode <> 0 then			
+	fn_email_notification2("appdev@viamericas.com","ALERTA - VIATRANSMITIR: Error de Aplicando Credito ViaChecks","cb_balance -> fn_creditviachecktransactions.  OPEN CURSOR. Error: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+end if	 
+	 
+FETCH curPendingChecks INTO :ls_id_branch, :ls_locationuser, :ld_batchid, :ld_datetran, :ld_checkid, :ld_checkamount, :ls_checkstatus, :li_istreasure;
+
+ls_prev_id_branch = ls_id_branch
+ls_prev_locationuser = ls_locationuser
+ld_prev_batchid = ld_batchid
+ld_prev_datetran = ld_datetran
+
+// Se sale con el EXIT, es necesario ejecutar 
+DO WHILE true = true
+
+	if SQLVIACHECKS.sqlcode <> 0 then
+		// Entro en la ultima, cambia el flag para que se salga en la proxima
+		lb_salir = true
+	end if
+	
+	
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ESTA PARTE ENTRA SOLAMENTE CUANDO ESTA EN EL ULTIMO CHEQUE DE UNA AGENCIA
+		
+	// Si es agencia nueva (diferente a la anterior)
+	if ls_prev_id_branch <> ls_id_branch or ls_prev_locationuser <> ls_locationuser or ld_prev_batchid <> ld_batchid or lb_salir = true then
+
+		SELECT count(*)
+		INTO :ll_cont_prev_branch
+		FROM Envio.dba.branch e (nolock), Envio.dba.group_branch f (nolock)
+		WHERE e.id_branch = :ls_prev_id_branch
+		AND e.id_main_branch = f.id_main_branch
+		AND f.FIN_COLLECTMETHOD = 'VC'
+		AND e.id_status_branch = 'O';		
+		
+		// Si la agencia es valida
+		if ll_cont_prev_branch = 1 then			
+			
+			// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			// Graba el credito 
+			if ll_creditItems > 0 then
+
+				ls_creditDesc = 'CP - DEPOSIT: VC2 DEP. '+string(ld_prev_datetran,'mm/dd/yyyy')+ ' BID:' + string(ld_prev_batchid) +' USR:'+ls_prev_locationuser
+
+				if ll_onholdItems > 0 then
+
+					ls_creditDesc = ls_creditDesc + " ONHOLD: $"+String(ld_onHoldAmount,"#,##0.00") + ' ('+String(ll_onholdItems)+')'
+
+				end if
+
+				 INSERT INTO ViaChecks.dbo.balanceCredit
+						  (creditID
+						  ,creditTime
+						  ,creditedAmount
+						  ,creditedItems
+						  ,onHoldAmount
+						  ,onHoldItems
+						  ,creditUser
+						  ,creditDesc
+						  ,creditTransactionId)
+				 VALUES (:ld_creditid
+						  ,getdate()
+						  ,:ld_creditAmount
+						  ,:ll_creditItems
+						  ,:ld_onHoldAmount
+						  ,:ll_onHoldItems
+						  ,:ls_prev_locationuser
+						  ,:ls_creditDesc
+						  ,null)
+				  USING SQLVIACHECKS; 
+			
+				// ------------------
+				// Inserta el Credito
+						
+				DECLARE spAddViaCheckCredit PROCEDURE FOR dba.spAddViaCheckCreditWithDetail3 
+				@IDBRANCH = :ls_prev_id_branch, 		
+				@DATETRAN = :ld_prev_datetran, 
+				@CREDITNUMBER = :ld_creditid, 
+				@DESCRIPTION = :ls_creditDesc, 
+				@ITEMCOUNT = :ll_creditItems, 
+				@BATCHTOTAL = :ld_creditAmount,					
+				@ITEMCOUNT_SMALL = :ll_count_small,
+				@ITEMAMOUNT_SMALL = :ll_amt_small,
+				@ITEMCOUNT_BIG = :ll_count_big,
+				@ITEMAMOUNT_BIG = :ll_amt_big,
+				@ITEMCOUNT_SMALL_TREASURY = :ll_count_small_treasury,
+				@ITEMAMOUNT_SMALL_TREASURY = :ll_amt_small_treasury,
+				@ITEMCOUNT_BIG_TREASURY = :ll_count_big_treasury,
+				@ITEMAMOUNT_BIG_TREASURY = :ll_amt_big_treasury,								
+				@CONSRETURNOUT = :ld_cons_trans OUTPUT;
+
+				Execute spAddViaCheckCredit;
+				
+				if SQLCA.SQLCode <> 0 then			
+					fn_email_notification2("appdev@viamericas.com","ALERTA - VIATRANSMITIR: Error de Aplicando Credito ViaChecks","cb_balance -> fn_creditviachecktransactions.  Execute spAddViaCheckCredit. Error: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+					//Messagebox("",String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+					
+//					// Limpia			
+
+// HAY QUE PROBAR PORQUE SI ESTA ALCANZANDO A DAR EL CREDITO BAJO EL BANCO WRITEOFF
+//					DELETE FROM ViaChecks.dbo.balanceCreditItems
+//					 WHERE creditID = :ld_creditid
+//					 USING SQLVIACHECKS;
+//					 
+//					DELETE FROM ViaChecks.dbo.balanceCredit
+//					 WHERE creditID = :ld_creditid
+//					 USING SQLVIACHECKS;						
+					
+				end if	 				
+				
+				Fetch spAddViaCheckCredit INTO :ld_cons_trans;
+
+				if SQLCA.SQLCode <> 0 then			
+					
+					fn_email_notification2("appdev@viamericas.com","ALERTA - VIATRANSMITIR: Error de Aplicando Credito ViaChecks","cb_balance -> fn_creditviachecktransactions.  CREDIT-ID: + " +string(ld_creditid) +' CONCEPTO: ['+ ls_creditDesc +"] Error:[ "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText+"]")
+					
+					//Messagebox("Error","Error Grabando Creditos. CREDIT-ID: + " +string(ld_creditid) +' CONCEPTO: ['+ ls_creditDesc +"] Error: "+String(SQLCA.SQLCode)+" - " + SQLCA.SQLErrText)
+														
+					Close spAddViaCheckCredit;
+					
+					return
+
+				else					
+
+					Close spAddViaCheckCredit;
+					
+					UPDATE ViaChecks.dbo.balanceCredit
+					SET creditTransactionId = :ld_cons_trans
+					WHERE creditID = :ld_creditid
+					USING SQLVIACHECKS;
+
+					ll_cont = ll_cont + 1
+		
+					// Obtiene el proximo CheckID
+					SELECT ISNULL(MAX(creditId),0) + 1
+					INTO :ld_creditid
+					FROM viachecks.dbo.balanceCreditItems
+					USING SQLVIACHECKS;  
+
+				end if
+				// Inserta el Credito
+				// ------------------			
+
+			end if
+
+			// Graba un credito 
+			// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		end if // END: Si es agencia valida
+	
+		// Initial Values
+		ld_creditAmount = 0
+		ll_creditItems = 0
+		ld_onHoldAmount = 0
+		ll_onHoldItems = 0			
+					
+		ll_count_small = 0
+		ll_count_big = 0
+		ll_count_small_treasury = 0
+		ll_count_big_treasury = 0
+		ll_amt_small = 0
+		ll_amt_big = 0
+		ll_amt_small_treasury = 0
+		ll_amt_big_treasury = 0					
+					
+					
+	end if // END: Si es agencia nueva
+
+	// ESTA PARTE ENTRA SOLAMENTE CUANDO ESTA EN EL ULTIMO CHEQUE DE UNA AGENCIA
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+
+
+	// **********************************************************************************************************************************************************
+	// **********************************************************************************************************************************************************
+	// **********************************************************************************************************************************************************
+	// ESTA PARTE ENTRA SOLAMENTE CUANDO ESTA EN EL ULTIMO CHEQUE DE UNA AGENCIA
+		
+	SELECT count(*)
+	INTO :ll_cont_branch
+	FROM Envio.dba.branch e (nolock), Envio.dba.group_branch f (nolock)
+	WHERE e.id_branch = :ls_id_branch
+	AND e.id_main_branch = f.id_main_branch
+	AND f.FIN_COLLECTMETHOD = 'VC'
+	AND e.id_status_branch = 'O';		
+		
+	if ll_cont_branch = 1 then					
+															
+		if ls_checkstatus = '5' then
+			
+			ld_onHoldAmount = ld_onHoldAmount + ld_checkamount
+			ll_onHoldItems = ll_onHoldItems + 1
+	
+		else
+			
+			ld_creditAmount = ld_creditAmount + ld_checkamount
+			ll_creditItems = ll_creditItems + 1
+	
+	
+			if ld_checkamount > 2999.99 and li_istreasure > 0 then
+				ll_count_big_treasury = ll_count_big_treasury + 1		
+				ll_amt_big_treasury = ll_amt_big_treasury + ld_checkamount
+			elseif ld_checkamount > 2999.99 and li_istreasure = 0 then
+				ll_count_big = ll_count_big + 1
+				ll_amt_big = ll_amt_big + ld_checkamount
+			elseif ld_checkamount <= 2999.99 and li_istreasure > 0 then
+				ll_count_small_treasury = ll_count_small_treasury + 1
+				ll_amt_small_treasury = ll_amt_small_treasury + ld_checkamount
+			else
+				ll_count_small = ll_count_small + 1
+				ll_amt_small = ll_amt_small + ld_checkamount
+			end if
+			
+	
+			INSERT INTO ViaChecks.dbo.balanceCreditItems
+					  (creditID
+					  ,checkID
+					  ,batchID)
+			VALUES  (:ld_creditid
+					  ,:ld_checkid
+					  ,:ld_batchid)
+			USING SQLVIACHECKS; 				
+					
+		end if			
+
+	end if
+	
+	// ESTA PARTE ENTRA SOLAMENTE CUANDO ESTA EN EL ULTIMO CHEQUE DE UNA AGENCIA
+	// **********************************************************************************************************************************************************
+	// **********************************************************************************************************************************************************
+	// **********************************************************************************************************************************************************
+
+
+	ls_prev_id_branch = ls_id_branch
+	ls_prev_locationuser = ls_locationuser
+	ld_prev_batchid = ld_batchid
+	ld_prev_datetran = ld_datetran
+
+	// Sale del LOOP
+	if lb_salir then
+		EXIT
+	end if		
+	
+	FETCH curPendingChecks INTO :ls_id_branch, :ls_locationuser, :ld_batchid, :ld_datetran, :ld_checkid, :ld_checkamount, :ls_checkstatus, :li_istreasure;
+
+LOOP     
+  
+CLOSE curPendingChecks;
+
+
+SQLVIACHECKS.of_disconnect()
+
+destroy SQLVIACHECKS
+
+SetPointer(Arrow!)
+
+//Messagebox("Completed","Process Completed Successfully, "+string(ll_cont) + " credits were applied.")
+  
+end subroutine
+

@@ -1,0 +1,74 @@
+﻿$PBExportHeader$dw_rep_sales_agencies.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=420 color="536870912" )
+summary(height=88 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(6) updatewhereclause=yes name=company dbname="BRANCH.company" )
+ column=(type=char(10) updatewhereclause=yes name=id_branch dbname="ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=name_branch dbname="NAME_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=salesrep dbname="SALESREP" )
+ column=(type=char(5) updatewhereclause=yes name=state dbname="STATE" )
+ column=(type=datetime updatewhereclause=yes name=dateopened dbname="DATEOPENED" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=orders dbname="ORDERS" )
+ column=(type=decimal(2) updatewhereclause=yes identity=yes name=volume dbname="VOLUME" )
+ retrieve="SELECT id_company as company,
+RTRIM(DBA.BRANCH.ID_BRANCH) AS ID_BRANCH,
+RTRIM(DBA.BRANCH.NAME_BRANCH) AS NAME_BRANCH,
+DBA.SFGETSALESREPRESENTATIVE(DBA.BRANCH.ID_BRANCH) SALESREP,
+RTRIM(DBA.BRANCH.ID_STATE) STATE,
+DBA.SFGETBRANCHDATEOPENED(DBA.BRANCH.ID_BRANCH) DATEOPENED,
+isnull(SUM( CONVERT(NUMERIC(10,0),DBA.RECEIVER.ID_RECEIVER / ABS(DBA.RECEIVER.ID_RECEIVER)) ),0) ORDERS,
+isnull(SUM( CONVERT(NUMERIC(14,2),DBA.RECEIVER.NET_AMOUNT_RECEIVER) ),0) VOLUME
+FROM DBA.BRANCH LEFT OUTER JOIN DBA.RECEIVER on DBA.RECEIVER.ID_BRANCH = DBA.BRANCH.ID_BRANCH
+AND ( DBA.RECEIVER.ID_FLAG_RECEIVER <> 'A' )
+AND ( DBA.BRANCH.ID_TYPE_BRANCH IN ('A','R') )
+AND ( DBA.BRANCH.ID_STATUS_BRANCH = 'O' or :P_ALL = '-ALL-')
+AND ( DBA.RECEIVER.DATE_RECEIVER > :P_DATE1 )
+AND ( DBA.RECEIVER.DATE_RECEIVER < :P_DATE2 )
+AND (( DBA.BRANCH.ID_BRANCH = :P_BRANCH ) OR (:P_BRANCH = '-ALL-'))
+GROUP BY id_company, RTRIM(DBA.BRANCH.ID_BRANCH),
+RTRIM(DBA.BRANCH.NAME_BRANCH),
+DBA.SFGETSALESREPRESENTATIVE(DBA.BRANCH.ID_BRANCH),
+DBA.BRANCH.ID_STATE,
+DBA.SFGETBRANCHDATEOPENED(DBA.BRANCH.ID_BRANCH)
+ORDER BY DBA.SFGETSALESREPRESENTATIVE(DBA.BRANCH.ID_BRANCH)" arguments=(("P_DATE1", datetime),("P_DATE2", datetime),("P_BRANCH", string),("P_ALL", string))  sort="salesrep A name_branch A " )
+text(band=header alignment="2" text="State" border="2" color="33554432" x="2309" y="360" height="52" width="137" html.valueishtml="0"  name=state_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Date Opened" border="2" color="33554432" x="2464" y="360" height="52" width="306" html.valueishtml="0"  name=dateopened_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Orders" border="2" color="33554432" x="2789" y="360" height="52" width="219" html.valueishtml="0"  name=orders_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Volume" border="2" color="33554432" x="3026" y="360" height="52" width="430" html.valueishtml="0"  name=volume_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Sales Rep." border="2" color="33554432" x="1614" y="360" height="52" width="677" html.valueishtml="0"  name=salesrep_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Name" border="2" color="33554432" x="462" y="360" height="52" width="1138" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id" border="2" color="33554432" x="197" y="360" height="52" width="251" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Co" border="2" color="33554432" x="14" y="360" height="52" width="169" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="2309" y="12" height="56" width="137" format="[general]" html.valueishtml="0"  name=state visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="2464" y="12" height="56" width="306" format="[shortdate]" html.valueishtml="0"  name=dateopened visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="33554432" x="2789" y="12" height="56" width="219" format="[general]" html.valueishtml="0"  name=orders visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1614" y="12" height="56" width="677" format="[general]" html.valueishtml="0"  name=salesrep visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="462" y="12" height="56" width="1138" format="[general]" html.valueishtml="0"  name=name_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="33554432" x="3026" y="12" height="56" width="430" format="[currency]" html.valueishtml="0"  name=volume visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="197" y="12" height="56" width="251" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="14" y="12" height="56" width="142" format="[general]" html.valueishtml="0"  name=company visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="9" y1="4" x2="3465" y2="4"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=summary alignment="1" expression="sum(orders for all)"border="0" color="33554432" x="2734" y="16" height="56" width="274" format="[general]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(volume for all)"border="0" color="33554432" x="3026" y="16" height="56" width="430" format="[currency]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Sales Report by Agency" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + ~"From ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2459" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

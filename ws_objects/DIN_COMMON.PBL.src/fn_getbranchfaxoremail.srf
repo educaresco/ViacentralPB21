@@ -1,0 +1,47 @@
+﻿$PBExportHeader$fn_getbranchfaxoremail.srf
+global type fn_getbranchfaxoremail from function_object
+end type
+
+forward prototypes
+global function string fn_getbranchfaxoremail (string ps_id_branch)
+end prototypes
+
+global function string fn_getbranchfaxoremail (string ps_id_branch);
+string ls_fax, ls_alt
+	
+SELECT dba.BRANCH.FAX_BRANCH,  isnull(ALT_FAX_ROUTE,'N')
+INTO :ls_fax  , :ls_alt
+FROM dba.BRANCH  
+WHERE dba.BRANCH.ID_BRANCH = :ps_id_branch   ;
+		
+// """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+// Completa el 1 para los Faxes que no lo tengan y no sean del area 301
+
+ls_fax = fn_replace(ls_fax,'  ','')
+ls_fax = fn_replace(ls_fax,' ','')
+ls_fax = fn_replace(ls_fax,'-','')
+ls_fax = fn_replace(ls_fax,'.','')
+ls_fax = fn_replace(ls_fax,'(','')
+ls_fax = fn_replace(ls_fax,')','')
+
+ls_fax = trim(ls_fax)
+
+if len(ls_fax) = 10 then ls_fax = '1' + ls_fax
+
+if mid(ls_fax,1,4) = '1301' then
+	ls_fax = mid(ls_fax,2)
+end if
+// """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""	
+
+
+// Uses alternative fax route (Metrofax)
+if ls_alt = 'Y' then
+	// mid removes the initial 1
+	ls_fax	 = "@F212 "+mid(ls_fax,2)+"\@metrofax.com@"
+else
+	ls_fax = "@F211 "+ls_fax+"@"
+end if
+
+return ls_fax
+end function
+

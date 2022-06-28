@@ -1,0 +1,166 @@
+﻿$PBExportHeader$dw_invoices_pagados_cities.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=364 color="536870912" )
+summary(height=92 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=56 color="536870912"  height.autosize=yes)
+table(column=(type=char(10) update=yes updatewhereclause=yes name=id_branch dbname="RECEIVER.ID_BRANCH" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=id_receiver dbname="RECEIVER.ID_RECEIVER" )
+ column=(type=char(5) update=yes updatewhereclause=yes name=id_city_receiver dbname="RECEIVER.ID_CITY_RECEIVER" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_receiver dbname="RECEIVER.NAME_RECEIVER" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=net_amount_receiver dbname="RECEIVER.NET_AMOUNT_RECEIVER" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=total_modo_pago dbname="RECEIVER.TOTAL_MODO_PAGO" )
+ column=(type=char(10) updatewhereclause=yes name=branch_pay_receiver dbname="RECEIVER.BRANCH_PAY_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=date_receiver dbname="RECEIVER.DATE_RECEIVER" )
+ column=(type=char(4) updatewhereclause=yes name=branch_id_main_branch dbname="BRANCH.ID_MAIN_BRANCH" )
+ column=(type=datetime updatewhereclause=yes name=pago_invoice_date_pago_invoice dbname="PAGO_INVOICE.DATE_PAGO_INVOICE" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_commission_payee dbname="RECEIVER.COMMISSION_PAYEE" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=decimal(0) updatewhereclause=yes name=receiver_id_sender dbname="RECEIVER.ID_SENDER" )
+ column=(type=char(2) updatewhereclause=yes name=receiver_id_payment dbname="RECEIVER.ID_PAYMENT" )
+ column=(type=char(2) updatewhereclause=yes name=receiver_id_curreny dbname="RECEIVER.ID_CURRENY" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_id_flag_receiver dbname="RECEIVER.ID_FLAG_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_id_state_receiver dbname="RECEIVER.ID_STATE_RECEIVER" )
+ column=(type=char(5) updatewhereclause=yes name=receiver_id_country_receiver dbname="RECEIVER.ID_COUNTRY_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_cashier dbname="RECEIVER.ID_CASHIER" )
+ column=(type=char(60) updatewhereclause=yes name=receiver_address_receiver dbname="RECEIVER.ADDRESS_RECEIVER" )
+ column=(type=char(12) updatewhereclause=yes name=receiver_phone1_receiver dbname="RECEIVER.PHONE1_RECEIVER" )
+ column=(type=char(12) updatewhereclause=yes name=receiver_phone2_receiver dbname="RECEIVER.PHONE2_RECEIVER" )
+ column=(type=char(7) updatewhereclause=yes name=receiver_zip_receiver dbname="RECEIVER.ZIP_RECEIVER" )
+ column=(type=char(200) updatewhereclause=yes name=receiver_notes_receiver dbname="RECEIVER.NOTES_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=receiver_time_receiver dbname="RECEIVER.TIME_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_rate_change_receiver dbname="RECEIVER.RATE_CHANGE_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_telex_receiver dbname="RECEIVER.TELEX_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_urgency_receiver dbname="RECEIVER.URGENCY_RECEIVER" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_recomend_receiver dbname="RECEIVER.RECOMEND_RECEIVER" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_mode_pay_receiver dbname="RECEIVER.MODE_PAY_RECEIVER" )
+ column=(type=char(30) updatewhereclause=yes name=receiver_acc_receiver dbname="RECEIVER.ACC_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_exchange_receiver dbname="RECEIVER.EXCHANGE_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_handling_receiver dbname="RECEIVER.HANDLING_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_receiver dbname="RECEIVER.TOTAL_RECEIVER" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_mod_pay_currency dbname="RECEIVER.MOD_PAY_CURRENCY" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_porc_comision_receiver dbname="RECEIVER.PORC_COMISION_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_pay_receiver dbname="RECEIVER.TOTAL_PAY_RECEIVER" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_trans_receiver dbname="RECEIVER.TRANS_RECEIVER" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=exchange_company dbname="RECEIVER.EXCHANGE_COMPANY" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=telex_company dbname="RECEIVER.TELEX_COMPANY" )
+ column=(type=decimal(0) updatewhereclause=yes name=ref_receiver dbname="RECEIVER.REF_RECEIVER" )
+ column=(type=char(35) updatewhereclause=yes name=receiver_bank_receiver dbname="RECEIVER.BANK_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_diference dbname="RECEIVER.TOTAL_DIFERENCE" initial="0" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_modo_pago_comp dbname="RECEIVER.TOTAL_MODO_PAGO_COMP" )
+ column=(type=char(14) updatewhereclause=yes name=receiver_toll_free dbname="RECEIVER.TOLL_FREE" )
+ column=(type=char(30) updatewhereclause=yes name=receiver_pin_number dbname="RECEIVER.PIN_NUMBER" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_status_pago_payee dbname="RECEIVER.STATUS_PAGO_PAYEE" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_status_pago_agent dbname="RECEIVER.STATUS_PAGO_AGENT" )
+ column=(type=datetime updatewhereclause=yes name=receiver_date_trans_payee dbname="RECEIVER.DATE_TRANS_PAYEE" )
+ column=(type=char(30) updatewhereclause=yes name=receiver_clave_receiver dbname="RECEIVER.CLAVE_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_fee_rate dbname="RECEIVER.FEE_RATE" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_closing_agent dbname="RECEIVER.CLOSING_AGENT" )
+ column=(type=char(1) updatewhereclause=yes name=receiver_closing_payee dbname="RECEIVER.CLOSING_PAYEE" )
+ column=(type=datetime updatewhereclause=yes name=receiver_payment_date dbname="RECEIVER.PAYMENT_DATE" )
+ retrieve="SELECT  DBA.RECEIVER.ID_BRANCH ,           
+DBA.RECEIVER.ID_RECEIVER ,           
+DBA.RECEIVER.ID_CITY_RECEIVER ,           
+DBA.RECEIVER.NAME_RECEIVER ,           
+DBA.RECEIVER.NET_AMOUNT_RECEIVER ,           
+DBA.RECEIVER.TOTAL_MODO_PAGO ,           
+DBA.RECEIVER.BRANCH_PAY_RECEIVER ,           
+DBA.RECEIVER.DATE_RECEIVER ,           
+DBA.BRANCH.ID_MAIN_BRANCH ,           
+DBA.PAGO_INVOICE.DATE_PAGO_INVOICE ,           
+DBA.RECEIVER.COMMISSION_PAYEE ,           
+DBA.BRANCH.NAME_BRANCH ,           
+DBA.RECEIVER.ID_SENDER ,           
+DBA.RECEIVER.ID_PAYMENT ,           
+DBA.RECEIVER.ID_CURRENY ,           
+DBA.RECEIVER.ID_FLAG_RECEIVER ,           
+DBA.RECEIVER.ID_STATE_RECEIVER ,           
+DBA.RECEIVER.ID_COUNTRY_RECEIVER ,           
+DBA.RECEIVER.ID_CASHIER ,           
+DBA.RECEIVER.ADDRESS_RECEIVER ,           
+DBA.RECEIVER.PHONE1_RECEIVER ,           
+DBA.RECEIVER.PHONE2_RECEIVER ,           
+DBA.RECEIVER.ZIP_RECEIVER ,           
+DBA.RECEIVER.NOTES_RECEIVER ,           
+DBA.RECEIVER.TIME_RECEIVER ,           
+DBA.RECEIVER.RATE_CHANGE_RECEIVER ,           
+DBA.RECEIVER.TELEX_RECEIVER ,          
+DBA.RECEIVER.URGENCY_RECEIVER ,           
+DBA.RECEIVER.RECOMEND_RECEIVER ,           
+DBA.RECEIVER.MODE_PAY_RECEIVER ,           
+DBA.RECEIVER.ACC_RECEIVER ,           
+DBA.RECEIVER.EXCHANGE_RECEIVER ,           
+DBA.RECEIVER.HANDLING_RECEIVER ,           
+DBA.RECEIVER.TOTAL_RECEIVER ,           
+DBA.RECEIVER.MOD_PAY_CURRENCY ,           
+DBA.RECEIVER.PORC_COMISION_RECEIVER ,           
+DBA.RECEIVER.TOTAL_PAY_RECEIVER ,           
+DBA.RECEIVER.TRANS_RECEIVER ,           
+DBA.RECEIVER.EXCHANGE_COMPANY ,           
+DBA.RECEIVER.TELEX_COMPANY ,           
+DBA.RECEIVER.REF_RECEIVER ,          
+DBA.RECEIVER.BANK_RECEIVER ,           
+DBA.RECEIVER.TOTAL_DIFERENCE ,           
+DBA.RECEIVER.TOTAL_MODO_PAGO_COMP ,           
+DBA.RECEIVER.TOLL_FREE ,           
+DBA.RECEIVER.PIN_NUMBER ,           
+DBA.RECEIVER.STATUS_PAGO_PAYEE ,           
+DBA.RECEIVER.STATUS_PAGO_AGENT ,           
+DBA.RECEIVER.DATE_TRANS_PAYEE ,           
+DBA.RECEIVER.CLAVE_RECEIVER ,           
+DBA.RECEIVER.FEE_RATE ,           
+DBA.RECEIVER.CLOSING_AGENT ,           
+DBA.RECEIVER.CLOSING_PAYEE ,           
+DBA.RECEIVER.PAYMENT_DATE     
+FROM DBA.RECEIVER ,           
+     DBA.BRANCH ,           
+     DBA.PAGO_INVOICE     
+WHERE ( DBA.BRANCH.ID_BRANCH = DBA.RECEIVER.BRANCH_PAY_RECEIVER ) and          
+	( DBA.PAGO_INVOICE.ID_SENDER = DBA.RECEIVER.ID_SENDER ) and          
+	( DBA.RECEIVER.ID_BRANCH = DBA.PAGO_INVOICE.ID_BRANCH ) and          
+	( DBA.PAGO_INVOICE.ID_RECEIVER = DBA.RECEIVER.ID_RECEIVER ) and          
+	( DBA.RECEIVER.ID_FLAG_RECEIVER IN ('P') ) and          
+	( DBA.BRANCH.ID_MAIN_BRANCH = :ARG_GROUP ) and          
+	( DBA.PAGO_INVOICE.DATE_PAGO_INVOICE >= :ARG_FECHA1 ) and          
+	( DBA.PAGO_INVOICE.DATE_PAGO_INVOICE <= :ARG_FECHA2 )
+ORDER BY DBA.BRANCH.NAME_BRANCH          ASC,           
+DBA.RECEIVER.REF_RECEIVER          ASC  " arguments=(("arg_fecha1", date),("arg_fecha2", date),("arg_group", string)) )
+group(level=1 header.height=72 trailer.height=0 by=("branch_name_branch" ) header.color="536870912" trailer.color="536870912" )
+compute(band=header alignment="0" expression="today()"border="0" color="0" x="73" y="28" height="68" width="398" format="mm/dd/yyyy"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2889" y="28" height="68" width="471" format="[general]"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header id=9 alignment="2" tabsequence=32766 border="0" color="0" x="923" y="124" height="76" width="1344" format="[general]"  name=branch_id_main_branch dddw.name=dddw_group_branch dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-14" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text=" Paid Invoices "border="0" color="0" x="480" y="212" height="80" width="663"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="# Ref"border="0" color="0" x="14" y="304" height="56" width="219"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="# Invoice"border="0" color="0" x="247" y="304" height="56" width="270"  name=id_branch_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date Inv."border="0" color="0" x="539" y="304" height="56" width="265"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Paid Date ."border="0" color="0" x="832" y="304" height="56" width="325"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="From :"border="0" color="0" x="1157" y="212" height="80" width="238"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" arg_fecha1 "border="0" color="0" x="1408" y="212" height="80" width="357" format="mm/dd/yyyy"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="1" text="To :"border="0" color="0" x="1806" y="212" height="80" width="215"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" arg_fecha2"border="0" color="0" x="2034" y="212" height="80" width="357" format="mm/dd/yyyy"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="City"border="0" color="0" x="1175" y="304" height="56" width="302"  name=id_city_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name Receiver"border="0" color="0" x="1490" y="304" height="56" width="558"  name=name_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Amount"border="0" color="0" x="2062" y="304" height="56" width="338"  name=net_amount_receiver_t  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Comm."border="0" color="0" x="2414" y="304" height="56" width="274"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Due."border="0" color="0" x="3008" y="304" height="56" width="293"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="F/X"border="0" color="0" x="2706" y="304" height="56" width="283"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=12 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="4" height="64" width="1723" format="[general]"  name=branch_name_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+column(band=detail id=41 alignment="0" tabsequence=32766 border="0" color="0" x="14" y="4" height="48" width="219" format="[general]"  name=ref_receiver edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression=" id_branch +~" - ~"+ id_receiver "border="0" color="0" x="247" y="4" height="48" width="270" format="[general]"  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="2" tabsequence=32766 border="0" color="0" x="530" y="4" height="48" width="288" format=""  name=date_receiver editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="832" y="4" height="48" width="325" format="[general]"  name=pago_invoice_date_pago_invoice editmask.mask="mm/dd/yyyy" editmask.focusrectangle=no  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="1175" y="4" height="48" width="302" format="[general]"  name=id_city_receiver dddw.name=dddw_city dddw.displaycolumn=name_city dddw.datacolumn=id_city dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="0" x="1490" y="4" height="48" width="558" format="[general]"  name=name_receiver edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="2062" y="4" height="48" width="338" format="[currency]"  name=net_amount_receiver edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="0" x="2414" y="4" height="48" width="274" format="[currency]"  name=receiver_commission_payee edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="1" expression=" net_amount_receiver + receiver_commission_payee - receiver_total_diference "border="0" color="0" x="3008" y="4" height="48" width="293" format="[currency]"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=43 alignment="1" tabsequence=32766 border="0" color="0" x="2706" y="4" height="48" width="283" format="[RED]($#,##0.00);$#,##0.00"  name=receiver_total_diference edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="# Invoices :"border="0" color="0" x="1051" y="16" height="56" width="357"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="count(name_receiver for all)"border="0" color="0" x="1422" y="8" height="68" width="174" format="[general]"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="1" text="Gran Total :"border="0" color="0" x="1655" y="16" height="56" width="379"  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(net_amount_receiver for all)"border="0" color="0" x="2062" y="16" height="68" width="338" format="[currency]"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_commission_payee for all)"border="0" color="0" x="2414" y="16" height="68" width="274" format="[currency]"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum( net_amount_receiver + receiver_commission_payee - receiver_total_diference  for all)"border="0" color="0" x="3008" y="16" height="68" width="293" format="[currency]"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(receiver_total_diference for all)"border="0" color="0" x="2706" y="16" height="68" width="283" format="[RED]($#,##0.00);$#,##0.00"  font.face="Arial" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

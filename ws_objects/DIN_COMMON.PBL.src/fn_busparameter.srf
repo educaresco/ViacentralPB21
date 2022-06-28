@@ -1,0 +1,18 @@
+﻿$PBExportHeader$fn_busparameter.srf
+global type fn_busparameter from function_object
+end type
+
+forward prototypes
+global function string fn_busparameter (string p_id)
+end prototypes
+
+global function string fn_busparameter (string p_id);string ls_stringvalue
+
+select stringvalue
+into :ls_stringvalue
+from dba.parameters
+where idparameter = :p_id;
+
+return ls_stringvalue
+end function
+

@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_comision_grupo_fijo.srf
+global type fn_comision_grupo_fijo from function_object
+end type
+
+forward prototypes
+global function double fn_comision_grupo_fijo (string ls_country_receiver, string ls_corresponsal, double ld_amount, string ls_tipo_moneda)
+end prototypes
+
+global function double fn_comision_grupo_fijo (string ls_country_receiver, string ls_corresponsal, double ld_amount, string ls_tipo_moneda);Double ld_porcentaje, ld_fee
+
+SELECT dba.comision_grupo.feet_comision_pay
+    INTO :ld_porcentaje  
+    FROM dba.comision_grupo 
+   WHERE ( dba.comision_grupo.id_country = :ls_country_receiver ) AND  
+         ( dba.comision_grupo.id_main_branch = :ls_corresponsal ) AND  
+         ( dba.comision_grupo.range_begin_comision_pay <= :ld_amount ) AND  
+         ( dba.comision_grupo.range_end_comision_pay >= :ld_amount )  AND
+			( dba.comision_grupo.mod_pay_currency	= :ls_tipo_moneda )  ;
+			
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	if isnull(ld_porcentaje) then ld_porcentaje = 0
+	
+	return ld_porcentaje
+end if
+end function
+

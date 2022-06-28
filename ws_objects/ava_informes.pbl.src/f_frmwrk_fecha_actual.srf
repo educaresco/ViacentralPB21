@@ -1,0 +1,34 @@
+﻿$PBExportHeader$f_frmwrk_fecha_actual.srf
+global type f_frmwrk_fecha_actual from function_object
+end type
+
+forward prototypes
+global function date f_frmwrk_fecha_actual (boolean ab_mensaje_error, string as_mensaje)
+end prototypes
+
+global function date f_frmwrk_fecha_actual (boolean ab_mensaje_error, string as_mensaje);DATE		ld_fecha
+STRING	ls_sql
+
+ls_sql = "SELECT CURDATE()"
+
+DECLARE CUR_FECHA_ACTUAL DYNAMIC CURSOR FOR SQLSA ;
+PREPARE SQLSA FROM :ls_sql ;
+OPEN DYNAMIC CUR_FECHA_ACTUAL ;
+FETCH CUR_FECHA_ACTUAL INTO :ld_fecha ;
+
+IF Not f_frmwrk_evalua_transaccion_sql() THEN
+	IF ab_mensaje_error THEN
+		IF Len(as_mensaje) = 0 THEN
+			MessageBox("Error","No fue posible recuperar la fecha actual, por favor intente de nuevo, si el problema persiste comuníqueselo al proveedor del sistema.",StopSign!)
+		ELSE
+			MessageBox("Error",as_mensaje,StopSign!)			
+		END IF	
+	END IF	
+	SetNull(ld_fecha)
+END IF
+
+CLOSE CUR_FECHA_ACTUAL ;
+
+Return ld_fecha
+end function
+

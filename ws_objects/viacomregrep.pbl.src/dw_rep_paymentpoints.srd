@@ -1,0 +1,79 @@
+﻿$PBExportHeader$dw_rep_paymentpoints.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=456 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912" )
+table(column=(type=char(50) updatewhereclause=yes name=country dbname="COUNTRY" )
+ column=(type=char(40) updatewhereclause=yes name=name_payer dbname="NAME_PAYER" )
+ column=(type=char(10) updatewhereclause=yes name=id_branch dbname="ID_BRANCH" )
+ column=(type=char(255) updatewhereclause=yes name=name_branch dbname="NAME_BRANCH" )
+ column=(type=char(255) updatewhereclause=yes name=address_branch dbname="ADDRESS_BRANCH" )
+ column=(type=char(40) updatewhereclause=yes name=city dbname="CITY" )
+ column=(type=char(40) updatewhereclause=yes name=state dbname="STATE" )
+ column=(type=char(40) updatewhereclause=yes name=zip_branch dbname="ZIP_BRANCH" )
+ column=(type=char(15) updatewhereclause=yes name=phone1 dbname="PHONE1" )
+ column=(type=char(15) updatewhereclause=yes name=phone2 dbname="PHONE2" )
+ column=(type=char(15) updatewhereclause=yes name=fax dbname="FAX" )
+ retrieve="SELECT  RTRIM(DBA.COUNTRY.ISO_NAME) AS COUNTRY,
+		  RTRIM(NAME_MAIN_BRANCH) AS NAME_PAYER,
+        RTRIM(DBA.BRANCH.ID_BRANCH) AS ID_BRANCH,   
+        RTRIM(REPLACE(DBA.BRANCH.NAME_BRANCH,',','')) AS NAME_BRANCH,   
+        RTRIM(REPLACE(DBA.BRANCH.ADDRESS_BRANCH,',','')) AS ADDRESS_BRANCH,   
+        RTRIM(DBA.CITY.NAME_CITY) AS CITY,   
+        RTRIM(DBA.STATE.NAME_STATE) AS STATE,
+        RTRIM(ISNULL(ZIP_BRANCH,0)) AS ZIP_BRANCH,
+        RTRIM(isnull(DBA.BRANCH.PHONE1_BRANCH,'')) AS PHONE1,   
+        RTRIM(isnull(DBA.BRANCH.PHONE2_BRANCH,'')) AS PHONE2,         
+        RTRIM(isnull(DBA.BRANCH.FAX_BRANCH,'')) AS FAX
+   FROM DBA.BRANCH, DBA.GROUP_BRANCH,
+        DBA.CITY, DBA.STATE, DBA.COUNTRY
+  WHERE DBA.BRANCH.ID_MAIN_BRANCH = DBA.GROUP_BRANCH.ID_MAIN_BRANCH
+    AND DBA.CITY.ID_CITY = DBA.BRANCH.ID_CITY
+    AND DBA.CITY.ID_STATE = DBA.BRANCH.ID_STATE
+    AND DBA.CITY.ID_COUNTRY = DBA.BRANCH.ID_COUNTRY
+    AND DBA.STATE.ID_STATE = DBA.BRANCH.ID_STATE
+    AND DBA.STATE.ID_COUNTRY = DBA.BRANCH.ID_COUNTRY
+	 AND DBA.COUNTRY.ID_COUNTRY = DBA.BRANCH.ID_COUNTRY
+	 AND DBA.BRANCH.ID_TYPE_BRANCH IN ('P','A')
+    AND DBA.CITY.ID_COUNTRY = DBA.BRANCH.ID_COUNTRY
+	 AND DBA.BRANCH.ID_FLAG_BRANCH = 'A'
+    AND DATE_CRE_BRANCH < :pdate1
+  ORDER BY DBA.COUNTRY.ISO_NAME, NAME_MAIN_BRANCH, DBA.CITY.NAME_CITY, DBA.BRANCH.ADDRESS_BRANCH
+
+" arguments=(("pdate1", datetime))  sort="id_branch A " )
+line(band=header x1="5" y1="360" x2="5925" y2="360"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="~"As Date ~"+ string(pdate1,~"mm/dd/yyyy~")"border="0" color="33554432" x="1134" y="96" height="92" width="3045" format="[General]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="14" y="28" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="14" y="260" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="14" y="300" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Viamericas Payment Locations" border="0" color="0" x="1129" y="16" height="76" width="3045" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="33554432" x="12485" y="0" height="52" width="1152" html.valueishtml="0"  name=country visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Payer" border="2" color="33554432" x="18" y="388" height="64" width="937" html.valueishtml="0"  name=sales_rep_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="Name Branch" border="2" color="33554432" x="1248" y="388" height="64" width="1061" html.valueishtml="0"  name=name_branch_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="City" border="2" color="33554432" x="3538" y="388" height="64" width="617" html.valueishtml="0"  name=city_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="State" border="2" color="33554432" x="4169" y="388" height="64" width="169" html.valueishtml="0"  name=state_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="ZipCode" border="2" color="33554432" x="4352" y="388" height="64" width="224" html.valueishtml="0"  name=zip_branch_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="Phone1" border="2" color="33554432" x="4590" y="388" height="64" width="434" html.valueishtml="0"  name=phone1_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+text(band=header alignment="2" text="Phone2" border="2" color="33554432" x="5038" y="388" height="64" width="434" html.valueishtml="0"  name=phone2_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="3538" y="8" height="52" width="617" format="[general]" html.valueishtml="0"  name=city visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="4169" y="8" height="52" width="169" format="[general]" html.valueishtml="0"  name=state visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="4352" y="8" height="52" width="224" format="[general]" html.valueishtml="0"  name=zip_branch visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="4590" y="8" height="52" width="434" format="[general]" html.valueishtml="0"  name=phone1 visible="1" edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432" x="5038" y="8" height="52" width="434" format="[general]" html.valueishtml="0"  name=phone2 visible="1" edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="5486" y="8" height="52" width="434" format="[general]" html.valueishtml="0"  name=fax visible="1" edit.limit=15 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Address Branch" border="2" color="33554432" x="2322" y="388" height="64" width="1202" html.valueishtml="0"  name=branch_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1248" y="8" height="52" width="1061" format="[general]" html.valueishtml="0"  name=name_branch visible="1" edit.limit=255 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=0 border="0" color="33554432" x="2322" y="8" height="52" width="1202" html.valueishtml="0"  name=address_branch visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Id Branch" border="2" color="33554432" x="969" y="388" height="64" width="265" html.valueishtml="0"  name=id_branch_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="969" y="8" height="52" width="265" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=0 border="0" color="33554432" x="18" y="8" height="52" width="937" html.valueishtml="0"  name=name_payer visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Fax" border="2" color="33554432" x="5486" y="388" height="64" width="434" html.valueishtml="0"  name=fax_t visible="1"  font.face="Tahoma" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="134217744" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="5074" y="276" height="60" width="846" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="5074" y="208" height="64" width="846" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

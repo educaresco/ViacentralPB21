@@ -1,0 +1,14 @@
+﻿$PBExportHeader$dddw_country.srd
+$PBExportComments$DDDW de los paises.
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(5) update=yes updatewhereclause=yes name=id_country dbname="COUNTRY.ID_COUNTRY" initial="spaces" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_country dbname="COUNTRY.NAME_COUNTRY" initial="spaces" )
+ column=(type=char(1) updatewhereclause=yes name=flag_country dbname="COUNTRY.FLAG_COUNTRY" )
+ column=(type=char(1) updatewhereclause=yes name=new_rate dbname="COUNTRY.NEW_RATE" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.COUNTRY~" ) COLUMN(NAME=~"DBA.COUNTRY.ID_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.NAME_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.FLAG_COUNTRY~") COLUMN(NAME=~"DBA.COUNTRY.NEW_RATE~")) ORDER(NAME=~"DBA.COUNTRY.NAME_COUNTRY~" ASC=yes ) " )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="5" y="4" height="68" width="937" format="[general]"  name=name_country  tag="Nombre del Pais." edit.name="Mayuscula" edit.limit=0 edit.case=upper edit.autoselect=no edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

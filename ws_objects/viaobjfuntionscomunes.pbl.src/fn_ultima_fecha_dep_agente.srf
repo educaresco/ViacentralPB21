@@ -1,0 +1,22 @@
+﻿$PBExportHeader$fn_ultima_fecha_dep_agente.srf
+global type fn_ultima_fecha_dep_agente from function_object
+end type
+
+forward prototypes
+global function datetime fn_ultima_fecha_dep_agente (string arg_group)
+end prototypes
+
+global function datetime fn_ultima_fecha_dep_agente (string arg_group);DATETIME	ld_date
+  
+  
+  SELECT Max(dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA)  
+    INTO :ld_date
+    FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'DA' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :arg_group )   ;
+
+
+
+return	ld_date
+end function
+

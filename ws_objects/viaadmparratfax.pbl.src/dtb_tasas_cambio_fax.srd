@@ -1,0 +1,48 @@
+﻿$PBExportHeader$dtb_tasas_cambio_fax.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=360 color="536870912" )
+summary(height=16 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=112 color="536870912" height.autosize=yes )
+table(column=(type=char(50) updatewhereclause=yes name=country_iso_name dbname="COUNTRY.ISO_NAME" )
+ column=(type=char(200) updatewhereclause=yes name=rep_rates_parms_mensaje_titulo dbname="REP_RATES_PARMS.MENSAJE_TITULO" )
+ column=(type=char(1000) updatewhereclause=yes name=c_tasas_branches dbname="c_tasas_branches" )
+ retrieve="  SELECT dba.COUNTRY.ISO_NAME,   
+         dba.REP_RATES_PARMS.MENSAJE_TITULO,   
+         DBA.sfGetTasasCambioFax (dba.BRANCH.ID_BRANCH, DBA.COUNTRY.ID_COUNTRY) c_tasas_branches  
+    FROM dba.COUNTRY,   
+         dba.BRANCH,   
+         dba.REP_RATES_PARMS  
+   WHERE ( dba.BRANCH.ID_BRANCH = :as_id_branch ) AND  
+			CHARINDEX(RTRIM(dba.COUNTRY.id_country),paises_principales) > 0
+         /*( dba.COUNTRY.ID_COUNTRY in ( SELECT	DSTOKEN  FROM	dba.sfStringToken((Select paises_principales 
+																											from dba.rep_rates_parms),';')
+																											) 
+			)   */ 
+
+GROUP BY 
+		dba.COUNTRY.ISO_NAME   ,
+		dba.REP_RATES_PARMS.MENSAJE_TITULO,   
+		DBA.sfGetTasasCambioFax (dba.BRANCH.ID_BRANCH, DBA.COUNTRY.ID_COUNTRY) 
+
+" arguments=(("as_id_branch", string))  sort="Long(c_tasa) D " )
+group(level=1 header.height=236 trailer.height=0 by=("country_iso_name" ) header.color="536870912" trailer.color="536870912" )
+line(band=header x1="59" y1="196" x2="3433" y2="196"  name=l_1 visible="1" pen.style="0" pen.width="14" pen.color="0"  background.mode="2" background.color="0" )
+column(band=header id=2 alignment="2" tabsequence=32766 border="0" color="33554432" x="59" y="8" height="176" width="3369" format="[general]" html.valueishtml="0"  name=rep_rates_parms_mensaje_titulo visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.autovscroll=yes  font.face="Tahoma" font.height="-25" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="TASA DE CAMBIO/EXCHANGE RATE" border="0" color="33554432" x="421" y="212" height="148" width="2693" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-25" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=header.1 id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="14" y="8" height="220" width="1829" format="[general]" html.valueishtml="0"  name=country_iso_name visible="1" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-40" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header.1 alignment="1" expression="  mid( c_tasas_branches , 1, POS(c_tasas_branches,~":~")-1 ) "border="0" color="33554432" x="1915" y="8" height="220" width="1202" format="[GENERAL]" html.valueishtml="0"  name=c_tasa visible="1"  font.face="Tahoma" font.height="-40" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header.1 alignment="1" expression="/* max(  rate  for group 1 ) */"border="0" color="33554432" x="2738" y="4" height="220" width="119" format="#,##0.00" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-40" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="2" color="33554432" x="46" y="12" height="84" width="3346" format="[general]" html.valueishtml="0"  name=c_tasas_branches visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

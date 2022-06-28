@@ -1,0 +1,11 @@
+﻿$PBExportHeader$dddw_tipo_hardware.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(2) update=yes updatewhereclause=yes name=id_tipo_hardware dbname="TIPO_HARDWARE.ID_TIPO_HARDWARE" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=nombre_tipo_hardware dbname="TIPO_HARDWARE.NOMBRE_TIPO_HARDWARE" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.TIPO_HARDWARE~" ) COLUMN(NAME=~"DBA.TIPO_HARDWARE.ID_TIPO_HARDWARE~") COLUMN(NAME=~"DBA.TIPO_HARDWARE.NOMBRE_TIPO_HARDWARE~")) ORDER(NAME=~"DBA.TIPO_HARDWARE.NOMBRE_TIPO_HARDWARE~" ASC=yes ) " )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="0" y="4" height="68" width="1394" format="[general]"  name=nombre_tipo_hardware edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

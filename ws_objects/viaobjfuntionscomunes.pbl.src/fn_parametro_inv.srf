@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_parametro_inv.srf
+$PBExportComments$Devuelve el numero de dias para realizar la investigacion
+global type fn_parametro_inv from function_object
+end type
+
+forward prototypes
+global function long fn_parametro_inv ()
+end prototypes
+
+global function long fn_parametro_inv ();long		ll_dias_investigacion = 0
+
+		SELECT DISTINCT dba.parametros.dias_investigacion  
+      INTO :ll_dias_investigacion  
+      FROM dba.parametros  ;
+		
+		if Isnull(ll_dias_investigacion) then
+			ll_dias_investigacion = 0
+		else
+			ll_dias_investigacion = (ll_dias_investigacion * -1)
+		end if
+			
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ll_dias_investigacion
+end if
+end function
+

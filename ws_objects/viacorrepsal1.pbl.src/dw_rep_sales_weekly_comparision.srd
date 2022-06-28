@@ -1,0 +1,77 @@
+﻿$PBExportHeader$dw_rep_sales_weekly_comparision.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=yes )
+header(height=528 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=56 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="BRANCH.id_branch" )
+ column=(type=char(60) updatewhereclause=yes name=name_branch dbname="BRANCH.name_branch" )
+ column=(type=decimal(2) updatewhereclause=yes name=weekvolume dbname="WeekVolume" )
+ column=(type=decimal(2) updatewhereclause=yes name=weekorders dbname="WeekOrders" )
+ column=(type=decimal(2) updatewhereclause=yes name=weekaverage dbname="WeekAverage" )
+ column=(type=decimal(6) updatewhereclause=yes name=fiveweeksvolume dbname="FiveWeeksVolume" )
+ column=(type=decimal(6) updatewhereclause=yes name=fiveweeksorders dbname="FiveWeeksOrders" )
+ column=(type=decimal(2) updatewhereclause=yes name=fiveweeksaverage dbname="FiveWeeksAverage" )
+ retrieve="SELECT id_branch,
+		 name_branch,
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-6,:p_date), dateadd(day,1,:p_date), 'VN') as WeekVolume,
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-6,:p_date), dateadd(day,1,:p_date), 'OR') as WeekOrders,
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-6,:p_date), dateadd(day,1,:p_date), 'AN') as WeekAverage,
+
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-41,:p_date), dateadd(day,-6,:p_date), 'VN')/5 as FiveWeeksVolume,
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-41,:p_date), dateadd(day,-6,:p_date), 'OR')/5 as FiveWeeksOrders,
+		 dba.sfGetBranchSales(id_branch, dateadd(day,-41,:p_date), dateadd(day,-6,:p_date), 'AN') as FiveWeeksAverage
+
+FROM dba.branch
+WHERE id_status_branch = 'O'
+AND id_type_branch in ('A','R')
+AND dba.sfGetBranchSales(id_branch, dateadd(day,-6,:p_date), dateadd(day,1,:p_date), 'VN') > 0" arguments=(("p_date", date))  sort="weekvolume D " )
+text(band=header alignment="2" text="Avg." border="0" color="0" x="3264" y="472" height="52" width="197" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Sales - Weekly Comparision" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1"  hidesnaked=1 )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="1166" y1="348" x2="3465" y2="348"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=header alignment="0" expression="'Week of ' + relativedate(  p_date , -6 ) + ' to ' + p_date"border="0" color="16777215" x="1006" y="96" height="76" width="2464" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Volume" border="0" color="0" x="2834" y="472" height="52" width="197" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Orders" border="0" color="0" x="3049" y="472" height="52" width="197" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Avg." border="0" color="0" x="1746" y="472" height="44" width="215" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Orders" border="0" color="0" x="1536" y="472" height="44" width="197" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Volume" border="0" color="0" x="1175" y="472" height="44" width="347" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Volume" border="0" color="0" x="2007" y="472" height="44" width="347" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Orders" border="0" color="0" x="2368" y="472" height="44" width="197" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Avg." border="0" color="0" x="2578" y="472" height="44" width="215" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="2811" y1="352" x2="2811" y2="532"  name=l_4 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header x1="1984" y1="352" x2="1984" y2="532"  name=l_3 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="520" x2="3465" y2="520"  name=l_11 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header x1="1170" y1="460" x2="3465" y2="460"  name=l_12 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header x1="1166" y1="352" x2="1166" y2="532"  name=l_10 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header x1="3461" y1="352" x2="3461" y2="532"  name=l_7 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Percentage of Growth" border="0" color="0" x="2834" y="372" height="52" width="622" html.valueishtml="0"  name=t_12 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="'Week of ' + relativedate(  p_date , -6 ) + ' to ' + p_date"border="0" color="0" x="1175" y="356" height="96" width="791" format="[General]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="2" expression="'Weeks of ' + relativedate(  p_date , -41 ) + ' to ' + relativedate(  p_date , -7 ) +' (Avg)'"border="0" color="0" x="2007" y="356" height="96" width="791" format="[General]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Agency Code/Name" border="0" color="0" x="23" y="452" height="52" width="1129" html.valueishtml="0"  name=t_13 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="(( weekaverage -  fiveweeksaverage ) /   fiveweeksaverage )"border="0" color="0" x="3264" y="8" height="52" width="197" format="0.00%" html.valueishtml="0"  name=compute_7 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=detail x1="2811" y1="4" x2="2811" y2="72"  name=l_6 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="3461" y1="4" x2="3461" y2="72"  name=l_8 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="1984" y1="4" x2="1984" y2="72"  name=l_5 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="1536" y="8" height="52" width="197" format="#######0" html.valueishtml="0"  name=weekorders visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="1" tabsequence=32766 border="0" color="0" x="1746" y="8" height="52" width="215" format="[currency]" html.valueishtml="0"  name=weekaverage visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="1" tabsequence=32766 border="0" color="0" x="2007" y="8" height="52" width="347" format="[currency]" html.valueishtml="0"  name=fiveweeksvolume visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="2368" y="8" height="52" width="197" format="#######0.00" html.valueishtml="0"  name=fiveweeksorders visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="0" x="2578" y="8" height="52" width="215" format="[currency]" html.valueishtml="0"  name=fiveweeksaverage visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="(( weekvolume - fiveweeksvolume ) / fiveweeksvolume )"border="0" color="0" x="2834" y="8" height="52" width="197" format="0.00%" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="1" expression="(( weekorders - fiveweeksorders ) /  fiveweeksorders )"border="0" color="0" x="3049" y="8" height="52" width="197" format="0.00%" html.valueishtml="0"  name=compute_8 visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=detail x1="1166" y1="4" x2="1166" y2="72"  name=l_9 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=detail x1="3461" y1="4" x2="3461" y2="72"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="0" x="1175" y="8" height="52" width="347" format="[currency]" html.valueishtml="0"  name=weekvolume visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="251" y="8" height="52" width="901" format="[general]" html.valueishtml="0"  name=name_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=0 border="0" color="0" x="23" y="8" height="52" width="215" html.valueishtml="0"  name=id_branch visible="1"  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="0" generatecss="1" nowrap="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

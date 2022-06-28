@@ -1,0 +1,15 @@
+﻿$PBExportHeader$dw_group_master.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=88 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(4) update=yes updatewhereclause=yes key=yes name=id_main_branch dbname="master_group.id_main_branch" )
+ column=(type=char(4) update=yes updatewhereclause=yes key=yes name=id_master dbname="master_group.id_master" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"dba.master_group~" ) COLUMN(NAME=~"dba.master_group.id_main_branch~") COLUMN(NAME=~"dba.master_group.id_master~")) " update="dba.master_group" updatewhere=0 updatekeyinplace=no  sort="id_master A " )
+text(band=header alignment="2" text="Master  Group"border="6" color="8388608" x="142" y="24" height="56" width="1134"  name=name_country_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Detail  Group"border="6" color="8388608" x="1303" y="24" height="56" width="1134"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="5" color="0" x="142" y="4" height="56" width="1134"  name=id_master dddw.name=dddw_group_branch_master dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=20 border="5" color="0" x="1303" y="0" height="56" width="1134"  name=id_main_branch dddw.name=dddw_group_branch_master dddw.displaycolumn=name_main_branch dddw.datacolumn=id_main_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

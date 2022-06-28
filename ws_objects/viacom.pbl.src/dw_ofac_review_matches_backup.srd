@@ -1,0 +1,93 @@
+﻿$PBExportHeader$dw_ofac_review_matches_backup.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 5 print.margin.right = 5 print.margin.top = 5 print.margin.bottom = 5 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=yes print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=no hidegrayline=no showbackcoloronxp=no )
+header(height=140 color="536870912" )
+summary(height=16 color="536870912" )
+footer(height=20 color="536870912" )
+detail(height=796 color="536870912" height.autosize=yes )
+table(column=(type=decimal(0) updatewhereclause=yes identity=yes name=ofac_hit_id_hit dbname="OFAC_HIT.ID_HIT" )
+ column=(type=datetime updatewhereclause=yes name=ofac_hit_date_hit dbname="OFAC_HIT.DATE_HIT" )
+ column=(type=char(350) updatewhereclause=yes name=ofac_hit_name_hit dbname="OFAC_HIT.NAME_HIT" )
+ column=(type=decimal(0) updatewhereclause=yes name=ofac_hit_nment_num dbname="OFAC_HIT.NMENT_NUM" )
+ column=(type=decimal(0) updatewhereclause=yes name=ofac_hit_nment_alt dbname="OFAC_HIT.NMENT_ALT" )
+ column=(type=char(350) updatewhereclause=yes name=ofac_hit_name_hit_1 dbname="OFAC_HIT.NAME_HIT" )
+ column=(type=char(350) updatewhereclause=yes name=ofac_hit_dssdn_name dbname="OFAC_HIT.DSSDN_NAME" )
+ column=(type=char(12) updatewhereclause=yes name=ofac_hit_dssdn_type dbname="OFAC_HIT.DSSDN_TYPE" )
+ column=(type=char(50) updatewhereclause=yes name=ofac_hit_dsprogram dbname="OFAC_HIT.DSPROGRAM" )
+ column=(type=char(200) updatewhereclause=yes name=ofac_hit_dstittle dbname="OFAC_HIT.DSTITTLE" )
+ column=(type=char(8) updatewhereclause=yes name=ofac_hit_dscall_sign dbname="OFAC_HIT.DSCALL_SIGN" )
+ column=(type=char(25) updatewhereclause=yes name=ofac_hit_dsvess_type dbname="OFAC_HIT.DSVESS_TYPE" )
+ column=(type=char(14) updatewhereclause=yes name=ofac_hit_dstonnage dbname="OFAC_HIT.DSTONNAGE" )
+ column=(type=char(8) updatewhereclause=yes name=ofac_hit_dsgrt dbname="OFAC_HIT.DSGRT" )
+ column=(type=char(40) updatewhereclause=yes name=ofac_hit_dsvess_flag dbname="OFAC_HIT.DSVESS_FLAG" )
+ column=(type=char(150) updatewhereclause=yes name=ofac_hit_dsvess_owner dbname="OFAC_HIT.DSVESS_OWNER" )
+ column=(type=char(1000) updatewhereclause=yes name=ofac_hit_dsremarks dbname="OFAC_HIT.DSREMARKS" )
+ retrieve="SELECT DBA.OFAC_HIT.ID_HIT,   
+DBA.OFAC_HIT.DATE_HIT,   
+DBA.OFAC_HIT.NAME_HIT,
+DBA.OFAC_HIT.NMENT_NUM,
+DBA.OFAC_HIT.NMENT_ALT,
+DBA.OFAC_HIT.NAME_HIT,
+DSSDN_NAME,
+DSSDN_TYPE,
+DSPROGRAM,
+DSTITTLE,
+DSCALL_SIGN,
+DSVESS_TYPE,
+DSTONNAGE,
+DSGRT,
+DSVESS_FLAG,
+DSVESS_OWNER,
+DSREMARKS
+FROM DBA.OFAC_HIT,  DBA.OFAC_LIST_SDN
+WHERE ( DBA.OFAC_HIT.NMENT_NUM = DBA.OFAC_LIST_SDN.NMENT_NUM )
+AND DBA.OFAC_HIT.ID_BRANCH = :P_ID_BRANCH
+AND DBA.OFAC_HIT.ID_RECEIVER = :P_ID_RECEIVER
+AND DBA.OFAC_HIT.TYPE_HIT = :P_TYPE" arguments=(("P_ID_BRANCH", string),("P_ID_RECEIVER", number),("P_TYPE", string))  sort="ofac_hit_nment_num A ofac_hit_nment_alt A " )
+group(level=1 header.height=0 header.height.autosize=yes trailer.height=0 by=("ofac_hit_id_hit" ) newpage=yes header.suppress=yes header.color="536870912" trailer.color="536870912" )
+button(band=header text="" defaultpicture=yes enabled=yes action="6" border="0" color="0" x="18" y="12" height="120" width="119" vtextalign="0" htextalign="0"  name=b_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=header text="" defaultpicture=yes enabled=yes action="4" border="0" color="0" x="2610" y="12" height="120" width="119" vtextalign="0" htextalign="0"  name=b_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=header text="" defaultpicture=yes enabled=yes action="7" border="0" color="0" x="2734" y="12" height="120" width="119" vtextalign="0" htextalign="0"  name=b_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+button(band=header text="" defaultpicture=yes enabled=yes action="5" border="0" color="0" x="142" y="12" height="120" width="119" vtextalign="0" htextalign="0"  name=b_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+compute(band=header alignment="2" expression="'MATCH ' + page() + ' OF ' + pageCount()"border="2" color="16777215" x="270" y="12" height="116" width="2331" format="[general]" html.valueishtml="0"  name=page_1 visible="1"  font.face="Tahoma" font.height="-18" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="32768" )
+text(band=detail alignment="0" text="SDN Record:" border="0" color="33554432" x="23" y="16" height="64" width="389" html.valueishtml="0"  name=t_12 visible="1"  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="SDN Name:" border="0" color="33554432" x="23" y="96" height="52" width="389" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="SDN Type:" border="0" color="33554432" x="23" y="160" height="52" width="389" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Program:" border="0" color="33554432" x="23" y="224" height="52" width="389" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Title:" border="0" color="33554432" x="23" y="288" height="52" width="389" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Call Sign:" border="0" color="33554432" x="23" y="352" height="52" width="389" html.valueishtml="0"  name=t_11 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vess Type" border="0" color="33554432" x="23" y="416" height="52" width="389" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Tonnage:" border="0" color="33554432" x="23" y="480" height="52" width="389" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="GRT:" border="0" color="33554432" x="23" y="544" height="52" width="389" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vess Flag:" border="0" color="33554432" x="23" y="608" height="52" width="389" html.valueishtml="0"  name=t_8 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Vess Owner:" border="0" color="33554432" x="23" y="672" height="52" width="389" html.valueishtml="0"  name=t_9 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=detail alignment="0" text="Remarks:" border="0" color="33554432" x="23" y="736" height="52" width="389" html.valueishtml="0"  name=t_10 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="608" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dsvess_flag visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="544" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dsgrt visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="480" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dstonnage visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="416" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dsvess_type visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="352" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dscall_sign visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="160" height="52" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_dssdn_type visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="20" height="60" width="672" format="[general]" html.valueishtml="0"  name=ofac_hit_nment_num visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-10" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432~tif(  isnull(ofac_hit_nment_alt),RGB(255,0,0),RGB(0,0,0))" x="425" y="96" height="52" width="1179" format="[general]" html.valueishtml="0"  name=ofac_hit_dssdn_name visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400~tif(  isnull(ofac_hit_nment_alt),1,0)"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="224" height="52" width="1179" format="[general]" html.valueishtml="0"  name=ofac_hit_dsprogram visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="288" height="52" width="1179" format="[general]" html.valueishtml="0"  name=ofac_hit_dstittle visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="672" height="52" width="1179" format="[general]" html.valueishtml="0"  name=ofac_hit_dsvess_owner visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="33554432" x="425" y="736" height="52" width="1179" format="[general]" html.valueishtml="0"  name=ofac_hit_dsremarks visible="1" height.autosize=yes edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=detail x1="14" y1="8" x2="2853" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+report(band=detail dataobject="dw_ofac_review_matches_akas" x="1627" y="28" height="136" width="1129" border="0"  height.autosize=yes criteria="" nest_arguments=((" ofac_hit_nment_num "),("if( isnull( ofac_hit_nment_alt ), -1, ofac_hit_nment_alt )")) trail_footer = yes  name=dw_2 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_ofac_review_matches_addresses" x="1627" y="176" height="136" width="1129" border="0"  height.autosize=yes criteria="" nest_arguments=((" ofac_hit_nment_num ")) trail_footer = yes  name=dw_1 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_ofac_review_matches_docs" x="1627" y="328" height="136" width="1129" border="0"  height.autosize=yes criteria="" nest_arguments=((" ofac_hit_nment_num ")) trail_footer = yes  name=dw_3 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_ofac_review_matches_dot" x="1627" y="480" height="136" width="1129" border="0"  height.autosize=yes criteria="" nest_arguments=((" ofac_hit_nment_num ")) trail_footer = yes  name=dw_4 visible="1"  slideup=directlyabove )
+report(band=detail dataobject="dw_ofac_review_matches_pob" x="1627" y="632" height="136" width="1129" border="0"  height.autosize=yes criteria="" nest_arguments=((" ofac_hit_nment_num ")) trail_footer = yes  name=dw_5 visible="1"  slideup=directlyabove )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

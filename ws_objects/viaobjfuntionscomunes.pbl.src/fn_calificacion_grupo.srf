@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_calificacion_grupo.srf
+global type fn_calificacion_grupo from function_object
+end type
+
+forward prototypes
+global function character fn_calificacion_grupo (string arg_grupo)
+end prototypes
+
+global function character fn_calificacion_grupo (string arg_grupo); 
+ string	ls_calificacion
+ 
+ 
+ SELECT MIN(DBA.APLICATION_BRANCH.TIPO_AGENCIA)  
+    INTO :LS_CALIFICACION  
+    FROM DBA.APLICATION_BRANCH,   
+         DBA.BRANCH  
+   WHERE ( DBA.APLICATION_BRANCH.ID_BRANCH = DBA.BRANCH.ID_BRANCH ) AND  
+         ( (  DBA.BRANCH.ID_MAIN_BRANCH = :ARG_GRUPO ) )   ;
+
+
+return	ls_calificacion 
+end function
+

@@ -1,0 +1,72 @@
+﻿$PBExportHeader$fn_checklastversion.srf
+global type fn_checklastversion from function_object
+end type
+
+forward prototypes
+global subroutine fn_checklastversion ()
+end prototypes
+
+global subroutine fn_checklastversion ();// ------------------------
+// Check for a new version!
+
+integer li_FileNum, li_value, li_last_version
+long ll_fileread
+string ls_value
+
+// -----------------------------------------------------------------------	
+// Determina la ultima version instalada en la maquina	
+li_FileNum = FileOpen("c:\ViamericasMT\dinero.vrs",LineMode!, Read!, LockRead!)
+ll_fileread  = FileRead(li_FileNum, ls_value)
+if ll_fileread > 0 then
+	// Obtiene la ultima version instalada (del archivo)
+	li_value = long(trim(ls_value))
+else
+	// No existia el archivo
+	li_value = 0
+end if
+FileClose(li_FileNum)
+// -----------------------------------------------------------------------	
+
+gs_release = string(li_value)
+
+// Si esta habilitada la ultima version!
+
+if (fn_busparameter("LASTVERSION") = 'ON') then
+	li_last_version = fn_busparameter_numeric("LASTVERSION")
+
+	if (li_value < li_last_version) then
+		messagebox("New Version","The new version will be installed.~nThe MTSA will be opened when the upgrade is completed.")
+		
+//			fn_mapnetworkdrive("u","\\Faxserver01\Faxes pwd /USER:VIAMERICAS\ViaAdmin")
+				
+		// Crea el .bat que actualiza el programa
+		li_FileNum = FileOpen("c:\ViamericasMT\update.bat", LineMode!, Write!, LockWrite!, Replace!)
+		FileWrite(li_FileNum, "Title Updating Viamericas Central - Please Wait...")
+		FileWrite(li_FileNum, "net use w: /DELETE")
+		FileWrite(li_FileNum, "net use w: \\"+fn_busparameter("UPDATESERVER")+"\"+fn_busparameter("UPDATEFOLDER"))
+		FileWrite(li_FileNum, "copy w:\*.pbd c:\ViamericasMT\ /Y")
+		FileWrite(li_FileNum, "copy w:\*.exe c:\ViamericasMT\ /Y")		
+		FileWrite(li_FileNum, "net use w: /DELETE")
+		FileWrite(li_FileNum, "start c:\ViamericasMT\dinero.exe")		
+		FileWrite(li_FileNum, "exit")				
+		FileClose(li_FileNum)
+
+		li_FileNum = FileOpen("c:\ViamericasMT\dinero.vrs", LineMode!, Write!, LockWrite!, Replace!)
+		FileWrite(li_FileNum, string(li_last_version))
+		gs_release = string(li_last_version)
+		FileClose(li_FileNum)
+		
+		Run("c:\ViamericasMT\update.bat")
+		close(w_principal)
+
+	else
+		messagebox("No New Version","This is the last version, no updates required.")	
+	end if	
+	
+else
+	messagebox("No Update Available","Updates have been disabled by the System Administrator.")	
+end if	
+
+// ------------------------
+end subroutine
+

@@ -1,0 +1,53 @@
+﻿$PBExportHeader$d_datos_sistema_ach.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=120 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=datetime updatewhereclause=yes name=reconciliationdate dbname="BANK_TRANSACTIONS.RECONCILIATIONDATE" )
+ column=(type=char(10) updatewhereclause=yes name=deposit_code dbname="BANK_TRANSACTIONS.DEPOSIT_CODE" )
+ column=(type=char(50) updatewhereclause=yes name=des_trans_diaria dbname="BANK_TRANSACTIONS.DES_TRANS_DIARIA" )
+ column=(type=decimal(4) updatewhereclause=yes name=total_amount dbname="BANK_TRANSACTIONS.TOTAL_AMOUNT" )
+ column=(type=char(1) updatewhereclause=yes name=flag_reconciliation dbname="BANK_TRANSACTIONS.FLAG_RECONCILIATION" )
+ column=(type=long updatewhereclause=yes name=c_num_registro dbname="c_num_registro" )
+ column=(type=char(1) updatewhereclause=yes name=flag_sugerencia dbname="flag_sugerencia" )
+ column=(type=decimal(0) updatewhereclause=yes name=cons_trans_diaria dbname="BANK_TRANSACTIONS.CONS_TRANS_DIARIA" )
+ retrieve="  SELECT BANCO.RECONCILIATIONDATE,   
+         BANCO.DEPOSIT_CODE,   
+         DIARIA.DES_TRANS_DIARIA,   
+         DIARIA.TOTAL_AMOUNT,   
+         DIARIA.FLAG_RECONCILIATION,
+			0 as c_num_registro,
+			'' as flag_sugerencia,
+			DIARIA.CONS_TRANS_DIARIA   
+    FROM dba.BANK_TRANSACTIONS					BT,
+			dba.CONCEPTO_CONTABLE					CC,
+			dba.TRANSACCION_DIARIA_PAYEE			DIARIA,
+			dba.TRANSACCION_DIARIA_BANCO_PAYEE 	BANCO
+   WHERE BT.ID_CODE_TRANSACTION			= :an_id_code_transaction	AND
+			BT.ID_CONCEPTO_CONTABLE			= CC.ID_CONCEPTO_CONTABLE AND			
+			CC.ID_CONCEPTO_CONTABLE 		= DIARIA.ID_CONCEPTO_CONTABLE AND
+			DIARIA.FLAG_RECONCILIATION		='N' AND
+			( DIARIA.CONS_TRANS_DIARIA 	= BANCO.CONS_TRANS_DIARIA ) and  
+         (BANCO.RECONCILIATIONDATE 		>= :adtm_reconciliation_ini AND  
+         BANCO.RECONCILIATIONDATE 		<= :adtm_reconciliation_fin)  AND
+         ( BANCO.ID_BANCO 					= :as_id_banco ) AND  
+         ( BANCO.ID_CUENTA_BANCO 		= :as_id_cuenta_banco ) 	" arguments=(("as_id_banco", string),("as_id_cuenta_banco", string),("adtm_reconciliation_ini", datetime),("adtm_reconciliation_fin", datetime),("an_id_code_transaction", number)) )
+text(band=header alignment="2" text="FechaDepósito" border="2" color="0" x="14" y="8" height="104" width="261" html.valueishtml="0"  name=fecha_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="CódigoDepósito" border="2" color="0" x="293" y="8" height="104" width="439" html.valueishtml="0"  name=codigodeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="DescripciónDepósito" border="2" color="0" x="750" y="8" height="104" width="1019" html.valueishtml="0"  name=descdeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="ValorDepósito" border="2" color="0" x="1783" y="8" height="104" width="398" html.valueishtml="0"  name=valordeposito_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="5" color="33554432" x="14" y="4" height="64" width="261" format="mm/dd/yyyy" html.valueishtml="0"  name=reconciliationdate visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), RGB(255,255,255)))))" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="5" color="33554432" x="293" y="4" height="64" width="439" format="[general]" html.valueishtml="0"  name=deposit_code visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), RGB(255,255,255)))))" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="5" color="33554432" x="750" y="4" height="64" width="1019" format="[general]" html.valueishtml="0"  name=des_trans_diaria visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0 edit.displayonly=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), RGB(255,255,255)))))" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="5" color="33554432" x="1783" y="4" height="64" width="398" format="[general]" html.valueishtml="0"  name=total_amount visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif( flag_reconciliation = 'S', RGB(149,210,89), if( flag_reconciliation = 'H', RGB(21,134,166), if( flag_reconciliation = 'G', RGB(161,240,235) ,  if( flag_reconciliation = 'B', RGB(223,222,98), RGB(255,255,255)))))" )
+column(band=detail id=7 alignment="0" tabsequence=32766 border="0" color="33554432" x="2194" y="4" height="64" width="78" format="[general]" html.valueishtml="0"  name=flag_sugerencia visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="2286" y="4" height="64" width="105" format="[general]" html.valueishtml="0"  name=c_num_registro visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="2405" y="4" height="64" width="69" format="[general]" html.valueishtml="0"  name=flag_reconciliation visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="2482" y="12" height="52" width="87" format="[general]" html.valueishtml="0"  name=cons_trans_diaria visible="0" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

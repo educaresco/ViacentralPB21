@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_pendientes_pago.srf
+global type fn_pendientes_pago from function_object
+end type
+
+forward prototypes
+global function long fn_pendientes_pago (string ls_group)
+end prototypes
+
+global function long fn_pendientes_pago (string ls_group);Double ld_pendientes
+
+  SELECT Count(*)  
+    INTO :ld_pendientes  
+    FROM dba.receiver,   
+         dba.branch  
+   WHERE ( dba.branch.id_branch = dba.receiver.branch_pay_receiver ) and  
+         ( ( dba.branch.id_main_branch = :ls_group ) AND  
+         ( dba.receiver.id_flag_receiver = 'T' ) )   ;
+
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_pendientes
+end if
+end function
+

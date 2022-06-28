@@ -1,0 +1,12 @@
+﻿$PBExportHeader$dw_control_pines.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(30) update=yes updatewhereclause=yes name=pin_number dbname="RECEIVER.PIN_NUMBER" )
+ retrieve="PBSELECT( VERSION(400) DISTINCT ()TABLE(NAME=~"DBA.RECEIVER~" ) COLUMN(NAME=~"DBA.RECEIVER.PIN_NUMBER~")WHERE(    EXP1 =~"( DBA.RECEIVER.DATE_RECEIVER~"   OP =~">=~"    EXP2 =~":FECHA1 )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"( DBA.RECEIVER.DATE_RECEIVER~"   OP =~"<=~"    EXP2 =~":FECHA2 )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"( DBA.RECEIVER.PIN_NUMBER~"   OP =~"<>~"    EXP2 =~"'' )~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"( DBA.RECEIVER.PIN_NUMBER~"   OP =~"<>~"    EXP2 =~"'0' )~" ) ) ORDER(NAME=~"DBA.RECEIVER.PIN_NUMBER~" ASC=yes ) ARG(NAME = ~"fecha1~" TYPE = date)  ARG(NAME = ~"fecha2~" TYPE = date) " arguments=(("fecha1", date),("fecha2", date)) )
+text(band=header alignment="2" text="Pin Number"border="0" color="0" x="9" y="8" height="64" width="960"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="4" height="64" width="960" format="[general]"  name=pin_number edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-9" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

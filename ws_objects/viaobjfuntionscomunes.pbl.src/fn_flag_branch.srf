@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_flag_branch.srf
+global type fn_flag_branch from function_object
+end type
+
+forward prototypes
+global function string fn_flag_branch (string id_branch)
+end prototypes
+
+global function string fn_flag_branch (string id_branch);
+string ls_flagname
+
+SELECT dba.FLAG_BRANCH.NAME_FLAG_BRANCH  
+INTO :ls_flagname  
+FROM dba.BRANCH,   
+	  dba.FLAG_BRANCH  
+WHERE ( dba.FLAG_BRANCH.ID_FLAG_BRANCH = dba.BRANCH.id_flag_branch ) and  
+	   ( ( dba.BRANCH.ID_BRANCH = :id_branch ) )   ;
+
+if SQLCA.SQLCode <> 0 then
+//	messagebox("",SQLCA.SQLErrText)
+	ls_flagname = "UNKNOWN"
+end if
+
+return ls_flagname
+end function
+

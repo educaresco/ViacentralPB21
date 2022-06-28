@@ -1,0 +1,27 @@
+﻿$PBExportHeader$fn_corregir_nombre.srf
+global type fn_corregir_nombre from function_object
+end type
+
+forward prototypes
+global function string fn_corregir_nombre (string nombre)
+end prototypes
+
+global function string fn_corregir_nombre (string nombre);//string ls_nombre        //cadena que llega por parametros
+string ls_cadena_modi   //cadena sin dobles espacios que llega por parametro
+integer li_num_cadenas
+integer li_cont         //Contador de iteraciones de espacios
+
+ls_cadena_modi=fn_corregir_espacios(nombre)
+li_num_cadenas=fn_number_string(ls_cadena_modi)
+
+if (li_num_cadenas > 4) then
+	//Dejar las tres ultimas cadenas y unir las demas en una sola
+	li_cont=0
+	do while li_cont < (li_num_cadenas - 4)
+		ls_cadena_modi=trim(mid(ls_cadena_modi,1,pos(ls_cadena_modi," "))) + trim(mid(ls_cadena_modi,pos(ls_cadena_modi," ")))
+		li_cont=li_cont+1
+	loop
+end if
+return ls_cadena_modi
+end function
+

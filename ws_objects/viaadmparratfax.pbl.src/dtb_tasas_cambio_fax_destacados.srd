@@ -1,0 +1,46 @@
+﻿$PBExportHeader$dtb_tasas_cambio_fax_destacados.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=340 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=228 color="536870912" )
+detail(height=0 color="536870912" )
+table(column=(type=char(50) updatewhereclause=yes name=country_iso_name dbname="COUNTRY.ISO_NAME" )
+ column=(type=decimal(4) updatewhereclause=yes name=rate dbname="RATE" )
+ column=(type=char(200) updatewhereclause=yes name=rep_rates_parms_mensaje_central dbname="REP_RATES_PARMS.MENSAJE_CENTRAL" )
+ retrieve="   SELECT dba.COUNTRY.ISO_NAME,   
+         DBA.SFGETBRANCHRATETOPAYER(:as_id_branch,DBA.BRANCH.ID_MAIN_BRANCH, DBA.COUNTRY.ID_COUNTRY, DBA.MODO_PAGO_BRANCH.MODO_PAGO) AS RATE,
+         dba.REP_RATES_PARMS.MENSAJE_CENTRAL
+    FROM dba.COUNTRY,
+			dba.modo_pago_branch ,  
+         dba.BRANCH,   
+         dba.REP_RATES_PARMS,
+	      DBA.GROUP_BRANCH
+   WHERE dba.COUNTRY.ISO_NAME IS NOt NULL AND
+			dba.modo_pago_branch.id_branch = dba.branch.id_branch and
+			DBA.BRANCH.ID_MAIN_BRANCH = DBA.GROUP_BRANCH.ID_MAIN_BRANCH  AND
+			DBA.BRANCH.ID_COUNTRY = DBA.COUNTRY.ID_COUNTRY AND
+			CHARINDEX(RTRIM(dba.BRANCH.id_main_branch),ID_MAIN_BRANCHES)> 0 and
+			CHARINDEX(RTRIM(dba.COUNTRY.id_country),paises_secundarios) > 0 
+		 	/*( dba.BRANCH.id_main_branch IN  (SELECT	DSTOKEN  
+										FROM	DBA.sfStringToken (dba.rep_rates_parms.ID_MAIN_BRANCHES,';')
+										)) and
+         ( dba.COUNTRY.ID_COUNTRY in ( SELECT	DSTOKEN  
+										FROM	DBA.sfStringToken (dba.rep_rates_parms.paises_secundarios,';')
+										) ) */   
+" arguments=(("as_id_branch", string))  sort="rate D country_iso_name A " )
+group(level=1 header.height=180 trailer.height=0 by=("country_iso_name" ) header.color="536870912" trailer.color="536870912" )
+column(band=header id=3 alignment="2" tabsequence=32766 border="0" color="33554432" x="23" y="16" height="304" width="3424" format="[general]" html.valueishtml="0"  name=rep_rates_parms_mensaje_central visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.imemode=0  font.face="Tahoma" font.height="-24" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="32" y1="332" x2="3456" y2="332"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+line(band=header.1 x1="32" y1="164" x2="3456" y2="164"  name=l_2 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=header.1 alignment="0" expression=" country_iso_name "border="0" color="33554432" x="23" y="8" height="140" width="1829" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-20" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header.1 alignment="1" expression="max(  rate  for group 1 )"border="0" color="33554432" x="1906" y="8" height="140" width="992" format="#,##0.00" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-20" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="32" y="12" height="64" width="489" format="#,##0.00" html.valueishtml="0"  name=rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-12" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=footer alignment="2" text="Valores de Tasa de Cambio sujetos a cambio sin previo aviso.  Consultas 1-800 401 7626" border="0" color="0" x="37" y="4" height="64" width="3424" html.valueishtml="0"  name=t_1 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=footer alignment="2" text="*La Tasa de Cambio publicada corresponde al agente pagador que tiene la mejor posición anunciada.  Otros agentes pagadores" border="0" color="0" x="37" y="80" height="64" width="3424" html.valueishtml="0"  name=t_2 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=footer alignment="2" text="podrían tener una Tasa de Cambio distinta para el mismo país. " border="0" color="0" x="37" y="156" height="64" width="3424" html.valueishtml="0"  name=t_3 visible="1"  font.face="Arial" font.height="-10" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

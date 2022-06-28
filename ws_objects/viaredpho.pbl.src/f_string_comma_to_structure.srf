@@ -1,0 +1,34 @@
+﻿$PBExportHeader$f_string_comma_to_structure.srf
+global type f_string_comma_to_structure from function_object
+end type
+
+forward prototypes
+global function stru_parametros f_string_comma_to_structure (string ps_string)
+end prototypes
+
+global function stru_parametros f_string_comma_to_structure (string ps_string);STRING s_respuesta
+STRU_PARAMETROS stru_parametros
+
+LONG l_position = 1, l_pos_sig = 0
+
+l_pos_sig = Pos(ps_string,',',l_position)
+
+
+DO WHILE l_pos_sig > 0
+	
+	s_respuesta = mid(ps_string,l_position,l_pos_sig - l_position  ) 
+	
+	stru_parametros.String[UpperBound(stru_parametros.String) + 1] = s_respuesta
+	
+	l_position = l_pos_sig + 1	   
+	l_pos_sig = Pos(ps_string,',',l_position) 
+LOOP
+
+s_respuesta = mid(ps_string,l_position ) 
+
+stru_parametros.String[UpperBound(stru_parametros.String) + 1] = s_respuesta
+
+RETURN stru_parametros
+
+end function
+

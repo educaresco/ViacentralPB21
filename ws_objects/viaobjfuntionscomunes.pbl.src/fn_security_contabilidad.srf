@@ -1,0 +1,34 @@
+﻿$PBExportHeader$fn_security_contabilidad.srf
+global type fn_security_contabilidad from function_object
+end type
+
+forward prototypes
+global function boolean fn_security_contabilidad (string as_user)
+end prototypes
+
+global function boolean fn_security_contabilidad (string as_user);
+Return True
+
+as_user = TRIM(as_user)
+
+If as_user = 'ADM' then
+	Return True
+end if
+
+string	ls_area
+
+  SELECT cashier.add_cashier  
+    INTO :ls_area
+    FROM dba.cashier cashier 
+   WHERE cashier.id_cashier = :as_user   ;
+
+ls_area = TRIM(ls_area)
+
+IF ls_area <> 'CONTABILIDAD' and ls_area <> 'ADMINISTRATOR' then
+	MessageBox('SECURITY MESSAGE','OPTION '+''+' FOR  NOT ENABLED.',Exclamation!)
+	Return FALSE
+ELSE
+	Return True
+END IF
+end function
+

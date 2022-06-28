@@ -1,0 +1,47 @@
+﻿$PBExportHeader$dw_achelectronicchecks_redphoneconf.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=68 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=80 color="536870912" )
+table(column=(type=decimal(0) updatewhereclause=yes key=yes identity=yes name=ach_electronic_deposit_id_ed dbname="ACH_ELECTRONIC_DEPOSIT.ID_ED" )
+ column=(type=char(10) updatewhereclause=yes name=ach_electronic_deposit_id_branch dbname="ACH_ELECTRONIC_DEPOSIT.ID_BRANCH" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.NAME_BRANCH" )
+ column=(type=decimal(4) updatewhereclause=yes name=ach_electronic_deposit_balance dbname="ACH_ELECTRONIC_DEPOSIT.BALANCE" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=ach_electronic_deposit_confirmed_amt dbname="ACH_ELECTRONIC_DEPOSIT.CONFIRMED_AMT" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=ach_electronic_deposit_confirmed_by dbname="ACH_ELECTRONIC_DEPOSIT.CONFIRMED_BY" )
+ column=(type=datetime update=yes updatewhereclause=yes name=ach_electronic_deposit_received_time dbname="ACH_ELECTRONIC_DEPOSIT.RECEIVED_TIME" )
+ column=(type=datetime update=yes updatewhereclause=yes name=ach_electronic_deposit_confirmed_time dbname="ACH_ELECTRONIC_DEPOSIT.CONFIRMED_TIME" )
+ column=(type=datetime update=yes updatewhereclause=yes name=ach_electronic_deposit_transmitted_time dbname="ACH_ELECTRONIC_DEPOSIT.TRANSMITTED_TIME" )
+ retrieve=" SELECT dba.ACH_ELECTRONIC_DEPOSIT.ID_ED,   
+         dba.ACH_ELECTRONIC_DEPOSIT.ID_BRANCH,
+         dba.BRANCH.NAME_BRANCH,   
+         dba.ACH_ELECTRONIC_DEPOSIT.BALANCE,
+         dba.ACH_ELECTRONIC_DEPOSIT.CONFIRMED_AMT,   
+         dba.ACH_ELECTRONIC_DEPOSIT.CONFIRMED_BY,   
+         dba.ACH_ELECTRONIC_DEPOSIT.RECEIVED_TIME,
+			dba.ACH_ELECTRONIC_DEPOSIT.CONFIRMED_TIME,
+			dba.ACH_ELECTRONIC_DEPOSIT.TRANSMITTED_TIME
+    FROM dba.ACH_ELECTRONIC_DEPOSIT,   
+         dba.BRANCH,
+		   dba.TIPO_TRANSMISION_AGENCIA
+   WHERE ( dba.ACH_ELECTRONIC_DEPOSIT.ID_BRANCH = dba.BRANCH.ID_BRANCH )
+	  AND ( dba.TIPO_TRANSMISION_AGENCIA.ID_BRANCH = dba.BRANCH.ID_BRANCH )	  
+     AND ( dba.ACH_ELECTRONIC_DEPOSIT.ED_DATE = :p_date )
+	  AND ( dba.ACH_ELECTRONIC_DEPOSIT.CONFIRMED_AMT IS NULL )
+" update="dba.ACH_ELECTRONIC_DEPOSIT" updatewhere=0 updatekeyinplace=no arguments=(("p_date", datetime)) )
+text(band=header alignment="2" text="Id Branch" border="2" color="0" x="14" y="8" height="52" width="265" html.valueishtml="0"  name=ach_electronic_deposit_id_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Balance" border="2" color="0" x="302" y="8" height="52" width="393" html.valueishtml="0"  name=ach_electronic_deposit_balance_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Confirmed Amt" border="2" color="0" x="718" y="8" height="52" width="407" html.valueishtml="0"  name=ach_electronic_deposit_confirmed_amt_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Name Branch" border="2" color="0" x="1147" y="8" height="52" width="1394" html.valueishtml="0"  name=branch_name_branch_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="37" y="0" height="60" width="224" format="[general]" html.valueishtml="0"  name=ach_electronic_deposit_id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="33554432" x="302" y="0" height="60" width="393" format="[currency]" html.valueishtml="0"  name=ach_electronic_deposit_balance visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="67108864" )
+column(band=detail id=5 alignment="1" tabsequence=10 border="2" color="33554432" x="718" y="0" height="60" width="407" format="[currency]" html.valueishtml="0"  name=ach_electronic_deposit_confirmed_amt visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="1147" y="0" height="60" width="1394" format="[general]" html.valueishtml="0"  name=branch_name_branch visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=detail x1="0" y1="68" x2="2551" y2="68"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

@@ -1,0 +1,15 @@
+﻿$PBExportHeader$dw_licence.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=12632256 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=96 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(2) update=yes updatewhereclause=yes name=id_licencia dbname="LICENCIA.ID_LICENCIA" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=licencia_name dbname="LICENCIA.LICENCIA_NAME" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.LICENCIA~" ) COLUMN(NAME=~"DBA.LICENCIA.ID_LICENCIA~") COLUMN(NAME=~"DBA.LICENCIA.LICENCIA_NAME~")) " )
+text(band=header alignment="2" text="Id Licence"border="6" color="8388608" x="123" y="20" height="56" width="338"  name=id_licencia_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Licence Name"border="6" color="8388608" x="480" y="20" height="56" width="1440"  name=licencia_name_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="5" color="0" x="123" y="4" height="56" width="338" format="[general]"  name=id_licencia edit.limit=2 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="5" color="0" x="480" y="4" height="56" width="1440" format="[general]"  name=licencia_name edit.limit=60 edit.case=upper edit.autoselect=yes edit.autohscroll=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,55 @@
+﻿$PBExportHeader$dw_bonus_branch.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=0 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" )
+table(column=(type=char(10) updatewhereclause=yes name=id_branch dbname="id_branch" )
+ column=(type=long updatewhereclause=yes identity=yes name=total_branch_gen dbname="total_branch_gen" )
+ retrieve="SELECT TABLE_TOTALS.id_branch, SUM(TABLE_TOTALS.total_branch)as total_branch_gen
+FROM  (	 select dba.RECEIVER.id_branch, count(dba.Receiver.id_branch) as total_branch
+			 from dba.RECEIVER  , dba.BRANCH_AGENT , dba.BRANCH, dba.COMISION_AGENTES_TRANSACTION 
+			 where dba.RECEIVER.id_branch = dba.BRANCH_AGENT.id_branch 
+			and dba.RECEIVER.id_branch = dba.BRANCH.id_branch 
+			AND dba.BRANCH_AGENT.id_agent = dba.COMISION_AGENTES_TRANSACTION.ID_AGENT 
+			AND dba.receiver.date_receiver between DATE_CRE_BRANCH and dba.sfGetLastDateValid(DBA.COMISION_AGENTES_TRANSACTION.TIME_NEW,DATE_CRE_BRANCH,:date_to,dba.RECEIVER.id_branch)
+			AND dba.BRANCH_AGENT.id_agent = :sales_rep
+			and dba.RECEIVER.ID_RECEIVER > 0 
+			AND dba.COMISION_AGENTES_TRANSACTION.TIME_NEW >= DATEDIFF(DAY,DBA.sfGetBranchDateCreatedminor(dba.BRANCH_AGENT.id_branch),DBA.RECEIVER.DATE_RECEIVER)
+			AND DATEADD(DAY,DBA.COMISION_AGENTES_TRANSACTION.TIME_NEW,DBA.sfGetBranchDateCreatedminor(dba.BRANCH_AGENT.id_branch)) > :date_from
+			AND dba.receiver.id_flag_receiver <> 'A'
+			AND  dba.receiver.id_branch not in (select id_branch_old from dba.branch_owner_change union select id_branch_sec from dba.branch_owner_change)
+			//AND  dba.receiver.id_branch not in (select id_branch_sec from dba.branch_relations)
+			AND (ISNULL(dba.BRANCH_AGENT.special_branch,'NO') = 'NO' )
+			group by dba.RECEIVER.id_branch
+			UNION
+			select dba.RECEIVER.id_branch,(count(dba.Receiver.id_branch)* -1) as total_branch
+			from dba.RECEIVER  , dba.BRANCH_AGENT , dba.BRANCH, dba.COMISION_AGENTES_TRANSACTION
+			where dba.RECEIVER.id_branch = dba.BRANCH_AGENT.id_branch 
+			and dba.RECEIVER.id_branch = dba.BRANCH.id_branch 
+			AND dba.BRANCH_AGENT.id_agent = dba.COMISION_AGENTES_TRANSACTION.ID_AGENT 
+			AND dba.receiver.date_receiver between DATE_CRE_BRANCH and dba.sfGetLastDateValid(DBA.COMISION_AGENTES_TRANSACTION.TIME_NEW,DATE_CRE_BRANCH,:date_to,dba.RECEIVER.id_branch)
+			AND dba.BRANCH_AGENT.id_agent = :sales_rep
+			and dba.RECEIVER.ID_RECEIVER < 0 
+			AND dba.COMISION_AGENTES_TRANSACTION.TIME_NEW >= DATEDIFF(DAY,DBA.sfGetBranchDateCreatedminor(dba.BRANCH_AGENT.id_branch),DBA.RECEIVER.DATE_RECEIVER)
+			AND DATEADD(DAY,DBA.COMISION_AGENTES_TRANSACTION.TIME_NEW,DBA.sfGetBranchDateCreatedminor(dba.BRANCH_AGENT.id_branch)) >:date_from
+			AND dba.receiver.id_flag_receiver <> 'A'
+			AND  dba.receiver.id_branch not in (select id_branch_old from dba.branch_owner_change union select id_branch_sec from dba.branch_owner_change)
+			//AND  dba.receiver.id_branch not in (select id_branch_sec from dba.branch_relations)
+			AND (ISNULL(dba.BRANCH_AGENT.special_branch,'NO') = 'NO' )
+			group by dba.RECEIVER.id_branch) TABLE_TOTALS
+GROUP BY TABLE_TOTALS.ID_BRANCH;" arguments=(("sales_rep", string),("date_from", datetime),("date_to", datetime)) )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="5" y="4" height="64" width="251" format="[general]" html.valueishtml="0"  name=id_branch visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="33554432" x="261" y="4" height="64" width="274" format="[general]" html.valueishtml="0"  name=total_branch_gen visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,27 @@
+﻿$PBExportHeader$fn_mapnetworkdrive.srf
+global type fn_mapnetworkdrive from function_object
+end type
+
+forward prototypes
+global function integer fn_mapnetworkdrive (string ls_letter, string ls_path)
+end prototypes
+
+global function integer fn_mapnetworkdrive (string ls_letter, string ls_path);SetPointer(HourGlass!)
+
+integer li_FileNum
+// Crea el .bat que reconecta la unidad
+li_FileNum = FileOpen("c:\VIAMERICASMT\map.bat", LineMode!, Write!, LockWrite!, Replace!)
+FileWrite(li_FileNum, "net use "+ls_letter+": /DELETE /Y")
+FileWrite(li_FileNum, "net use "+ls_letter+": "+ls_path+" /PERSISTENT:YES")
+FileWrite(li_FileNum, "exit")
+FileClose(li_FileNum)
+
+Run("c:\VIAMERICASMT\map.bat",Minimized!)
+
+// Espera 7 segundos mienras el bat termina
+sleep(7000)
+
+SetPointer(Arrow!)
+return 0
+end function
+

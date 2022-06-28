@@ -1,0 +1,131 @@
+﻿$PBExportHeader$f_publish_branch.srf
+global type f_publish_branch from function_object
+end type
+
+forward prototypes
+global subroutine f_publish_branch (string is_branch_id)
+end prototypes
+
+global subroutine f_publish_branch (string is_branch_id);
+String 	ls_output, ls_outputfolder, ls_newflag, ls_agencyfolder
+Integer 	li_FileNum, li_AllowMoneyTransfersEntry
+Double 	ld_credit, ld_last_invoice, ld_balance, ld_credit_wknd, ld_intransit, ld_balance_general, ld_outstanding, ld_branchoutstanding
+long ll_conttipo
+
+SELECT ISNULL(DIR_OUTPUT,'R:\OUTPUT\')
+  INTO :ls_outputfolder
+  FROM dba.PARAMETROS; 
+	  
+// ******************
+// Validate U: Drive!
+fn_map_output()
+if not fileexists('R:\Output') then
+	Messagebox("Error!","La unidad necesaria no esta mapeada, favor intente nuevamente o contacte a Tecnologia si el problema se repite!",StopSign!)
+	return
+end if
+// ******************
+
+/*
+SELECT DISTINCT dba.BRANCH.ID_FLAG_BRANCH,  dba.GROUP_BRANCH.DEBT_LIMIT, dba.GROUP_BRANCH.DEBT_LIMIT_WKND, dba.sfGetSafeonTransit(dba.GROUP_BRANCH.ID_MAIN_BRANCH)
+INTO :ls_newflag, :ld_credit, :ld_credit_wknd, :ld_intransit
+FROM dba.BRANCH, dba.GROUP_BRANCH 
+WHERE dba.GROUP_BRANCH.ID_MAIN_BRANCH = dba.BRANCH.ID_MAIN_BRANCH
+AND dba.branch.id_branch = :is_branch_id
+AND dba.branch.id_type_branch in ('A','R');
+
+
+SELECT Sum(dba.transaccion_diaria_payee.credit_trans_diaria) - Sum(dba.transaccion_diaria_payee.debit_trans_diaria)  
+  INTO :ld_balance  
+  FROM dba.transaccion_diaria_payee,  dba.branch  
+ WHERE dba.transaccion_diaria_payee.id_group_trans_diaria = dba.branch.id_main_branch
+	AND dba.branch.id_branch = :is_branch_id
+	AND dba.transaccion_diaria_payee.id_concepto_contable <> 'CPC';*/
+		
+
+ 
+SELECT DEBT_LIMIT
+		, DEBT_LIMIT_WKND
+		, ID_FLAG_BRANCH
+		, AMOUNTINSAFE
+		, BALANCE
+		, LASTINVOICE
+		, AVAILABLECREDIT
+		, OUTSTANDING
+		, branchoutstanding
+		,CONTTIPO
+INTO :ld_credit, :ld_credit_wknd, :ls_newflag, :ld_intransit, :ld_balance, :ld_last_invoice, :ld_balance_general, :ld_outstanding, :ld_branchoutstanding, :ll_conttipo
+	FROM DBA.SENDCREDITTOBRANCH with (nolock )
+	where  ID_BRANCH =  :is_branch_id;
+	
+
+if isnull(ld_balance) then ld_balance = 0		
+if isnull(ld_credit) then ld_credit = 0	
+
+
+// ViaSafe Money (substrated from the balance - the balance is negative)
+if ld_intransit > 0 then
+	ld_balance = ld_balance + ld_intransit
+end if		
+
+/*SELECT MAX(id_receiver)  
+  INTO :ld_last_invoice  
+  FROM dba.relacion_invoices_payee  
+ WHERE id_branch_invoice = :is_branch_id;*/
+
+if isnull(ld_last_invoice) then ld_last_invoice = 0
+
+ls_agencyfolder = ''
+if fileexists(ls_outputfolder+trim(is_branch_id)) then ls_agencyfolder = trim(is_branch_id) + '\'
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Credito de fin de semana es de sabado medianoche a martes 1pm
+if upper(mid(DayName(today()),1,2)) = 'SA' or upper(mid(DayName(today()),1,2)) = 'SU' or upper(mid(DayName(today()),1,2)) = 'MO' then
+	ld_credit = ld_credit_wknd
+end if
+
+if upper(mid(DayName(today()),1,2)) = 'TU' and Now() < time('13:00:00') then
+	ld_credit = ld_credit_wknd
+end if
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+		
+	
+ls_output = ls_outputfolder + ls_agencyfolder + "UPG"+FILL('0',10 - LEN(trim(is_branch_id)))+trim(is_branch_id)+".sql"
+li_FileNum = FileOpen(ls_output, LineMode!, Write!, LockWrite!,Append!)
+
+FileWrite(li_filenum,"SET option on_error = CONTINUE;")	
+/*FileWrite(li_filenum,'DELETE FROM credit_limit ;')
+FileWrite(li_filenum,"INSERT INTO credit_limit (credit_limit,balance,id_branch,last_invoice) VALUES ("+STRING(ld_credit)+","+STRING(ld_balance)+",'"+  trim(is_branch_id)  +"',"+string(ld_last_invoice)+");")
+FileWrite(li_filenum,"UPDATE branch SET id_flag_branch = '"+trim(ls_newflag)+"' WHERE id_branch = '" +trim(is_branch_id)+ "';")*/
+
+
+SELECT Count(*) 
+INTO: li_AllowMoneyTransfersEntry
+FROM Base.VIAONE_BRANCH_SETTINGS
+WHERE ID_BRANCH = :is_branch_id 
+	AND SETTING_KEY= 'AllowMoneyTransfersEntry' 
+	AND SETTING_VALUE = 1;
+
+		
+		// Inactiva las que estan en TELEFONO ROJO o DIGITACION CENTRAL
+if ll_conttipo > 0 or trim(ls_newflag) = 'I' or li_AllowMoneyTransfersEntry > 0 then
+		FileWrite(li_filenum,"UPDATE branch SET id_flag_branch = 'I' WHERE id_branch = '" +is_branch_id+ "';")
+		FileWrite(li_filenum,"DELETE FROM credit_limit;")
+		FileWrite(li_filenum,"INSERT INTO credit_limit(credit_limit,balance,id_branch,last_invoice) VALUES (0,0,'"+  trim(is_branch_id)  +"',500000);")
+		FileWrite(li_filenum,"UPDATE credit_limit SET credit_limit = 0 ,balance = 0 ,last_invoice = 500000 ;")
+		FileWrite(li_filenum,"UPDATE credit_limit SET balance_general = 0, last_update_bg = getdate() , outstanding = 0, branchoutstanding = 0 ;")
+ELSE			
+
+	FileWrite(li_filenum,"DELETE FROM credit_limit;")		
+	FileWrite(li_filenum,"INSERT INTO credit_limit(credit_limit,balance,id_branch,last_invoice) VALUES ("+STRING(ld_credit)+","+STRING(ld_balance)+",'"+  trim(is_branch_id)  +"',"+string(ld_last_invoice)+");")			
+	FileWrite(li_filenum,"UPDATE credit_limit SET credit_limit = "+STRING(ld_credit)+",balance = "+STRING(ld_balance)+",last_invoice = "+string(ld_last_invoice)+";")		
+	FileWrite(li_filenum,"UPDATE credit_limit SET balance_general = "+string(ld_balance_general)+", last_update_bg = getdate() , outstanding = "+string(ld_outstanding)+" , branchoutstanding = " + string(ld_branchoutstanding) + " ;")	
+	
+	FileWrite(li_filenum,"UPDATE branch SET id_flag_branch = '"+trim(ls_newflag)+"' WHERE id_branch = '" +trim(is_branch_id)+ "';")
+	
+END IF
+
+FileWrite(li_filenum,"COMMIT;")	
+FileClose(li_FileNum)
+end subroutine
+

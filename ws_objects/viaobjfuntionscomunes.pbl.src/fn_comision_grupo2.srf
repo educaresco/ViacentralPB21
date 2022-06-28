@@ -1,0 +1,72 @@
+﻿$PBExportHeader$fn_comision_grupo2.srf
+global type fn_comision_grupo2 from function_object
+end type
+
+forward prototypes
+global function double fn_comision_grupo2 (string ls_country_receiver, string ls_corresponsal, double ld_amount, string ls_tipo_moneda, string ls_id_modo_pago, string ls_tipo)
+end prototypes
+
+global function double fn_comision_grupo2 (string ls_country_receiver, string ls_corresponsal, double ld_amount, string ls_tipo_moneda, string ls_id_modo_pago, string ls_tipo);
+Double 	ld_porcentaje, ld_fee
+Long		ll_cont
+
+SELECT Count(*)
+ INTO :ll_cont
+ FROM dba.comision_grupo 
+WHERE ( dba.comision_grupo.id_country = :ls_country_receiver ) 
+  AND ( dba.comision_grupo.id_main_branch = :ls_corresponsal ) 
+  AND ( dba.comision_grupo.range_begin_comision_pay <= :ld_amount ) 
+  AND ( dba.comision_grupo.range_end_comision_pay >= :ld_amount )  
+  AND ( dba.comision_grupo.mod_pay_currency	= :ls_tipo_moneda )
+  AND ( dba.comision_grupo.id_modo_pago = :ls_id_modo_pago);
+
+
+if ll_cont = 1 then
+
+	// Tiene comision exclusiva por el modo de pago
+	SELECT dba.comision_grupo.porcent_comision_pay, 
+			 dba.comision_grupo.feet_comision_pay  
+	  INTO :ld_porcentaje, 
+	  		 :ld_fee
+	  FROM dba.comision_grupo 
+	 WHERE ( dba.comision_grupo.id_country = :ls_country_receiver ) 
+	   AND ( dba.comision_grupo.id_main_branch = :ls_corresponsal ) 
+	   AND ( dba.comision_grupo.range_begin_comision_pay <= :ld_amount ) 
+	   AND ( dba.comision_grupo.range_end_comision_pay >= :ld_amount )  
+	   AND ( dba.comision_grupo.mod_pay_currency	= :ls_tipo_moneda )
+	   AND ( dba.comision_grupo.id_modo_pago = :ls_id_modo_pago);
+
+
+else
+	
+	// Tiene comision general
+	SELECT dba.comision_grupo.porcent_comision_pay, 
+			 dba.comision_grupo.feet_comision_pay
+	  INTO :ld_porcentaje, 
+		 	 :ld_fee
+	  FROM dba.comision_grupo 
+	 WHERE ( dba.comision_grupo.id_country = :ls_country_receiver ) 
+	   AND ( dba.comision_grupo.id_main_branch = :ls_corresponsal ) 
+	   AND ( dba.comision_grupo.range_begin_comision_pay <= :ld_amount ) 
+	   AND ( dba.comision_grupo.range_end_comision_pay >= :ld_amount )  
+	   AND ( dba.comision_grupo.mod_pay_currency	= :ls_tipo_moneda )
+	   AND ( dba.comision_grupo.id_modo_pago = '-');		
+	
+end if
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	
+	if isnull(ld_porcentaje) then ld_porcentaje = 0	
+	if isnull(ld_fee) then ld_fee = 0
+
+	if ls_tipo = '%' then	
+		return ld_porcentaje
+	else
+		return ld_fee	
+	end if
+	
+end if
+end function
+

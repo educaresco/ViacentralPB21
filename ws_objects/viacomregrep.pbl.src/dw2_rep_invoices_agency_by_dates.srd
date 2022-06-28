@@ -1,0 +1,162 @@
+﻿$PBExportHeader$dw2_rep_invoices_agency_by_dates.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=100 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=64 color="536870912" )
+table(column=(type=char(41) updatewhereclause=yes name=invoice dbname="INVOICE" )
+ column=(type=char(30) updatewhereclause=yes name=date_invoice dbname="DATE_INVOICE" )
+ column=(type=char(30) updatewhereclause=yes name=time_invoice dbname="TIME_INVOICE" )
+ column=(type=char(10) updatewhereclause=yes name=invoice_status dbname="INVOICE_STATUS" )
+ column=(type=char(40) updatewhereclause=yes name=name_sender dbname="NAME_SENDER" )
+ column=(type=char(60) updatewhereclause=yes name=address_sender dbname="ADDRESS_SENDER" )
+ column=(type=decimal(0) updatewhereclause=yes name=phone1_sender dbname="SENDER.PHONE1_SENDER" dbalias=".PHONE1_SENDER" )
+ column=(type=decimal(0) updatewhereclause=yes identity=yes name=phone2_sender dbname="PHONE2_SENDER" )
+ column=(type=char(30) updatewhereclause=yes name=city_sender dbname="CITY_SENDER" )
+ column=(type=char(30) updatewhereclause=yes name=state_sender dbname="STATE_SENDER" )
+ column=(type=decimal(0) updatewhereclause=yes name=sender_zip_sender dbname="SENDER.ZIP_SENDER" dbalias=".ZIP_SENDER" )
+ column=(type=char(40) updatewhereclause=yes name=receiver_name_recipient dbname="RECEIVER.NAME_RECIPIENT" dbalias=".NAME_RECIPIENT" )
+ column=(type=char(60) updatewhereclause=yes name=address_recipient dbname="ADDRESS_RECIPIENT" )
+ column=(type=char(12) updatewhereclause=yes name=phone1_recipient dbname="PHONE1_RECIPIENT" )
+ column=(type=char(12) updatewhereclause=yes name=phone2_recipient dbname="PHONE2_RECIPIENT" )
+ column=(type=char(40) updatewhereclause=yes name=city_recipient dbname="CITY_RECIPIENT" )
+ column=(type=char(50) updatewhereclause=yes name=country_recipient dbname="COUNTRY_RECIPIENT" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_order_amount dbname="RECEIVER.ORDER_AMOUNT" dbalias=".ORDER_AMOUNT" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_total_with_fees dbname="RECEIVER.TOTAL_WITH_FEES" dbalias=".TOTAL_WITH_FEES" )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=agent_fees dbname="AGENT_FEES" )
+ column=(type=decimal(4) updatewhereclause=yes identity=yes name=agent_add_charges dbname="AGENT_ADD_CHARGES" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_exchange_rate dbname="RECEIVER.EXCHANGE_RATE" dbalias=".EXCHANGE_RATE" )
+ column=(type=decimal(4) updatewhereclause=yes name=receiver_amount_to_be_paid dbname="RECEIVER.AMOUNT_TO_BE_PAID" dbalias=".AMOUNT_TO_BE_PAID" )
+ column=(type=char(50) updatewhereclause=yes name=branch_payment_mode dbname="BRANCH.PAYMENT_MODE" dbalias=".PAYMENT_MODE" )
+ column=(type=char(60) updatewhereclause=yes name=branch_payment_location dbname="BRANCH.PAYMENT_LOCATION" dbalias="P.PAYMENT_LOCATION" )
+ column=(type=char(30) updatewhereclause=yes name=payment_date dbname="PAYMENT_DATE" )
+ column=(type=char(50) updatewhereclause=yes name=payment_id dbname="PAYMENT_ID" )
+ retrieve="   SELECT 
+          RTRIM(dba.BRANCH.ID_BRANCH)+'-'+CONVERT(VARCHAR,dba.RECEIVER.ID_RECEIVER) AS INVOICE,
+          CONVERT(VARCHAR,dba.RECEIVER.DATE_RECEIVER,101) AS DATE_INVOICE,  
+          CONVERT(VARCHAR,dba.RECEIVER.TIME_RECEIVER,108) AS TIME_INVOICE,
+          CASE dba.RECEIVER.id_flag_receiver  WHEN 'A' THEN 'VOID'
+                          							 WHEN 'C' THEN 'CANCELLED'
+                                              WHEN 'T' THEN 'TRANSFERED'
+                          							 WHEN 'H' THEN 'HOLD'
+                          							 WHEN 'P' THEN 'PAID'
+                          							 WHEN 'I' THEN 'READY' ELSE 'OTHER' END 
+                                              AS INVOICE_STATUS,
+          RTRIM(dba.SENDER.NAME_SENDER) AS NAME_SENDER,
+          RTRIM(dba.SENDER.ADDRES_SENDER) AS ADDRESS_SENDER,
+          dba.SENDER.PHONE1_SENDER AS PHONE1_SENDER,
+          isnull(dba.SENDER.PHONE2_SENDER,0) AS PHONE2_SENDER,
+          RTRIM(dba.SENDER.CITY_SENDER) AS CITY_SENDER,
+          RTRIM(dba.SENDER.STATE_SENDER) AS STATE_SENDER,
+          dba.SENDER.ZIP_SENDER AS ZIP_SENDER,
+          dba.RECEIVER.NAME_RECEIVER AS NAME_RECIPIENT,
+          RTRIM(dba.RECEIVER.ADDRESS_RECEIVER) AS ADDRESS_RECIPIENT,
+          RTRIM(isnull(dba.RECEIVER.PHONE1_RECEIVER,'')) AS PHONE1_RECIPIENT,
+          RTRIM(isnull(dba.RECEIVER.PHONE2_RECEIVER,'')) AS PHONE2_RECIPIENT,
+          RTRIM(dba.CITY.NAME_CITY) AS CITY_RECIPIENT,
+          RTRIM(dba.COUNTRY.ISO_NAME) AS COUNTRY_RECIPIENT,
+          dba.RECEIVER.NET_AMOUNT_RECEIVER AS ORDER_AMOUNT,
+          dba.RECEIVER.TOTAL_RECEIVER AS TOTAL_WITH_FEES,
+          (TELEX_RECEIVER + EXCHANGE_RECEIVER + HANDLING_RECEIVER + TOTAL_DIFERENCE + TOTAL_MODO_PAGO) - (EXCHANGE_COMPANY + TELEX_COMPANY + TOTAL_MODO_PAGO_COMP) AS AGENT_FEES,
+ 			 (TOTAL_RECEIVER - NET_AMOUNT_RECEIVER) - ( convert(numeric(14,2),dba.receiver.telex_receiver + dba.receiver.exchange_receiver +  dba.receiver.total_modo_pago + dba.receiver.handling_receiver )) as AGENT_ADD_CHARGES,
+          dba.RECEIVER.RATE_CHANGE_RECEIVER AS EXCHANGE_RATE,
+          dba.RECEIVER.TOTAL_PAY_RECEIVER AS AMOUNT_TO_BE_PAID,
+			 FRIENDLY_NAME AS PAYMENT_MODE,
+			 P.NAME_BRANCH AS PAYMENT_LOCATION,
+			 CASE dba.RECEIVER.id_flag_receiver WHEN 'P' THEN convert(varchar,payment_date,101) ELSE 'N/A' END AS PAYMENT_DATE,
+			 CASE dba.RECEIVER.id_flag_receiver WHEN 'P' THEN dba.sfGetReceiverPaymentId2(dba.RECEIVER.ID_BRANCH,dba.RECEIVER.ID_RECEIVER) ELSE 'N/A' END AS PAYMENT_ID
+    FROM dba.BRANCH,   
+         dba.RECEIVER,   
+         dba.SENDER,   
+         dba.CITY,   
+         dba.COUNTRY,
+			dba.BRANCH P,
+			dba.modo_pago
+   WHERE ( dba.BRANCH.ID_BRANCH = dba.RECEIVER.ID_BRANCH )
+	  AND ( dba.RECEIVER.BRANCH_PAY_RECEIVER = P.ID_BRANCH )
+     AND ( dba.RECEIVER.ID_SENDER = dba.SENDER.ID_SENDER )
+     AND ( dba.RECEIVER.ID_BRANCH = dba.SENDER.ID_BRANCH )
+     AND ( dba.RECEIVER.ID_CITY_RECEIVER = dba.CITY.ID_CITY )
+     AND ( dba.RECEIVER.ID_STATE_RECEIVER = dba.CITY.ID_STATE )
+     AND ( dba.RECEIVER.ID_COUNTRY_RECEIVER = dba.CITY.ID_COUNTRY )
+     AND ( dba.CITY.ID_COUNTRY = dba.COUNTRY.ID_COUNTRY )
+	  AND ( dba.RECEIVER.mode_pay_receiver = dba.modo_pago.id_modo_pago )
+     AND ( dba.RECEIVER.DATE_RECEIVER > :p_date1 )
+     AND ( dba.RECEIVER.DATE_RECEIVER < :p_date2 )
+     AND ( dba.BRANCH.id_branch = :p_idbranch )
+--AND dba.branch.id_city in ('03578','03757','03924','03872','04111','03512','04042','04097','04041')
+     AND ( id_receiver > 0 )
+  order by dba.RECEIVER.DATE_RECEIVER" arguments=(("p_date1", datetime),("p_date2", datetime),("p_idbranch", string)) )
+text(band=header alignment="2" text="Invoice" border="0" color="33554432" x="5" y="4" height="44" width="421" html.valueishtml="0"  name=invoice_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Date Invoice" border="0" color="33554432" x="430" y="4" height="44" width="411" html.valueishtml="0"  name=date_invoice_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Time Invoice" border="0" color="33554432" x="846" y="4" height="44" width="384" html.valueishtml="0"  name=time_invoice_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Invoice Status" border="0" color="33554432" x="1230" y="4" height="44" width="375" html.valueishtml="0"  name=invoice_status_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name Sender" border="0" color="33554432" x="1605" y="4" height="44" width="937" html.valueishtml="0"  name=name_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Address Sender" border="0" color="33554432" x="2546" y="4" height="44" width="1394" html.valueishtml="0"  name=address_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Phone1 Sender" border="0" color="33554432" x="3945" y="4" height="44" width="398" html.valueishtml="0"  name=phone1_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Phone2 Sender" border="0" color="33554432" x="4347" y="4" height="44" width="398" html.valueishtml="0"  name=phone2_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="City Sender" border="0" color="33554432" x="4750" y="4" height="44" width="709" html.valueishtml="0"  name=city_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="State Sender" border="0" color="33554432" x="5463" y="4" height="44" width="709" html.valueishtml="0"  name=state_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Sender
+Zip Sender" border="0" color="33554432" x="6176" y="4" height="88" width="283" html.valueishtml="0"  name=sender_zip_sender_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver
+Name Recipient" border="0" color="33554432" x="6469" y="4" height="88" width="933" html.valueishtml="0"  name=receiver_name_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Address Recipient" border="0" color="33554432" x="7410" y="4" height="44" width="1394" html.valueishtml="0"  name=address_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Phone1 Recipient" border="0" color="33554432" x="8809" y="4" height="44" width="448" html.valueishtml="0"  name=phone1_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Phone2 Recipient" border="0" color="33554432" x="9262" y="4" height="44" width="448" html.valueishtml="0"  name=phone2_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="City Recipient" border="0" color="33554432" x="9714" y="4" height="44" width="937" html.valueishtml="0"  name=city_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Country Recipient" border="0" color="33554432" x="10656" y="4" height="44" width="1166" html.valueishtml="0"  name=country_recipient_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver
+Order Amount" border="0" color="33554432" x="11826" y="4" height="88" width="370" html.valueishtml="0"  name=receiver_order_amount_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver
+Total With Fees" border="0" color="33554432" x="12201" y="4" height="88" width="411" html.valueishtml="0"  name=receiver_total_with_fees_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Agent Fees" border="0" color="33554432" x="12617" y="4" height="44" width="293" html.valueishtml="0"  name=agent_fees_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver
+Exchange Rate" border="0" color="33554432" x="13275" y="4" height="88" width="384" html.valueishtml="0"  name=receiver_exchange_rate_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Receiver
+Amount To Be Paid" border="0" color="33554432" x="13664" y="4" height="88" width="498" html.valueishtml="0"  name=receiver_amount_to_be_paid_t visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Payment Location" border="0" color="33554432" x="14176" y="4" height="44" width="498" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Agent Add
+Charges" border="0" color="33554432" x="12896" y="4" height="88" width="375" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="5" y="4" height="68" width="421" format="[general]" html.valueishtml="0"  name=invoice visible="1" edit.limit=41 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="33554432" x="430" y="4" height="68" width="411" format="[general]" html.valueishtml="0"  name=date_invoice visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="33554432" x="846" y="4" height="68" width="384" format="[general]" html.valueishtml="0"  name=time_invoice visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=32766 border="0" color="33554432" x="1234" y="4" height="68" width="352" format="[general]" html.valueishtml="0"  name=invoice_status visible="1" edit.limit=10 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="33554432" x="1605" y="4" height="68" width="937" format="[general]" html.valueishtml="0"  name=name_sender visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="2546" y="4" height="68" width="1394" format="[general]" html.valueishtml="0"  name=address_sender visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="33554432" x="3945" y="4" height="68" width="379" format="[general]" html.valueishtml="0"  name=phone1_sender visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=32766 border="0" color="33554432" x="4347" y="4" height="68" width="384" format="[general]" html.valueishtml="0"  name=phone2_sender visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="33554432" x="4750" y="4" height="68" width="709" format="[general]" html.valueishtml="0"  name=city_sender visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="33554432" x="5463" y="4" height="68" width="709" format="[general]" html.valueishtml="0"  name=state_sender visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="1" tabsequence=32766 border="0" color="33554432" x="6181" y="4" height="68" width="270" format="[general]" html.valueishtml="0"  name=sender_zip_sender visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="0" tabsequence=32766 border="0" color="33554432" x="6469" y="4" height="68" width="933" format="[general]" html.valueishtml="0"  name=receiver_name_recipient visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=32766 border="0" color="33554432" x="7410" y="4" height="68" width="1394" format="[general]" html.valueishtml="0"  name=address_recipient visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=14 alignment="0" tabsequence=32766 border="0" color="33554432" x="8809" y="4" height="68" width="297" format="[general]" html.valueishtml="0"  name=phone1_recipient visible="1" edit.limit=12 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="33554432" x="9262" y="4" height="68" width="297" format="[general]" html.valueishtml="0"  name=phone2_recipient visible="1" edit.limit=12 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=16 alignment="0" tabsequence=32766 border="0" color="33554432" x="9714" y="4" height="68" width="937" format="[general]" html.valueishtml="0"  name=city_recipient visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=17 alignment="0" tabsequence=32766 border="0" color="33554432" x="10656" y="4" height="68" width="1166" format="[general]" html.valueishtml="0"  name=country_recipient visible="1" edit.limit=50 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=18 alignment="1" tabsequence=32766 border="0" color="33554432" x="11826" y="4" height="68" width="274" format="[currency]" html.valueishtml="0"  name=receiver_order_amount visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=19 alignment="1" tabsequence=32766 border="0" color="33554432" x="12201" y="4" height="68" width="274" format="[currency]" html.valueishtml="0"  name=receiver_total_with_fees visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=20 alignment="1" tabsequence=32766 border="0" color="33554432" x="12617" y="4" height="68" width="274" format="[currency]" html.valueishtml="0"  name=agent_fees visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=21 alignment="1" tabsequence=32766 border="0" color="33554432" x="12905" y="4" height="68" width="357" format="[currency]" html.valueishtml="0"  name=agent_add_charges visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=22 alignment="1" tabsequence=32766 border="0" color="33554432" x="13275" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=receiver_exchange_rate visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=23 alignment="1" tabsequence=32766 border="0" color="33554432" x="13664" y="4" height="68" width="274" format="[currency]" html.valueishtml="0"  name=receiver_amount_to_be_paid visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=25 alignment="0" tabsequence=32766 border="0" color="33554432" x="14162" y="4" height="68" width="864" format="[general]" html.valueishtml="0"  name=branch_payment_location visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=24 alignment="0" tabsequence=32766 border="0" color="33554432" x="15671" y="0" height="68" width="453" format="[general]" html.valueishtml="0"  name=branch_payment_mode visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Payment Mode" border="0" color="33554432" x="15671" y="4" height="44" width="453" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Payment Date" border="0" color="33554432" x="16146" y="4" height="44" width="439" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=26 alignment="0" tabsequence=0 border="0" color="33554432" x="16183" y="8" height="52" width="690" html.valueishtml="0"  name=payment_date visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=27 alignment="0" tabsequence=0 border="0" color="33554432" x="15118" y="4" height="52" width="526" html.valueishtml="0"  name=payment_id visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Payment ID" border="0" color="33554432" x="15118" y="4" height="44" width="526" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-7" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

@@ -1,0 +1,61 @@
+﻿$PBExportHeader$dw_busca_nombre_receiver.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=76 color="12639424" )
+summary(height=88 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912~tIF(MOD(GETROW(),2)=0,RGB(240,240,240),RGB(255,255,255))" )
+table(column=(type=decimal(0) updatewhereclause=yes name=id_sender dbname="RECEIVER.ID_SENDER" dbalias=".ID_SENDER" )
+ column=(type=char(40) updatewhereclause=yes name=name_receiver dbname="RECEIVER.NAME_RECEIVER" dbalias=".NAME_RECEIVER" )
+ column=(type=char(60) updatewhereclause=yes name=address_receiver dbname="RECEIVER.ADDRESS_RECEIVER" dbalias=".ADDRESS_RECEIVER" )
+ column=(type=char(12) updatewhereclause=yes name=phone1_receiver dbname="RECEIVER.PHONE1_RECEIVER" dbalias=".PHONE1_RECEIVER" )
+ column=(type=decimal(0) updatewhereclause=yes name=id_receiver dbname="RECEIVER.ID_RECEIVER" dbalias=".ID_RECEIVER" )
+ column=(type=datetime updatewhereclause=yes name=date_receiver dbname="RECEIVER.DATE_RECEIVER" dbalias=".DATE_RECEIVER" )
+ column=(type=decimal(4) updatewhereclause=yes name=net_amount_receiver dbname="RECEIVER.NET_AMOUNT_RECEIVER" dbalias=".NET_AMOUNT_RECEIVER" )
+ column=(type=char(1) updatewhereclause=yes name=mode_pay_receiver dbname="RECEIVER.MODE_PAY_RECEIVER" dbalias=".MODE_PAY_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=branch_pay_receiver dbname="RECEIVER.BRANCH_PAY_RECEIVER" dbalias=".BRANCH_PAY_RECEIVER" )
+ column=(type=char(10) updatewhereclause=yes name=receiver_id_branch dbname="RECEIVER.ID_BRANCH" dbalias=".ID_BRANCH" )
+ retrieve="SELECT DISTINCT  DBA.RECEIVER.ID_SENDER,
+DBA.RECEIVER.NAME_RECEIVER,
+DBA.RECEIVER.ADDRESS_RECEIVER,
+DBA.RECEIVER.PHONE1_RECEIVER,
+DBA.RECEIVER.ID_RECEIVER,
+DBA.RECEIVER.DATE_RECEIVER,
+DBA.RECEIVER.NET_AMOUNT_RECEIVER,
+DBA.RECEIVER.MODE_PAY_RECEIVER,
+DBA.RECEIVER.BRANCH_PAY_RECEIVER,
+DBA.RECEIVER.ID_BRANCH
+FROM DBA.RECEIVER, DBA.SENDER
+WHERE DBA.SENDER.ID_BRANCH = DBA.RECEIVER.ID_BRANCH
+AND DBA.SENDER.ID_SENDER = DBA.RECEIVER.ID_SENDER
+AND DBA.SENDER.ID_SENDER_GLOBAL = :ARG_SENDER
+AND DBA.receiver.name_receiver LIKE :LS_NOMBRE" arguments=(("ls_nombre", string),("arg_sender", number))  sort="date_receiver D " )
+text(band=header alignment="2" text="Name" border="0" color="0" x="18" y="12" height="52" width="645" html.valueishtml="0"  name=name_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Address" border="0" color="0" x="681" y="12" height="52" width="645" html.valueishtml="0"  name=address_receiver_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Date" border="0" color="0" x="1344" y="12" height="52" width="320" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text=" Amount" border="0" color="0" x="1682" y="12" height="52" width="338" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text="Payee" border="0" color="0" x="2455" y="12" height="52" width="549" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+text(band=header alignment="2" text=" Mod Pay" border="0" color="0" x="2039" y="12" height="52" width="398" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="553648127" )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="18" y="8" height="60" width="645" format="[general]" html.valueishtml="0"  name=name_receiver visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=32766 border="0" color="0" x="681" y="8" height="60" width="645" format="[general]" html.valueishtml="0"  name=address_receiver visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="2" tabsequence=32766 border="0" color="0" x="1344" y="8" height="60" width="320" format="[general]" html.valueishtml="0"  name=date_receiver visible="1" edit.name="MM/DD/YYYY" editmask.mask="MM/DD/YYYY" editmask.focusrectangle=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="1" tabsequence=32766 border="0" color="0" x="1682" y="8" height="60" width="338" format="$#,##0.00;[RED]($#,##0.00)" html.valueishtml="0"  name=net_amount_receiver visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="2455" y="8" height="60" width="549" format="[general]" html.valueishtml="0"  name=branch_pay_receiver visible="1" dddw.name=dddw_branch dddw.displaycolumn=name_branch dddw.datacolumn=id_branch dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="0" x="2053" y="8" height="60" width="384" format="" html.valueishtml="0"  name=mode_pay_receiver visible="1" dddw.name=dddw_modo_pago dddw.displaycolumn=nom_modo_pago dddw.datacolumn=id_modo_pago dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="3017" y="8" height="52" width="229" format="[general]" html.valueishtml="0"  name=receiver_id_branch visible="1" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=summary alignment="0" text="Total Sent:" border="0" color="0" x="1394" y="24" height="52" width="279" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="1" expression="sum(net_amount_receiver for all)"border="0" color="0" x="1682" y="24" height="52" width="338" format="$#,##0.00;[RED]($#,##0.00)" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+line(band=summary x1="9" y1="8" x2="3003" y2="8"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+text(band=summary alignment="0" text="Count :" border="0" color="0" x="923" y="24" height="52" width="206" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=summary alignment="2" expression="count(  id_receiver  for all )"border="0" color="0" x="1143" y="24" height="52" width="183" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

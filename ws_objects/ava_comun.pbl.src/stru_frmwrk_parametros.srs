@@ -1,0 +1,23 @@
+﻿$PBExportHeader$stru_frmwrk_parametros.srs
+global type stru_frmwrk_parametros from structure
+	boolean		b_nulo
+	boolean		boolean[]
+	date		date[]
+	datetime		datetime[]
+	decimal { 4 }		decimal[]
+	integer		integer[]
+	long		long[]
+	string		string[]
+	time		time[]
+	datastore		datastore[]
+	menu		menu
+	datawindow		datawindow[]
+	graph		graph[]
+	listbox		listbox[]
+	window		window[]
+	picturebutton		pbutton[]
+	statictext		statictext[]
+	userobject		userobject[]
+	datawindowchild		datawindowchild[]
+end type
+

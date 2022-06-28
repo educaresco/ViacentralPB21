@@ -1,0 +1,35 @@
+﻿$PBExportHeader$fn_map_output.srf
+global type fn_map_output from function_object
+end type
+
+forward prototypes
+global subroutine fn_map_output ()
+end prototypes
+
+global subroutine fn_map_output ();Integer li_FileNum
+
+if not fileexists("R:\Output") then
+
+	SetPointer(HourGlass!)
+	li_FileNum = FileOpen('D:\Temp\RM.bat', LineMode!, Write!, LockWrite!,Replace!)
+
+	if li_filenum < 0 Then
+		Messagebox("Error","Error creating RM.bat File")
+		Return
+	end if
+
+
+	FileWrite (li_FileNum,"net use r: /DELETE /Y")		
+	FileWrite (li_FileNum,"net use r: ~"\\192.168.11.103\FTPAgencies\~" /PERSISTENT:YES")
+	FileWrite (li_FileNum,"Exit")		
+
+	FileClose(li_FileNum)
+
+	Run('D:\Temp\RM.bat',Minimized!)
+
+	Sleep(5)
+	SetPointer(Arrow!)
+
+end if
+end subroutine
+

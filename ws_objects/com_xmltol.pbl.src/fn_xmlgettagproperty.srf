@@ -1,0 +1,67 @@
+﻿$PBExportHeader$fn_xmlgettagproperty.srf
+global type fn_xmlgettagproperty from function_object
+end type
+
+forward prototypes
+global function string fn_xmlgettagproperty (string ps_xml, string ps_tag, integer pl_tagposition, string ps_propertyname)
+end prototypes
+
+global function string fn_xmlgettagproperty (string ps_xml, string ps_tag, integer pl_tagposition, string ps_propertyname);
+// Cuando un tag tiene propiedades (ej: <ADDRESSDETAILS ACCURACY="8" XMLNS="URN:OASIS:NAMES:TC:CIQ:XSDSCHEMA:XAL:2.0"> )
+// retorna el valode de la propiedad escogida
+// DEBEN ESTAR ENTRE COMILLAS!
+// Si no la encuentra retorna cadena vacia!
+
+long ll_cont, ll_nextpos, ll_posfin
+String ls_xml, ls_tagini, ls_tagfin
+String ls_tagproperties
+
+
+ls_xml = fn_replace(upper(ps_Xml),'< ','<')
+ls_xml = fn_replace(upper(ls_xml),'< ','<')
+ls_tagini = "<"+upper(ps_Tag)
+ls_tagfin = "</"+upper(ps_Tag)
+
+ls_tagproperties = ''
+
+ll_cont = 0 
+
+ll_nextpos = 1
+
+do while ll_nextpos > 0
+
+	ll_nextpos = Pos(ls_xml, ls_tagini, ll_nextpos)
+
+	if ll_nextpos > 0 then 
+		ll_cont += 1
+		ll_nextpos += 1
+	end if
+	
+	if ll_cont = pl_tagposition then 
+		ll_nextpos = ll_nextpos + len(ls_tagini) 						
+		ll_posfin = Pos(ls_xml, ">", ll_nextpos)
+								
+		ls_tagproperties = mid(ls_xml, ll_nextpos, ll_posfin - ll_nextpos)
+		
+		if pos(ls_tagproperties,ps_propertyname,1)= 0 then
+			ls_tagproperties = ""
+		else	
+			//Removes properties before
+			ls_tagproperties = mid(ls_tagproperties,pos(ls_tagproperties,ps_propertyname,1))
+			
+			//Remove properties after second "
+			ls_tagproperties = mid(ls_tagproperties,1,pos(ls_tagproperties,"~"",pos(ls_tagproperties,"~"",1)+1)-1)
+			
+			//Remove properties before ="
+			ls_tagproperties = mid(ls_tagproperties,pos(ls_tagproperties,"=~"")+2)
+		end if
+		
+		ll_nextpos = 0	// Encontro el que buscaba, lo saca del loop!
+		
+	end if
+
+loop
+
+return ls_tagproperties
+end function
+

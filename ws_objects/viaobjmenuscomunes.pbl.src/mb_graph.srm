@@ -1,0 +1,591 @@
+﻿$PBExportHeader$mb_graph.srm
+$PBExportComments$Menu utilizado para las ventanas de gráficos.
+forward
+global type mb_graph from m_master
+end type
+type m_color from menu within m_tools
+end type
+type m_tipogrfico from menu within m_tools
+end type
+type m_- from menu within m_tools
+end type
+type m_espacio from menu within m_tools
+end type
+type m_ttulo from menu within m_tools
+end type
+end forward
+
+global type mb_graph from m_master
+end type
+global mb_graph mb_graph
+
+on mb_graph.create
+mb_graph=this
+call super::create
+end on
+
+on mb_graph.destroy
+call super::destroy
+end on
+
+on m_file.create
+call super::create
+this.Text="&Archivo"
+end on
+
+on m_new.create
+call super::create
+this.Text="&Nuevo~tCtrl+N"
+this.Microhelp="Permite crear nuevos elementos dentro de la ventana actual."
+this.ToolBarItemText="Nuevo"
+this.Visible=false
+this.ToolBarItemOrder=0
+this.ToolBarItemVisible=false
+this.Shortcut=334
+end on
+
+on m_open.create
+call super::create
+this.Text="&Abrir~tCtrl+A"
+this.Microhelp="Permite cargar elementos creados dentro de la ventana actual."
+this.ToolBarItemText="Abrir"
+this.ToolBarItemOrder=1
+this.Shortcut=321
+end on
+
+on m_close.create
+call super::create
+this.Text="&Cerrar~tCtrl+F4"
+this.Microhelp="Cierra la ventana actual."
+this.ToolBarItemText="Cerrar"
+this.ToolBarItemOrder=500
+this.Shortcut=371
+end on
+
+on m_save.create
+call super::create
+this.Text="&Guardar~tCtrl+G"
+this.Microhelp="Permite almacenar la información procesada dentro de la ventana actual."
+this.ToolBarItemText="Guardar"
+this.Visible=false
+this.ToolBarItemOrder=2
+this.ToolBarItemVisible=false
+this.Shortcut=327
+end on
+
+on m_saveas.create
+call super::create
+this.Text="Guardar Co&mo..."
+this.ToolBarItemText="Guardar Como"
+this.Visible=false
+end on
+
+on m_dash12.create
+call super::create
+this.Visible=false
+end on
+
+on m_print.create
+call super::create
+this.Text="Im&primir~tCtrl+P"
+this.ToolBarItemName="Print!"
+this.ToolBarItemText="Imprimir"
+this.ToolBarItemOrder=3
+this.Shortcut=336
+end on
+
+on m_printpreview.create
+call super::create
+this.Text="Vista Preli&minar"
+this.Microhelp="Permite visualizar previamente los datos de la ventana actual antes de la impresión."
+this.ToolBarItemText="Preliminar"
+this.ToolBarItemOrder=4
+end on
+
+on m_pagesetup.create
+call super::create
+this.Text="Configu&rar Página..."
+this.Microhelp="Permite cambiar los atributos de impresión."
+end on
+
+on m_printimmediate.create
+call super::create
+this.Text="Imprimir Inmediatamente"
+this.Microhelp="Imprime inmediatamente la información de la ventana actual."
+this.ToolBarItemText="Imprimir"
+end on
+
+on m_dash13.create
+call super::create
+this.Visible=true
+end on
+
+on m_delete.create
+call super::create
+this.Text="&Borrar~tCtrl+D"
+this.Microhelp="Permite eliminar el registro de la ventana actual."
+this.ToolBarItemText="Borrar"
+this.Enabled=true
+this.Shortcut=324
+end on
+
+on m_properties.create
+call super::create
+this.Text="&Propiedades"
+this.Microhelp="Permite la visualización o modificación de las propiedades asociadas a la información contenida en la ventana actual."
+this.ToolBarItemText="Propiedades"
+this.Visible=true
+this.Enabled=true
+this.ToolBarItemOrder=4
+this.ToolBarItemVisible=true
+this.ToolBarItemSpace=2
+end on
+
+on m_exit.create
+call super::create
+this.Text="&Salir~tAlt+F4"
+this.Microhelp="Salir de la aplicación."
+this.ToolBarItemText="Salir"
+this.ToolBarItemVisible=true
+this.Shortcut=627
+end on
+
+on m_edit.create
+call super::create
+this.Text="&Edición"
+this.Visible=false
+end on
+
+on m_undo.create
+call super::create
+this.Text="&Deshacer~tCtrl+Z"
+this.ToolBarItemText="Deshacer"
+this.Shortcut=346
+end on
+
+on m_cut.create
+call super::create
+this.Text="Cor&tar~tCtrl+X"
+this.Microhelp="Mueve información seleccionada al portapapeles (ClipBoard)."
+this.ToolBarItemText="Cortar"
+this.Shortcut=344
+end on
+
+on m_copy.create
+call super::create
+this.Text="&Copiar~tCtrl+C"
+this.Microhelp="Mueve información seleccionada al portapapeles (ClipBoard)."
+this.ToolBarItemText="Copiar"
+this.Shortcut=323
+end on
+
+on m_paste.create
+call super::create
+this.Text="&Pegar~tCtrl+V"
+this.Microhelp="Inserta el contenido del Portapapeles (ClipBoard) en el sitio donde se encuentre el cursor."
+this.ToolBarItemText="Pegar"
+this.Shortcut=342
+end on
+
+on m_pastespecial.create
+call super::create
+this.Text="Pegar &Especial..."
+this.Microhelp="Inserta el contenido del Portapapeles (ClipBoard) como un vínculo, objeto, u otro formato."
+this.Visible=false
+end on
+
+on m_clear.create
+call super::create
+this.Text="&Limpiar"
+this.Microhelp="Remueve la selección de la ventana actual."
+this.ToolBarItemText="Limpiar"
+end on
+
+on m_selectall.create
+call super::create
+this.Text="Seleccionar &Todo~tCtrl+A"
+this.Microhelp="Selecciona toda la información disponible en la ventana actual."
+this.ToolBarItemText="Seleccionar Todo"
+this.Shortcut=321
+end on
+
+on m_dash23.create
+call super::create
+this.Visible=false
+end on
+
+on m_find.create
+call super::create
+this.Text="&Buscar...~tCtrl+F"
+this.Microhelp="Encuentra el texto especificado dentro de la ventana actual."
+this.ToolBarItemText="Buscar"
+this.Visible=false
+this.ToolBarItemVisible=false
+this.Shortcut=326
+end on
+
+on m_replace.create
+call super::create
+this.Text="&Reemplazar...~tCtrl+H"
+this.Microhelp="Reemplaza el texto especificado  por otro dentro de la ventana actual."
+this.ToolBarItemText="Reemplazar"
+this.Visible=false
+this.ToolBarItemVisible=false
+this.Shortcut=328
+end on
+
+on m_dash24.create
+call super::create
+this.Visible=false
+end on
+
+on m_updatelinks.create
+call super::create
+this.Text="Actualizar Vínculos"
+this.Microhelp="Permite la actualización de vínculos con los objetos insertados dentro de la ventana actual."
+this.Visible=false
+end on
+
+on m_object1.create
+call super::create
+this.Text="&Objeto"
+this.Microhelp="Contiene las opciones para los objetos insertados."
+this.Visible=false
+end on
+
+on m_edit1.create
+call super::create
+this.Text="&Editar"
+this.Microhelp="Edita el objeto seleccionado."
+end on
+
+on m_open1.create
+call super::create
+this.Text="&Abrir..."
+this.Microhelp="Carga información del objeto seleccionado."
+end on
+
+on m_view.create
+call super::create
+this.Text="&Ver"
+this.Visible=false
+end on
+
+on m_ruler.create
+call super::create
+this.Text="&Regla"
+this.Microhelp="Visualiza u oculta la regla."
+end on
+
+on m_largeicon.create
+call super::create
+this.Text="Iconos &Grandes"
+this.Microhelp="Visualiza los items usando íconos grandes."
+this.ToolBarItemText="Iconos Grandes"
+end on
+
+on m_smallicons.create
+call super::create
+this.Text="Iconos &Pequeños"
+this.Microhelp="Visualiza los items usando íconos pequeños."
+this.ToolBarItemText="Iconos Pequeños"
+end on
+
+on m_list.create
+call super::create
+this.Text="&Lista"
+this.Microhelp="Visualiza los items a manera de lista."
+this.ToolBarItemText="Lista"
+end on
+
+on m_details.create
+call super::create
+this.Text="&Detalles"
+this.Microhelp="Visualiza información correspondiente a los items."
+this.ToolBarItemText="Detalles"
+end on
+
+on m_arrangeicons.create
+call super::create
+this.Text="Organizar &Iconos"
+this.Microhelp="Contiene comandos para organizar items."
+end on
+
+on m_by1.create
+call super::create
+this.Text="&Por"
+this.Microhelp="Organiza por.."
+end on
+
+on m_autoarrange.create
+call super::create
+this.Text="Organización &Automática"
+this.Microhelp="Organiza los items automáticamente."
+end on
+
+on m_first.create
+call super::create
+this.Text="Primero"
+this.Microhelp="Primer registro"
+this.ToolBarItemText="Primero"
+this.Visible=false
+end on
+
+on m_priorpage.create
+call super::create
+this.Text="Anterior"
+this.Microhelp="Registro anterior"
+this.ToolBarItemText="Anterior"
+this.Visible=false
+this.ToolBarItemVisible=true
+end on
+
+on m_nextpage.create
+call super::create
+this.Text="Siguiente"
+this.Microhelp="Siguiente registro"
+this.ToolBarItemText="Siguiente"
+this.Visible=false
+end on
+
+on m_lastpage.create
+call super::create
+this.Text="Ultimo"
+this.Microhelp="Ultimo registro"
+this.ToolBarItemText="Ultimo"
+this.Visible=false
+this.ToolBarItemVisible=true
+end on
+
+on m_sort.create
+call super::create
+this.Text="&Ordenar..."
+this.Microhelp="Permite ordenar los items de la ventana actual."
+this.ToolBarItemText="Ordenar"
+this.Visible=false
+this.ToolBarItemVisible=false
+end on
+
+on m_filter.create
+call super::create
+this.Text="&Filtrar..."
+this.Microhelp="Permite filtrar los items de la ventana actual."
+this.ToolBarItemText="Filtrar"
+this.Visible=false
+this.ToolBarItemVisible=false
+end on
+
+on m_dash36.create
+call super::create
+this.Visible=false
+end on
+
+on m_zoom.create
+call super::create
+this.Text="&Ampliar..."
+this.Microhelp="Escala la visualización de la vista preliminar."
+this.ToolBarItemName="Preview!"
+this.ToolBarItemText="Ampliar"
+this.ToolBarItemOrder=190
+this.ToolBarItemSpace=2
+end on
+
+on m_insert.create
+call super::create
+this.Text="&Insertar"
+this.Visible=false
+end on
+
+on m_insertfile.create
+call super::create
+this.Text="&Archivo..."
+this.Microhelp="Inserta el texto de un archivo externo."
+end on
+
+on m_picture.create
+call super::create
+this.Text="&Imagen..."
+this.Microhelp="Inserta una imagen desde un archivo."
+end on
+
+on m_object.create
+call super::create
+this.Text="&Objeto..."
+this.Microhelp="Inserta un objeto."
+end on
+
+type m_tools from m_master`m_tools within mb_graph
+m_color m_color
+m_tipogrfico m_tipogrfico
+m_- m_-
+m_espacio m_espacio
+m_ttulo m_ttulo
+end type
+
+on m_tools.create
+call super::create
+this.Text="&Herramientas"
+this.m_color=create m_color
+this.m_tipogrfico=create m_tipogrfico
+this.m_-=create m_-
+this.m_espacio=create m_espacio
+this.m_ttulo=create m_ttulo
+this.Item[UpperBound(this.item)+1]=this.m_color
+this.Item[UpperBound(this.item)+1]=this.m_tipogrfico
+this.Item[UpperBound(this.item)+1]=this.m_-
+this.Item[UpperBound(this.item)+1]=this.m_espacio
+this.Item[UpperBound(this.item)+1]=this.m_ttulo
+end on
+
+on m_tools.destroy
+call super::destroy
+destroy(this.m_color)
+destroy(this.m_tipogrfico)
+destroy(this.m_-)
+destroy(this.m_espacio)
+destroy(this.m_ttulo)
+end on
+
+on m_toolbars.create
+call super::create
+this.Text="&Personalizar Barras..."
+this.Microhelp="Permite personalizar la barra de herramientas."
+this.Visible=false
+end on
+
+on m_window.create
+call super::create
+this.Text="Ven&tana"
+end on
+
+on m_cascade.create
+call super::create
+this.Text="&Cascada"
+this.Microhelp="Organiza las ventanas cargadas en forma de cascada."
+this.ToolBarItemText="Cascada"
+end on
+
+on m_tilehorizontal.create
+call super::create
+this.Text="Mosaico &Horizontal"
+this.Microhelp="Organiza las ventanas cargadas en estilo mosaico horizontal."
+this.ToolBarItemText="Mosaico Horizontal"
+end on
+
+on m_tilevertical.create
+call super::create
+this.Text="Mosaico &Vertical"
+this.Microhelp="Organiza las ventanas cargadas en estilo mosaico vertical."
+this.ToolBarItemText="Mosaico Vertical"
+end on
+
+on m_layer.create
+call super::create
+this.Text="C&ompleta"
+this.Microhelp="Ajusta la ventana actual al espacio disponible en el módulo."
+this.ToolBarItemText="Completa"
+end on
+
+on m_minimizeall.create
+call super::create
+this.Text="&Minimizar Todas"
+end on
+
+on m_undoarrange.create
+call super::create
+this.Text="&Deshacer"
+this.Microhelp="Deshace la última acción al rededor de las ventanas."
+end on
+
+on m_help.create
+call super::create
+this.Text="A&yuda"
+end on
+
+on m_helptopics.create
+call super::create
+this.Text="&Temas de Ayuda..."
+this.Microhelp="Visualiza los temas de ayuda disponibles por la aplicación."
+this.ToolBarItemName="..\Bitmaps\Ayuda.bmp"
+this.ToolBarItemText="Ayuda"
+this.ToolBarItemOrder=9000
+this.ToolBarItemVisible=true
+end on
+
+on m_about.create
+call super::create
+this.Text="&Acerca de..."
+this.Microhelp="Visualiza información acerca del Sistema de Información."
+end on
+
+type m_color from menu within m_tools
+end type
+
+on m_color.create
+this.Text="&Color"
+this.Microhelp="Permite el cambio de color de las diferentes partes del gráfico."
+this.ToolBarItemName="Preferences!"
+this.ToolBarItemText="Color"
+this.ToolBarItemOrder=160
+this.ToolBarItemSpace=2
+end on
+
+event clicked;// Tell the sheet to take care of setting the graph color. This is
+// done in the "graph_color" event of the sheet 
+ParentWindow.GetActiveSheet().TriggerEvent ( "graph_color")
+
+end event
+
+type m_tipogrfico from menu within m_tools
+end type
+
+event clicked;// Tell the sheet to take care of setting the graph type. This is
+// done in the "graph_type" event of the sheet
+ParentWindow.GetActiveSheet().TriggerEvent ("graph_type")
+end event
+
+on m_tipogrfico.create
+this.Text="Tipo &Gráfico"
+this.Microhelp="Permite cambiar el tipo de gráfico."
+this.ToolBarItemName="Graph1!"
+this.ToolBarItemText="Tipo Gráfico"
+this.ToolBarItemOrder=161
+end on
+
+type m_- from menu within m_tools
+end type
+
+on m_-.create
+this.Text="-"
+end on
+
+type m_espacio from menu within m_tools
+end type
+
+event clicked;// Tell the sheet to take care of setting the graph spacing. This is
+// done in the "spacing" event of the sheet 
+ParentWindow.GetActiveSheet().TriggerEvent ("spacing", 0, 0)
+
+end event
+
+on m_espacio.create
+this.Text="&Espacio"
+this.Microhelp="Permite modificar el espaceado en el gráfico."
+end on
+
+type m_ttulo from menu within m_tools
+end type
+
+event clicked;// Tell the sheet to take care of setting the title. This is done in
+// the "graph_title" event of the active sheet
+ParentWindow.GetActiveSheet().TriggerEvent ( "graph_title")
+end event
+
+on m_ttulo.create
+this.Text="&Título"
+this.Microhelp="Permite el cambio de titulo para el gráfico."
+this.ToolBarItemName="StaticText!"
+this.ToolBarItemText="Título"
+this.ToolBarItemOrder=162
+end on
+

@@ -1,0 +1,37 @@
+﻿$PBExportHeader$fn_getbranchfax.srf
+global type fn_getbranchfax from function_object
+end type
+
+forward prototypes
+global function string fn_getbranchfax (string ps_id_branch)
+end prototypes
+
+global function string fn_getbranchfax (string ps_id_branch);string ls_fax
+	
+SELECT dba.BRANCH.FAX_BRANCH  
+INTO :ls_fax  
+FROM dba.BRANCH  
+WHERE dba.BRANCH.ID_BRANCH = :ps_id_branch   ;
+		
+// """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+// Completa el 1 para los Faxes que no lo tengan y no sean del area 301
+
+ls_fax = fn_replace(ls_fax,'  ','')
+ls_fax = fn_replace(ls_fax,' ','')
+ls_fax = fn_replace(ls_fax,'-','')
+ls_fax = fn_replace(ls_fax,'.','')
+ls_fax = fn_replace(ls_fax,'(','')
+ls_fax = fn_replace(ls_fax,')','')
+
+ls_fax = trim(ls_fax)
+
+if len(ls_fax) = 10 then ls_fax = '1' + ls_fax
+
+if mid(ls_fax,1,4) = '1301' then
+	ls_fax = mid(ls_fax,2)
+end if
+// """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""	
+
+return ls_fax
+end function
+

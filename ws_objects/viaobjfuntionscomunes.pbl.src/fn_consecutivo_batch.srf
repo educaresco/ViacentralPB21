@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_consecutivo_batch.srf
+global type fn_consecutivo_batch from function_object
+end type
+
+forward prototypes
+global function double fn_consecutivo_batch (string is_group)
+end prototypes
+
+global function double fn_consecutivo_batch (string is_group);Double	ld_batch
+
+	
+	SELECT MAX(id_batch) + 1  
+    INTO :ld_batch  
+    FROM dba.batch  
+   WHERE dba.batch.id_main_branch = :is_group   ;
+
+	
+
+	If isnull(ld_batch) Then
+		ld_batch = 1
+	end if
+	
+	Return ld_batch
+
+
+
+
+end function
+

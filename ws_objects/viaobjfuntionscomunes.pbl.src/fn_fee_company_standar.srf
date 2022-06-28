@@ -1,0 +1,26 @@
+﻿$PBExportHeader$fn_fee_company_standar.srf
+global type fn_fee_company_standar from function_object
+end type
+
+forward prototypes
+global function double fn_fee_company_standar (string ls_country_receiver, string ls_branch_insta, double ld_amount, string ls_tipo_moneda)
+end prototypes
+
+global function double fn_fee_company_standar (string ls_country_receiver, string ls_branch_insta, double ld_amount, string ls_tipo_moneda);Double ld_feet
+
+SELECT dba.standar.feet_comision_comp  
+    INTO :ld_feet 
+    FROM dba.standar  
+   WHERE ( dba.standar.id_country = :ls_country_receiver ) AND  
+         ( dba.standar.range_begin_comision <= :ld_amount ) AND  
+         ( dba.standar.range_end_comision >= :ld_amount )  AND
+			( dba.standar.mod_pay_currency	= :ls_tipo_moneda )  ;
+			
+			
+if sqlca.sqlcode <> 0 then
+	return 0
+else
+	return ld_feet
+end if
+end function
+

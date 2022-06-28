@@ -1,0 +1,39 @@
+﻿$PBExportHeader$dw_rep_despliegue_trans_with_balance_all.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=80 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=92 color="536870912" )
+table(column=(type=char(4) updatewhereclause=yes name=id_group_trans_diaria dbname="TRANSACCION_DIARIA_PAYEE.id_group_trans_diaria" )
+ column=(type=decimal(4) updatewhereclause=yes name=compute_0002 dbname="compute_0002" )
+ column=(type=decimal(4) updatewhereclause=yes name=compute_0003 dbname="compute_0003" )
+ column=(type=decimal(4) updatewhereclause=yes name=compute_0004 dbname="compute_0004" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.name_main_branch" )
+ retrieve="SELECT  
+dba.transaccion_diaria_payee.id_group_trans_diaria ,           
+Sum(dba.transaccion_diaria_payee.credit_trans_diaria) - Sum(dba.transaccion_diaria_payee.debit_trans_diaria),           
+Sum(dba.transaccion_diaria_payee.debit_trans_diaria),           
+Sum(dba.transaccion_diaria_payee.credit_trans_diaria),           
+dba.group_branch.name_main_branch     
+FROM 
+dba.transaccion_diaria_payee ,           
+dba.group_branch     
+WHERE 
+( dba.transaccion_diaria_payee.id_group_trans_diaria = dba.group_branch.id_main_branch ) and          
+( ( dba.group_branch.id_main_branch = :arg_group ) ) 
+GROUP BY dba.group_branch.name_main_branch ,           
+dba.transaccion_diaria_payee.id_group_trans_diaria  
+ORDER BY dba.group_branch.name_main_branch          ASC  " arguments=(("arg_group", string))  sort="group_branch_name_main_branch A " )
+group(level=1 header.height=0 trailer.height=0 by=("id_group_trans_diaria" ) header.color="553648127" trailer.color="536870912"  sort="count(id_group_trans_diaria for group 1) A " )
+text(band=header alignment="2" text="Group "border="2" color="8388608" x="27" y="20" height="56" width="1097"  name=id_group_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Debit"border="2" color="8388608" x="1143" y="20" height="56" width="325"  name=debit_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Credit"border="2" color="8388608" x="1490" y="20" height="56" width="320"  name=credit_trans_diaria_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+text(band=header alignment="2" text="Balance"border="2" color="8388608" x="1829" y="20" height="56" width="320"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="8388608" x="27" y="4" height="72" width="1097" format="[general]"  name=group_branch_name_main_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="0" x="1143" y="4" height="72" width="325" format="[currency]"  name=compute_0003 edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="0" x="1490" y="4" height="72" width="320" format="[currency]"  name=compute_0004 edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="1" tabsequence=32766 border="0" color="0" x="1829" y="4" height="72" width="320" format="[RED]($#,##0.00);$#,##0.00"  name=compute_0002 edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="16777215" x="2213" y="4" height="72" width="352" format="[general]"  name=id_group_trans_diaria edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+
+sparse(names="id_group_trans_diaria")htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

@@ -1,0 +1,20 @@
+﻿$PBExportHeader$fn_getbranchname.srf
+global type fn_getbranchname from function_object
+end type
+
+forward prototypes
+global function string fn_getbranchname (string ps_id_branch)
+end prototypes
+
+global function string fn_getbranchname (string ps_id_branch);String ls_name
+
+SELECT isnull(name_branch,'-NOT FOUND-')
+  INTO :ls_name
+  FROM dba.branch
+ WHERE id_branch = :ps_id_branch;
+ 
+return trim(ls_name)
+
+
+end function
+

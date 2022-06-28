@@ -1,0 +1,90 @@
+﻿$PBExportHeader$dw_directorio_general.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=480 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=60 color="536870912" )
+detail(height=108 color="536870912" )
+table(column=(type=char(40) updatewhereclause=yes name=state_name_state dbname="STATE.name_state" )
+ column=(type=char(40) updatewhereclause=yes name=city_name_city dbname="BRANCH.name_city" )
+ column=(type=char(60) updatewhereclause=yes name=branch_name_branch dbname="BRANCH.name_branch" )
+ column=(type=char(60) updatewhereclause=yes name=branch_address_branch dbname="BRANCH.address_branch" )
+ column=(type=char(40) updatewhereclause=yes name=group_branch_name_main_branch dbname="GROUP_BRANCH.name_main_branch" )
+ column=(type=char(5) updatewhereclause=yes name=cubrimiento_branch_id_city dbname="CUBRIMIENTO_BRANCH.id_city" )
+ column=(type=char(2) updatewhereclause=yes name=modo_pago_branch_modo_pago dbname="MODO_PAGO_BRANCH.modo_pago" )
+ column=(type=char(40) updatewhereclause=yes name=country_name_country dbname="COUNTRY.name_country" )
+ column=(type=char(5) updatewhereclause=yes name=branch_id_city dbname="BRANCH.id_city" )
+ column=(type=char(20) updatewhereclause=yes name=modo_pago_nom_modo_pago dbname="MODO_PAGO.nom_modo_pago" )
+ column=(type=char(5) updatewhereclause=yes name=city_id_city dbname="BRANCH.id_city" )
+ column=(type=char(40) updatewhereclause=yes name=city_name_city dbname="BRANCH.name_city" )
+ column=(type=char(1) updatewhereclause=yes name=branch_currency_pay_branch dbname="BRANCH.currency_pay_branch" )
+ column=(type=decimal(0) updatewhereclause=yes name=group_branch_prioridad_group_branch dbname="GROUP_BRANCH.prioridad_group_branch" )
+ column=(type=char(4) updatewhereclause=yes name=group_branch_id_main_branch dbname="GROUP_BRANCH.id_main_branch" )
+ retrieve="  SELECT DISTINCT  dba.state.name_state ,           
+						 city_a.name_city ,           
+						 dba.branch.name_branch ,           
+						 dba.branch.address_branch ,           
+						 dba.group_branch.name_main_branch ,           
+                   dba.cubrimiento_branch.id_city ,           
+					    dba.modo_pago_branch.modo_pago ,           
+						 dba.country.name_country ,           
+						 dba.branch.id_city ,           
+                   dba.modo_pago.nom_modo_pago ,           
+					    city_a.id_city ,           
+						 city_b.name_city ,           
+						 dba.branch.currency_pay_branch ,           
+                   dba.group_branch.prioridad_group_branch ,           
+                   dba.group_branch.id_main_branch     
+        FROM dba.branch ,           
+				 dba.city city_a ,           
+				 dba.state ,           
+				 dba.group_branch ,           
+				 dba.cubrimiento_branch ,           
+				 dba.modo_pago_branch ,           
+				 dba.country ,           
+				 dba.modo_pago ,           
+				 dba.city city_b     
+        WHERE ( dba.state.id_state = city_a.id_state ) 
+			and  ( dba.state.id_country = city_a.id_country ) 
+			and  ( dba.group_branch.id_main_branch = dba.branch.id_main_branch ) 
+			and  ( dba.cubrimiento_branch.id_branch = dba.branch.id_branch ) 
+			and  ( dba.country.id_country = dba.state.id_country )           
+			and  ( city_a.id_city = dba.cubrimiento_branch.id_city ) 
+			and  ( dba.cubrimiento_branch.id_state = city_a.id_state ) 
+			and  ( city_a.id_country = dba.cubrimiento_branch.id_country ) 
+			and  ( dba.branch.id_branch = dba.modo_pago_branch.id_branch ) 
+			and  ( dba.modo_pago.id_modo_pago = dba.modo_pago_branch.modo_pago ) 
+			and  ( dba.branch.id_city = city_b.id_city ) 
+			and  ( city_b.id_state = dba.branch.id_state ) 
+			and  ( dba.branch.id_country = city_b.id_country ) 
+			and  ( ( dba.branch.id_flag_branch = 'A' ) 
+			and    ( dba.branch.id_type_branch = 'A' 	or   dba.branch.id_type_branch = 'P')  
+			and    ( dba.branch.id_country = :arg_country ) ) 
+        ORDER BY dba.country.name_country          ASC,           
+					  dba.state.name_state          ASC,           
+					  city_a.name_city          ASC,           
+					  dba.group_branch.prioridad_group_branch          ASC,           
+					  dba.modo_pago.nom_modo_pago          DESC" arguments=(("arg_country", string)) )
+group(level=1 header.height=100 trailer.height=0 by=("country_name_country" , "state_name_state" ) header.color="536870912" trailer.color="536870912" )
+group(level=2 header.height=0 trailer.height=0 by=("city_name_city" ) header.color="536870912" trailer.color="536870912" )
+line(band=header x1="178" y1="376" x2="3461" y2="376" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+line(band=header x1="178" y1="472" x2="3461" y2="472" pen.style="0" pen.width="5" pen.color="0"  background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="CURRENCY"border="0" color="0" x="1911" y="388" height="80" width="430"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="0" text="DELIVERY"border="0" color="0" x="2395" y="388" height="80" width="389"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="16777215" x="3090" y="20" height="64" width="375" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="PAYEE"border="0" color="0" x="2821" y="384" height="80" width="645"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression="if(  country_name_country ='JAMAICA','PARISH & CITY','CITY' )"border="0" color="0" x="165" y="388" height="80" width="1285" format="[general]"  font.face="Arial" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="0" expression=" Trim(country_name_country )"border="0" color="0" x="1088" y="16" height="280" width="1984" format="[general]"  font.face="Arial" font.height="-36" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="536870912" )
+compute(band=header.1 alignment="0" expression="IF( state_name_state ='MEXICO D.F.', state_name_state ,if( country_name_country ='Mexico' or  country_name_country ='USA', 'ESTADO DE '+ state_name_state,  state_name_state ))"border="0" color="0" x="165" y="4" height="96" width="2258" format="[general]"  font.face="Arial" font.height="-16" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.italic="1" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="IF( branch_currency_pay_branch ='A','US$ / NAT.',if(branch_currency_pay_branch ='D','US$','NATIONAL'))"border="0" color="0" x="1911" y="60" height="56" width="471" format="[general]"  name=currency  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2395" y="60" height="56" width="411" format="[general]"  name=modo_pago_nom_modo_pago edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="if((modo_pago_branch_modo_pago = 'D'   )  ,
+if( city_id_city  =  branch_id_city, branch_address_branch, 'PAGA A DOMICILIO DESDE  '+   city_name_city ) ,
+if( (modo_pago_branch_modo_pago = 'C'   )  ,
+ branch_address_branch  ,if( city_id_city  =  branch_id_city , branch_address_branch  ,'PAGA EN OFICINA DE '+  city_name_city  ) )  ) "border="0" color="0" x="165" y="60" height="56" width="1733" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="IF( state_name_state = 'MEXICO D.F.' ,  city_name_city +~" - ~"+branch_name_branch , if(  country_name_country  = 'jamaica', branch_name_branch , city_name_city ) )"border="0" color="0" x="165" y="0" height="56" width="2917" format="[general]"  font.face="Arial" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="2821" y="60" height="56" width="645" format="[general]"  name=group_branch_name_main_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=15 alignment="0" tabsequence=32766 border="0" color="16777215" x="3479" y="20" height="56" width="27" format="[general]"  name=group_branch_id_main_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-36" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" font.underline="1" background.mode="1" background.color="536870912" )
+compute(band=footer alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="3113" y="8" height="64" width="375" format="[general]"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+bitmap(band=header filename="C:\ViamericasMT\logo_rep.bmp" x="9" y="8" height="216" width="1061" border="0" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

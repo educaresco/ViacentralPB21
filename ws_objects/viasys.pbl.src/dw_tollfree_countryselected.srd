@@ -1,0 +1,11 @@
+﻿$PBExportHeader$dw_tollfree_countryselected.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=60 color="536870912" )
+table(column=(type=char(5) updatewhereclause=yes name=country_id_country dbname="COUNTRY.ID_COUNTRY" )
+ column=(type=char(40) updatewhereclause=yes name=country_name_country dbname="COUNTRY.NAME_COUNTRY" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"dba.COUNTRY~" )  TABLE(NAME=~"dba.TOLLFREE~" ) COLUMN(NAME=~"dba.COUNTRY.ID_COUNTRY~") COLUMN(NAME=~"dba.COUNTRY.NAME_COUNTRY~")WHERE(    EXP1 =~"(charindex('*'+rtrim(id_country)+'*',to_countries)~"   OP =~">~"    EXP2 =~"0~"    LOGIC =~"or~" ) WHERE(    EXP1 =~"charindex('*ANY COUNTRY*',to_countries)~"   OP =~">~"    EXP2 =~"0)~"    LOGIC =~"and~" ) WHERE(    EXP1 =~"dba.TOLLFREE.COD_COMPANY~"   OP =~"=~"    EXP2 =~":cod_company~" ) ) ORDER(NAME=~"dba.COUNTRY.NAME_COUNTRY~" ASC=yes ) ARG(NAME = ~"cod_company~" TYPE = string) " arguments=(("cod_company", string)) )
+column(band=detail id=2 alignment="0" tabsequence=32766 border="0" color="0" x="9" y="4" height="52" width="923" format="[general]"  name=country_name_country edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-7" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

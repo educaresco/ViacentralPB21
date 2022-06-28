@@ -1,0 +1,54 @@
+﻿$PBExportHeader$dw_acc_credit_statusaudit.srd
+release 11;
+datawindow(units=0 timer_interval=0 color=67108864 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes print.preview.outline=yes hidegrayline=no showbackcoloronxp=no )
+header(height=72 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=72 color="536870912" height.autosize=yes )
+table(column=(type=datetime updatewhereclause=yes name=date_audit dbname="AUDIT_BRANCH_STATUS.DATE_AUDIT" dbalias=".DATE_AUDIT" )
+ column=(type=char(1) updatewhereclause=yes name=old_status dbname="AUDIT_BRANCH_STATUS.OLD_STATUS" dbalias=".OLD_STATUS" values="OPEN	O/CLOSED	C/" )
+ column=(type=char(1) updatewhereclause=yes name=old_flag dbname="AUDIT_BRANCH_STATUS.OLD_FLAG" dbalias=".OLD_FLAG" values="ACTIVE	A/INACTIVE	I/" )
+ column=(type=char(1) updatewhereclause=yes name=new_status dbname="AUDIT_BRANCH_STATUS.NEW_STATUS" dbalias=".NEW_STATUS" values="OPEN	O/CLOSED	C/" )
+ column=(type=char(1) updatewhereclause=yes name=new_flag dbname="AUDIT_BRANCH_STATUS.NEW_FLAG" dbalias=".NEW_FLAG" values="ACTIVE	A/INACTIVE	I/" )
+ column=(type=char(200) updatewhereclause=yes name=new_comment dbname="AUDIT_BRANCH_STATUS.NEW_COMMENT" dbalias=".NEW_COMMENT" )
+ column=(type=char(40) updatewhereclause=yes name=db_user_name dbname="AUDIT_BRANCH_STATUS.DB_USER_NAME" dbalias=".DB_USER_NAME" )
+ column=(type=char(45) updatewhereclause=yes name=inactivation_types_desc_inactivation_type dbname="INACTIVATION_TYPES.DESC_INACTIVATION_TYPE" dbalias=".DESC_INACTIVATION_TYPE" )
+ column=(type=char(8000) updatewhereclause=yes name=db_short_user dbname="DB_SHORT_USER" )
+ retrieve="SELECT dba.AUDIT_BRANCH_STATUS.DATE_AUDIT,   
+dba.AUDIT_BRANCH_STATUS.OLD_STATUS,   
+dba.AUDIT_BRANCH_STATUS.OLD_FLAG,   
+dba.AUDIT_BRANCH_STATUS.NEW_STATUS,   
+dba.AUDIT_BRANCH_STATUS.NEW_FLAG,   
+dba.AUDIT_BRANCH_STATUS.NEW_COMMENT,   
+dba.AUDIT_BRANCH_STATUS.DB_USER_NAME,   
+dba.INACTIVATION_TYPES.DESC_INACTIVATION_TYPE,
+replace(dba.AUDIT_BRANCH_STATUS.DB_USER_NAME,'VIAMERICAS\','') as DB_SHORT_USER 
+FROM dba.AUDIT_BRANCH_STATUS,   
+dba.INACTIVATION_TYPES  
+WHERE ( dba.AUDIT_BRANCH_STATUS.LAST_INACTIVATION_TYPE = dba.INACTIVATION_TYPES.ID_INACTIVATION_TYPE ) 
+and  ( dba.AUDIT_BRANCH_STATUS.ID_BRANCH = :ID_BRANCH )
+ORDER BY dba.AUDIT_BRANCH_STATUS.DATE_AUDIT desc   
+" arguments=(("ID_BRANCH", string))  sort="date_audit D " )
+text(band=header alignment="2" text="Date" border="2" color="33554432" x="18" y="16" height="52" width="503" html.valueishtml="0"  name=date_audit_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="New Status" border="2" color="33554432" x="1376" y="16" height="52" width="398" html.valueishtml="0"  name=new_status_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Old Status" border="2" color="33554432" x="960" y="16" height="52" width="398" html.valueishtml="0"  name=old_status_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Type of Inactivation" border="2" color="33554432" x="1792" y="16" height="52" width="1216" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="New Comment" border="2" color="33554432" x="3026" y="16" height="52" width="1134" html.valueishtml="0"  name=new_comment_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+compute(band=detail alignment="0" expression="if( new_status = 'C', 'CLOSED', if( new_flag = 'I','OPEN-INACTIVE','OPEN-ACTIVE'))"border="0" color="33554432" x="1390" y="8" height="52" width="384" format="[GENERAL]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=detail alignment="0" expression="if( old_status = 'C', 'CLOSED', if( old_flag = 'I','OPEN-INACTIVE','OPEN-ACTIVE'))"border="0" color="33554432" x="974" y="8" height="52" width="384" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="0" tabsequence=32766 border="0" color="33554432" x="1792" y="8" height="52" width="1225" format="[general]" html.valueishtml="0"  name=inactivation_types_desc_inactivation_type visible="1~tif( new_flag = 'A',0,1)" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="33554432" x="3035" y="8" height="52" width="1125" format="[general]" html.valueishtml="0"  name=new_comment visible="1"  resizeable=1 height.autosize=yes edit.limit=200 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="User" border="2" color="33554432" x="539" y="16" height="52" width="402" html.valueishtml="0"  name=db_user_name_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="33554432" x="32" y="8" height="52" width="489" format="[shortdate] [time]" html.valueishtml="0"  name=date_audit visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="0" tabsequence=0 border="0" color="33554432" x="549" y="8" height="52" width="402" html.valueishtml="0"  name=db_short_user visible="1" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" pagingmethod=0 generatedddwframes="1" )
+xhtmlgen() cssgen(sessionspecific="0" )
+xmlgen(inline="0" )
+xsltgen()
+jsgen()
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )
+export.xhtml()
+ 

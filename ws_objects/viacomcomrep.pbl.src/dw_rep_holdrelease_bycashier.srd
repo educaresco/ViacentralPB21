@@ -1,0 +1,62 @@
+﻿$PBExportHeader$dw_rep_holdrelease_bycashier.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=1073741824 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=348 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=68 color="536870912"  height.autosize=yes)
+table(column=(type=char(40) updatewhereclause=yes name=cashier_nameuser dbname="NameUser" )
+ column=(type=char(10) updatewhereclause=yes name=motivo_hold_history_iduser dbname="MOTIVO_HOLD_HISTORY.IdUser" )
+ column=(type=char(10) updatewhereclause=yes name=idbranch dbname="IdBranch" )
+ column=(type=decimal(0) updatewhereclause=yes name=motivo_hold_history_orden dbname="MOTIVO_HOLD_HISTORY.Orden" )
+ column=(type=datetime updatewhereclause=yes name=motivo_hold_history_datehold dbname="MOTIVO_HOLD_HISTORY.DateHold" )
+ column=(type=datetime updatewhereclause=yes name=motivo_hold_history_daterelease dbname="MOTIVO_HOLD_HISTORY.DateRelease" )
+ column=(type=char(5) updatewhereclause=yes name=motivo_hold_history_codehold dbname="MOTIVO_HOLD_HISTORY.CodeHold" )
+ column=(type=long updatewhereclause=yes name=daynumber dbname="DayNumber" )
+ column=(type=char(50) updatewhereclause=yes name=description dbname="Description" )
+ column=(type=char(50) updatewhereclause=yes name=motivo_hold_history_usernotes dbname="MOTIVO_HOLD_HISTORY.UserNotes" )
+ retrieve="SELECT RTRIM(C.NAME_CASHIER) as NameUser,
+	   H.ID_CASHIER as IdUser,	   
+	   RTRIM(ID_BRANCH) AS IdBranch,
+	   ID_RECEIVER AS Orden,
+	   DATE_MOTIVO_HOLD as DateHold,
+	   DATE_RELEASE as DateRelease,
+	   TYPE_MOTIVO_HOLD as CodeHold,	   
+	   DAY(H.DATE_RELEASE) AS DayNumber,
+	   RTRIM(D.DESCRIPCION) AS Description,
+		DESC_MOTIVO_HOLD AS UserNotes
+FROM DBA.MOTIVO_HOLD_HISTORY H,
+	 DBA.CASHIER C, 
+	 DBA.DESC_HOLD D
+WHERE H.TYPE_MOTIVO_HOLD NOT IN ('70','89','3')
+AND H.ID_CASHIER=C.ID_CASHIER
+AND H.TYPE_MOTIVO_HOLD=D.TIPO_HOLD
+AND H.DATE_RELEASE BETWEEN :p_date1 AND :p_date2
+ORDER BY C.NAME_CASHIER
+" arguments=(("p_date1", datetime),("p_date2", datetime))  sort="cashier_nameuser A motivo_hold_history_datehold A " )
+group(level=1 header.height=252 trailer.height=48 by=("cashier_nameuser" ) header.color="536870912" trailer.color="536870912" )
+text(band=header alignment="2" text="Hold Releases By User" border="0" color="0" x="1001" y="8" height="76" width="2464" html.valueishtml="0"  name=t_15 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+bitmap(band=header filename="C:\ViamericasMT\vialogo.bmp" x="9" y="8" height="216" width="969" border="0"  name=logo visible="1" )
+text(band=header alignment="0" text="4641 Montgomery Ave Suite 400, Bethesda, MD 20814" border="0" color="0" x="9" y="232" height="40" width="969" html.valueishtml="0"  name=t_2 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="0" text="Ph. 800.401.7626  Fax. 301.215.9295 " border="0" color="0" x="9" y="272" height="40" width="969" html.valueishtml="0"  name=t_3 visible="1"  font.face="Tahoma" font.height="-6" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+compute(band=header alignment="2" expression="~"From ~" + string(p_date1,~"mm/dd/yyyy~") + ~" to ~" + ~"From ~" + string(p_date2,~"mm/dd/yyyy~") "border="0" color="0" x="1001" y="88" height="84" width="2464" format="[general]" html.valueishtml="0"  name=compute_4 visible="1"  font.face="Tahoma" font.height="-12" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="string(today(),'mm/dd/yyyy hh:mm')"border="0" color="0" x="2725" y="184" height="64" width="741" format="[general]" html.valueishtml="0"  name=compute_2 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header alignment="1" expression="'Page ' + page() + ' of ' + pageCount()"border="0" color="0" x="2725" y="252" height="60" width="741" format="[general]" html.valueishtml="0"  name=compute_3 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+line(band=header x1="9" y1="328" x2="3465" y2="328"  name=l_1 visible="1" pen.style="0" pen.width="5" pen.color="0"  background.mode="2" background.color="16777215" )
+compute(band=header.1 alignment="0" expression="~"Number of Releases:  ~" +count( idbranch +~"-~" + motivo_hold_history_orden  for group 1)"border="0" color="0" x="27" y="104" height="64" width="3218" format="[GENERAL]" html.valueishtml="0"  name=compute_6 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=header.1 alignment="0" expression="~"User:  ~" + cashier_nameuser "border="0" color="0" x="27" y="28" height="64" width="3218" format="[GENERAL]" html.valueishtml="0"  name=compute_1 visible="1"  font.face="Tahoma" font.height="-9" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header.1 alignment="2" text="Date Release" border="2" color="33554432" x="992" y="184" height="52" width="517" html.valueishtml="0"  name=t_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Hold Type" border="2" color="33554432" x="1522" y="184" height="52" width="1134" html.valueishtml="0"  name=t_6 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Date Hold" border="2" color="33554432" x="462" y="184" height="52" width="517" html.valueishtml="0"  name=t_4 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="Order" border="2" color="33554432" x="23" y="184" height="52" width="425" html.valueishtml="0"  name=dateof_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header.1 alignment="2" text="User Notes" border="2" color="33554432" x="2670" y="184" height="52" width="791" html.valueishtml="0"  name=t_7 visible="1"  font.face="Tahoma" font.height="-8" font.weight="700"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=5 alignment="0" tabsequence=32766 border="0" color="0" x="462" y="8" height="52" width="517" format="mm/dd/yyyy hh:mm AM/PM" html.valueishtml="0"  name=motivo_hold_history_datehold visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=6 alignment="0" tabsequence=32766 border="0" color="0" x="992" y="8" height="52" width="517" format="mm/dd/yyyy hh:mm AM/PM" html.valueishtml="0"  name=motivo_hold_history_daterelease visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=9 alignment="0" tabsequence=32766 border="0" color="0" x="1522" y="8" height="52" width="1134" format="[general]" html.valueishtml="0"  name=description visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+compute(band=detail alignment="0" expression=" idbranch +~"-~" + motivo_hold_history_orden "border="0" color="0" x="23" y="8" height="52" width="425" format="[GENERAL]" html.valueishtml="0"  name=compute_5 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=10 alignment="0" tabsequence=32766 border="0" color="0" x="2670" y="8" height="52" width="791" format="[general]" html.valueishtml="0"  name=motivo_hold_history_usernotes visible="1"  resizeable=1 height.autosize=yes edit.limit=0 edit.case=any edit.autoselect=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

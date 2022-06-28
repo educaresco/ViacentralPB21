@@ -1,0 +1,33 @@
+﻿$PBExportHeader$fn_updategrouptypes.srf
+global type fn_updategrouptypes from function_object
+end type
+
+forward prototypes
+global subroutine fn_updategrouptypes ()
+end prototypes
+
+global subroutine fn_updategrouptypes ();// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Recalculating the type for each group
+
+//update dba.group_branch set group_type = null;
+//
+//update dba.group_branch set group_type = 'R' 
+//where id_main_branch in (select distinct id_main_branch from dba.branch where id_type_branch = 'R');
+//
+//update dba.group_branch set group_type = 'P' 
+//where id_main_branch in (select distinct id_main_branch from dba.branch where id_type_branch = 'P');
+//
+//update dba.group_branch set group_type = 'A' 
+//where id_main_branch in (select distinct id_main_branch from dba.branch where id_type_branch = 'A');
+//
+//update dba.group_branch set group_type = 'A' 
+//where id_main_branch in (select distinct id_main_branch from dba.branch where id_type_branch = 'R')
+//and   id_main_branch in (select distinct id_main_branch from dba.branch where id_type_branch = 'P');
+//
+//update dba.group_branch set group_type = 'N' where group_type is null;
+
+//commit;
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+end subroutine
+

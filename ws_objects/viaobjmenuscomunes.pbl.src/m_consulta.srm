@@ -1,0 +1,1085 @@
+﻿$PBExportHeader$m_consulta.srm
+forward
+global type m_consulta from menu
+end type
+type m_limpiar from menu within m_consulta
+end type
+type m_salvar from menu within m_consulta
+end type
+type m_salvarcomo from menu within m_consulta
+end type
+type m_imprimir from menucascade within m_consulta
+end type
+type m_uno from menu within m_imprimir
+end type
+type m_todos from menu within m_imprimir
+end type
+type m_- from menu within m_imprimir
+end type
+type m_copiarecibo from menu within m_imprimir
+end type
+type m_transmision from menu within m_imprimir
+end type
+type m_recibo from menu within m_imprimir
+end type
+type m_imprimir from menucascade within m_consulta
+m_uno m_uno
+m_todos m_todos
+m_- m_-
+m_copiarecibo m_copiarecibo
+m_transmision m_transmision
+m_recibo m_recibo
+end type
+type m_consultar from menu within m_consulta
+end type
+type m_ordenar from menu within m_consulta
+end type
+type m_cancelar from menu within m_consulta
+end type
+type m_consregpago from menu within m_consulta
+end type
+type complain from menu within m_consulta
+end type
+type m_sendtoagent from menucascade within m_consulta
+end type
+type m_clave1 from menu within m_sendtoagent
+end type
+type m_calceled from menu within m_sendtoagent
+end type
+type m_sendtoagent from menucascade within m_consulta
+m_clave1 m_clave1
+m_calceled m_calceled
+end type
+type m_changes from menu within m_consulta
+end type
+type m_changepayee from menu within m_changes
+end type
+type m_changerate1 from menu within m_changes
+end type
+type m_changes from menu within m_consulta
+m_changepayee m_changepayee
+m_changerate1 m_changerate1
+end type
+type m_intcontrol from menu within m_consulta
+end type
+type m_history from menu within m_consulta
+end type
+type m_pinnumber from menu within m_consulta
+end type
+type m_salir from menu within m_consulta
+end type
+global type m_consulta from menu
+m_limpiar m_limpiar
+m_salvar m_salvar
+m_salvarcomo m_salvarcomo
+m_imprimir m_imprimir
+m_consultar m_consultar
+m_ordenar m_ordenar
+m_cancelar m_cancelar
+m_consregpago m_consregpago
+complain complain
+m_sendtoagent m_sendtoagent
+m_changes m_changes
+m_intcontrol m_intcontrol
+m_history m_history
+m_pinnumber m_pinnumber
+m_salir m_salir
+end type
+end forward
+
+global type m_consulta from menu
+m_limpiar m_limpiar
+m_salvar m_salvar
+m_salvarcomo m_salvarcomo
+m_imprimir m_imprimir
+m_consultar m_consultar
+m_ordenar m_ordenar
+m_cancelar m_cancelar
+m_consregpago m_consregpago
+complain complain
+m_sendtoagent m_sendtoagent
+m_changes m_changes
+m_intcontrol m_intcontrol
+m_history m_history
+m_pinnumber m_pinnumber
+m_salir m_salir
+end type
+global m_consulta m_consulta
+
+on m_consulta.create
+m_consulta=this
+call super::create
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_limpiar=create m_limpiar
+this.m_salvar=create m_salvar
+this.m_salvarcomo=create m_salvarcomo
+this.m_imprimir=create m_imprimir
+this.m_consultar=create m_consultar
+this.m_ordenar=create m_ordenar
+this.m_cancelar=create m_cancelar
+this.m_consregpago=create m_consregpago
+this.complain=create complain
+this.m_sendtoagent=create m_sendtoagent
+this.m_changes=create m_changes
+this.m_intcontrol=create m_intcontrol
+this.m_history=create m_history
+this.m_pinnumber=create m_pinnumber
+this.m_salir=create m_salir
+this.Item[UpperBound(this.Item)+1]=this.m_limpiar
+this.Item[UpperBound(this.Item)+1]=this.m_salvar
+this.Item[UpperBound(this.Item)+1]=this.m_salvarcomo
+this.Item[UpperBound(this.Item)+1]=this.m_imprimir
+this.Item[UpperBound(this.Item)+1]=this.m_consultar
+this.Item[UpperBound(this.Item)+1]=this.m_ordenar
+this.Item[UpperBound(this.Item)+1]=this.m_cancelar
+this.Item[UpperBound(this.Item)+1]=this.m_consregpago
+this.Item[UpperBound(this.Item)+1]=this.complain
+this.Item[UpperBound(this.Item)+1]=this.m_sendtoagent
+this.Item[UpperBound(this.Item)+1]=this.m_changes
+this.Item[UpperBound(this.Item)+1]=this.m_intcontrol
+this.Item[UpperBound(this.Item)+1]=this.m_history
+this.Item[UpperBound(this.Item)+1]=this.m_pinnumber
+this.Item[UpperBound(this.Item)+1]=this.m_salir
+end on
+
+on m_consulta.destroy
+call super::destroy
+destroy(this.m_limpiar)
+destroy(this.m_salvar)
+destroy(this.m_salvarcomo)
+destroy(this.m_imprimir)
+destroy(this.m_consultar)
+destroy(this.m_ordenar)
+destroy(this.m_cancelar)
+destroy(this.m_consregpago)
+destroy(this.complain)
+destroy(this.m_sendtoagent)
+destroy(this.m_changes)
+destroy(this.m_intcontrol)
+destroy(this.m_history)
+destroy(this.m_pinnumber)
+destroy(this.m_salir)
+end on
+
+type m_limpiar from menu within m_consulta
+end type
+
+on m_limpiar.create
+call super::create
+this.text = "Clear"
+this.microhelp = "Clear"
+this.toolbaritemname = "selectscript!"
+this.toolbaritemtext = "Clear"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_limpiar.destroy
+call super::destroy
+end on
+
+event clicked;ParentWindow.TriggerEvent("ue_clean")
+end event
+
+type m_salvar from menu within m_consulta
+end type
+
+on m_salvar.create
+call super::create
+this.text = "Save"
+this.microhelp = "Save"
+this.toolbaritemname = "save!"
+this.toolbaritemtext = "Save"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_salvar.destroy
+call super::destroy
+end on
+
+event clicked;//IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_save")
+end event
+
+type m_salvarcomo from menu within m_consulta
+end type
+
+on m_salvarcomo.create
+call super::create
+this.visible = false
+this.text = "Save As .."
+this.enabled = false
+this.microhelp = "Save As .."
+this.toolbaritemvisible = false
+this.toolbaritemname = "saveas!"
+this.toolbaritemtext = "Save As .."
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_salvarcomo.destroy
+call super::destroy
+end on
+
+event clicked;//IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_saveas")
+end event
+
+type m_imprimir from menucascade within m_consulta
+m_uno m_uno
+m_todos m_todos
+m_- m_-
+m_copiarecibo m_copiarecibo
+m_transmision m_transmision
+m_recibo m_recibo
+end type
+
+on m_imprimir.create
+call super::create
+this.text = "Print"
+this.microhelp = "Imprimir uno o todos los resultados de la consulta"
+this.toolbaritemtext = "Imprimir Uno/Todos"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.columns = 2
+this.m_uno=create m_uno
+this.m_todos=create m_todos
+this.m_-=create m_-
+this.m_copiarecibo=create m_copiarecibo
+this.m_transmision=create m_transmision
+this.m_recibo=create m_recibo
+this.Item[UpperBound(this.Item)+1]=this.m_uno
+this.Item[UpperBound(this.Item)+1]=this.m_todos
+this.Item[UpperBound(this.Item)+1]=this.m_-
+this.Item[UpperBound(this.Item)+1]=this.m_copiarecibo
+this.Item[UpperBound(this.Item)+1]=this.m_transmision
+this.Item[UpperBound(this.Item)+1]=this.m_recibo
+end on
+
+on m_imprimir.destroy
+call super::destroy
+destroy(this.m_uno)
+destroy(this.m_todos)
+destroy(this.m_-)
+destroy(this.m_copiarecibo)
+destroy(this.m_transmision)
+destroy(this.m_recibo)
+end on
+
+type m_uno from menu within m_imprimir
+end type
+
+on m_uno.create
+call super::create
+this.text = "Uno"
+this.microhelp = "Imprimir solo un registro de la consulta"
+this.toolbaritemname = "custom074!"
+this.toolbaritemtext = "Imprimir uno"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;ParentWindow.TriggerEvent("ue_print_one")
+end event
+
+on m_uno.destroy
+call super::destroy
+end on
+
+type m_todos from menu within m_imprimir
+end type
+
+on m_todos.create
+call super::create
+this.text = "Todos"
+this.microhelp = "Imprimir todos el resultado de la consulta"
+this.toolbaritemname = "print!"
+this.toolbaritemtext = "Imprimir todos"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;ParentWindow.TriggerEvent("ue_print_all")
+end event
+
+on m_todos.destroy
+call super::destroy
+end on
+
+type m_- from menu within m_imprimir
+end type
+
+on m_-.create
+call super::create
+this.text = "-"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_-.destroy
+call super::destroy
+end on
+
+type m_copiarecibo from menu within m_imprimir
+end type
+
+on m_copiarecibo.create
+call super::create
+this.text = "Copia Recibo"
+this.microhelp = "Imprimir copia de recibo"
+this.toolbaritemname = "Report5!"
+this.toolbaritemtext = "Imprimir copia de recibo"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_print_receipt")
+end event
+
+on m_copiarecibo.destroy
+call super::destroy
+end on
+
+type m_transmision from menu within m_imprimir
+end type
+
+on m_transmision.create
+call super::create
+this.text = "Transmision"
+this.microhelp = "Trans to Payee by Fax"
+this.toolbaritemname = "report!"
+this.toolbaritemtext = "Trans to Payee by Fax"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_print_trans")
+end event
+
+on m_transmision.destroy
+call super::destroy
+end on
+
+type m_recibo from menu within m_imprimir
+end type
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_print_recibo_matriz")
+end event
+
+on m_recibo.create
+call super::create
+this.text = "Recibo"
+this.toolbaritemname = "runreport!"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_recibo.destroy
+call super::destroy
+end on
+
+type m_consultar from menu within m_consulta
+end type
+
+on m_consultar.create
+call super::create
+this.text = "Query"
+this.microhelp = "Query"
+this.toolbaritemname = "help!"
+this.toolbaritemtext = "Query"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_consultar.destroy
+call super::destroy
+end on
+
+event clicked;ParentWindow.TriggerEvent("ue_consult")
+end event
+
+type m_ordenar from menu within m_consulta
+end type
+
+on m_ordenar.create
+call super::create
+this.text = "Sort"
+this.microhelp = "Sort"
+this.toolbaritemname = "sort!"
+this.toolbaritemtext = "Sort"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_ordenar.destroy
+call super::destroy
+end on
+
+event clicked;ParentWindow.TriggerEvent("ue_sort")
+end event
+
+type m_cancelar from menu within m_consulta
+end type
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_solicitud_cancelacion")
+end event
+
+on m_cancelar.create
+call super::create
+this.text = "Req. Cancellation"
+this.microhelp = "Cancellation Req"
+this.toolbaritemname = "custom072!"
+this.toolbaritemtext = "Cancellation Req"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_cancelar.destroy
+call super::destroy
+end on
+
+type m_consregpago from menu within m_consulta
+end type
+
+on m_consregpago.create
+call super::create
+this.text = "Cons/Reg Pay"
+this.microhelp = "Pay Invoice"
+this.toolbaritemname = "custom084!"
+this.toolbaritemtext = "Pay Invoice"
+this.toolbaritemspace = 1
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_consregpago.destroy
+call super::destroy
+end on
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_pago")
+end event
+
+type complain from menu within m_consulta
+end type
+
+on complain.create
+call super::create
+this.text = "Investigations"
+this.microhelp = "Mensajes del giro"
+this.toolbaritemname = "custom082!"
+this.toolbaritemtext = "Complain"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on complain.destroy
+call super::destroy
+end on
+
+event clicked;IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+ParentWindow.TriggerEvent("ue_reclamo")
+end event
+
+type m_sendtoagent from menucascade within m_consulta
+m_clave1 m_clave1
+m_calceled m_calceled
+end type
+
+on m_sendtoagent.create
+call super::create
+this.text = "Send to Agent"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_clave1=create m_clave1
+this.m_calceled=create m_calceled
+this.Item[UpperBound(this.Item)+1]=this.m_clave1
+this.Item[UpperBound(this.Item)+1]=this.m_calceled
+end on
+
+on m_sendtoagent.destroy
+call super::destroy
+destroy(this.m_clave1)
+destroy(this.m_calceled)
+end on
+
+type m_clave1 from menu within m_sendtoagent
+end type
+
+event clicked;IF ProfileString(gs_database, "HostID","ID", "None") <> '0001A00001' THEN //Headquaters
+     return
+END IF
+
+
+IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+
+
+
+ParentWindow.TriggerEvent("ue_referencia")
+
+
+end event
+
+on m_clave1.create
+call super::create
+this.text = "Clave"
+this.microhelp = "Clave"
+this.toolbaritemname = "Query5!"
+this.toolbaritemtext = "Clave"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_clave1.destroy
+call super::destroy
+end on
+
+type m_calceled from menu within m_sendtoagent
+end type
+
+event clicked;IF ProfileString(gs_database, "HostID","ID", "None") <> '0001A00001' THEN //Headquaters
+     return
+END IF
+
+
+IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+
+
+
+ParentWindow.TriggerEvent("ue_retransmit_cancelados")
+
+
+end event
+
+on m_calceled.create
+call super::create
+this.text = "Canceled"
+this.microhelp = "Canceled"
+this.toolbaritemname = "watcom!"
+this.toolbaritemtext = "Canceled"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_calceled.destroy
+call super::destroy
+end on
+
+type m_changes from menu within m_consulta
+m_changepayee m_changepayee
+m_changerate1 m_changerate1
+end type
+
+on m_changes.create
+call super::create
+this.text = "Changes"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+this.m_changepayee=create m_changepayee
+this.m_changerate1=create m_changerate1
+this.Item[UpperBound(this.Item)+1]=this.m_changepayee
+this.Item[UpperBound(this.Item)+1]=this.m_changerate1
+end on
+
+on m_changes.destroy
+call super::destroy
+destroy(this.m_changepayee)
+destroy(this.m_changerate1)
+end on
+
+type m_changepayee from menu within m_changes
+end type
+
+on m_changepayee.create
+call super::create
+this.text = "Change Payee"
+this.microhelp = "Change Payee"
+this.toolbaritemname = "move!"
+this.toolbaritemtext = "Change Payee"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+event clicked;IF ProfileString(gs_database, "HostID","ID", "None") <> '0001A00001' THEN //Headquaters
+     return
+END IF
+
+
+IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+
+
+
+ParentWindow.TriggerEvent("ue_change_payee")
+
+
+end event
+
+on m_changepayee.destroy
+call super::destroy
+end on
+
+type m_changerate1 from menu within m_changes
+end type
+
+event clicked;IF ProfileString(gs_database, "HostID","ID", "None") <> '0001A00001' THEN //Headquaters
+     return
+END IF
+
+
+IF NOT fn_security('m_consulta',text,gs_cashier) THEN Return
+
+
+
+ParentWindow.TriggerEvent("ue_change_rate")
+
+
+end event
+
+on m_changerate1.create
+call super::create
+this.text = "Change Rate"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_changerate1.destroy
+call super::destroy
+end on
+
+type m_intcontrol from menu within m_consulta
+end type
+
+event clicked;ParentWindow.TriggerEvent("ue_documento")
+
+
+end event
+
+on m_intcontrol.create
+call super::create
+this.text = "Int. Control"
+this.microhelp = "Int. Control"
+this.toolbaritemname = "picture!"
+this.toolbaritemtext = "Sender Ids"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_intcontrol.destroy
+call super::destroy
+end on
+
+type m_history from menu within m_consulta
+end type
+
+event clicked;
+
+ParentWindow.TriggerEvent("ue_history_invoice")
+
+
+end event
+
+on m_history.create
+call super::create
+this.text = "History"
+this.microhelp = "History"
+this.toolbaritemname = "picturelistbox!"
+this.toolbaritemtext = "History"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_history.destroy
+call super::destroy
+end on
+
+type m_pinnumber from menu within m_consulta
+end type
+
+on m_pinnumber.create
+call super::create
+this.text = "Pin Number"
+this.microhelp = "Pin Number"
+this.toolbaritemname = "custom096!"
+this.toolbaritemtext = "Pin Number"
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_pinnumber.destroy
+call super::destroy
+end on
+
+event clicked;
+
+ParentWindow.TriggerEvent("ue_pin_number")
+
+
+end event
+
+type m_salir from menu within m_consulta
+end type
+
+on m_salir.create
+call super::create
+this.text = "Exit"
+this.microhelp = "Exit"
+this.toolbaritemname = "exit!"
+this.toolbaritemtext = "Exit"
+this.toolbaritemspace = 2
+this.menutextcolor = 134217735
+this.menubackcolor = 134217732
+this.menuhighlightcolor = 134217741
+this.textsize = 8
+this.weight = 400
+this.facename = "Tahoma"
+this.titlebackcolor = 134217730
+this.bitmapbackcolor = 12632256
+this.menubitmaps = true
+this.titlegradient = true
+this.toolbartextcolor = 134217746
+this.toolbarbackcolor = 67108864
+this.toolbarhighlightcolor = 134217741
+this.toolbargradient = true
+this.bitmapgradient = true
+end on
+
+on m_salir.destroy
+call super::destroy
+end on
+
+event clicked;Close(ParentWIndow)
+end event
+

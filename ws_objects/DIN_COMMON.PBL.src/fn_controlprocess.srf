@@ -1,0 +1,18 @@
+﻿$PBExportHeader$fn_controlprocess.srf
+global type fn_controlprocess from function_object
+end type
+
+forward prototypes
+global subroutine fn_controlprocess (string ls_name)
+end prototypes
+
+global subroutine fn_controlprocess (string ls_name);long ll_file
+
+ll_file = FileOpen("S:\Logs\"+ls_name+".ctl",LineMode!,Write!,LockWrite!,Replace!)
+
+FileWrite(ll_file,string(today(),'mm/dd/yyyy'))
+FileWrite(ll_file,string(now(),'hh:mm:ss'))
+
+FileClose(ll_file)
+end subroutine
+

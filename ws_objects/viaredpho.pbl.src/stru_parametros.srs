@@ -1,0 +1,8 @@
+﻿$PBExportHeader$stru_parametros.srs
+global type stru_parametros from structure
+	string		string[]
+	long		long[]
+	decimal		decimal[]
+	date		date[]
+end type
+

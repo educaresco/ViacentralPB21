@@ -1,0 +1,18 @@
+﻿$PBExportHeader$dw_ingreso_modo_pago_branch1.srd
+release 6;
+datawindow(units=0 timer_interval=0 color=80269524 processing=0 print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+header(height=68 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(10) update=yes updatewhereclause=yes key=yes name=id_branch dbname="MODO_PAGO_BRANCH.ID_BRANCH" )
+ column=(type=char(2) update=yes updatewhereclause=yes key=yes name=modo_pago dbname="MODO_PAGO_BRANCH.MODO_PAGO" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=porc_modo_pago_branch dbname="MODO_PAGO_BRANCH.PORC_MODO_PAGO_BRANCH" )
+ column=(type=decimal(4) update=yes updatewhereclause=yes name=telex_modo_pago_branch dbname="MODO_PAGO_BRANCH.TELEX_MODO_PAGO_BRANCH" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.MODO_PAGO_BRANCH~" ) COLUMN(NAME=~"DBA.MODO_PAGO_BRANCH.ID_BRANCH~") COLUMN(NAME=~"DBA.MODO_PAGO_BRANCH.MODO_PAGO~") COLUMN(NAME=~"DBA.MODO_PAGO_BRANCH.PORC_MODO_PAGO_BRANCH~") COLUMN(NAME=~"DBA.MODO_PAGO_BRANCH.TELEX_MODO_PAGO_BRANCH~")WHERE(    EXP1 =~"( DBA.MODO_PAGO_BRANCH.ID_BRANCH~"   OP =~"=~"    EXP2 =~":ARG_BRANCH )~" ) ) ARG(NAME = ~"arg_branch~" TYPE = string) " update="DBA.MODO_PAGO_BRANCH" updatewhere=0 updatekeyinplace=yes arguments=(("arg_branch", string)) )
+column(band=detail id=4 alignment="1" tabsequence=32766 border="0" color="12632256" x="4306" y="64" height="56" width="297" format="[currency]"  name=telex_modo_pago_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=3 alignment="1" tabsequence=32766 border="0" color="12632256" x="4352" y="72" height="56" width="302" format="0%"  name=porc_modo_pago_branch edit.limit=0 edit.case=any edit.autoselect=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=1 alignment="0" tabsequence=32766 border="0" color="12632256" x="4640" y="60" height="56" width="32" format="[general]"  name=id_branch dddw.name=dddw_branch dddw.displaycolumn=name_branch dddw.datacolumn=id_branch dddw.percentwidth=150 dddw.lines=20 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.hscrollbar=yes dddw.vscrollbar=yes  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12632256" )
+column(band=detail id=2 alignment="0" tabsequence=10 border="5" color="0" x="18" y="12" height="56" width="1911" format="[general]"  name=modo_pago dddw.name=dddw_modo_pago dddw.displaycolumn=nom_modo_pago dddw.datacolumn=id_modo_pago dddw.percentwidth=100 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+text(band=header alignment="2" text="Payment Mode"border="2" color="8388608" x="18" y="4" height="56" width="1911"  name=modo_pago_t  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" cellpadding="0" cellspacing="0" generatecss="no" nowrap="yes")

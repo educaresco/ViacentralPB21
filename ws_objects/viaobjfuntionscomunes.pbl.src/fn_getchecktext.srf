@@ -1,0 +1,28 @@
+﻿$PBExportHeader$fn_getchecktext.srf
+global type fn_getchecktext from function_object
+end type
+
+forward prototypes
+global function string fn_getchecktext (integer p_par)
+end prototypes
+
+global function string fn_getchecktext (integer p_par);
+String ls_return
+
+if p_par = 1 then
+	select COMCHECK_INFO1
+	into :ls_return
+	from dba.acc_parameters;
+elseif p_par = 2 then
+	select COMCHECK_INFO2
+	into :ls_return
+	from dba.acc_parameters;
+else
+	select COMCHECK_INFO3
+	into :ls_return
+	from dba.acc_parameters;
+end if
+
+return ls_return
+end function
+

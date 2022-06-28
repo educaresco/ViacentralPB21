@@ -1,0 +1,48 @@
+﻿$PBExportHeader$fn_controlfile2.srf
+global type fn_controlfile2 from function_object
+end type
+
+forward prototypes
+global subroutine fn_controlfile2 (string ps_pdf_location, string ps_email_subject, string ps_email_address, string ps_faxnumber)
+end prototypes
+
+global subroutine fn_controlfile2 (string ps_pdf_location, string ps_email_subject, string ps_email_address, string ps_faxnumber);
+String ls_filename, ls_cadena
+Integer li_file_resumen
+
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// Crea el archivo de control
+ls_filename = fn_replace(upper(ps_pdf_location),'.PDF','.TXT')
+
+ls_cadena = ""
+
+// If a faxnumer is provided
+if len(ps_faxnumber) > 8 then
+	ls_cadena = ls_cadena + "@F211 "+ps_faxnumber+"@"+ char(13) + char(10)	
+end if
+
+// If an email address was provided
+if len(ps_email_address) > 5 then
+	ls_cadena = ls_cadena + "@F212 "+ps_email_address+"@" + char(13) + char(10)	
+end if
+
+// adds the subject line
+ls_cadena = ls_cadena + "@F307 "+ps_email_subject+"@" + char(13) + char(10)	
+
+// adds the File attachment
+ls_cadena = ls_cadena + "@F606"+ ps_pdf_location+",D, R@"	+ char(13) + char(10)	
+
+
+li_file_resumen = FileOpen(ls_filename,LineMode!,Write!,LockWrite!,Append!)
+if li_file_resumen < 0 Then
+	Messagebox("Error","Error opening file "+ls_filename)
+	Return
+end if	
+FileWrite(li_file_resumen,ls_cadena)	
+ls_cadena = 'This EMail/FAX contains an attachment file sent by Viamericas - Este Correo/FAX contiene un archivo anexo enviado por Viamericas.' + char(10) + char(13)	
+FileWrite(li_file_resumen,ls_cadena)	
+
+fileclose(li_file_resumen)
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^	
+end subroutine
+

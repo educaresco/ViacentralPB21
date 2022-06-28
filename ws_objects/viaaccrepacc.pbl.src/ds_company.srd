@@ -1,0 +1,65 @@
+﻿$PBExportHeader$ds_company.srd
+release 9;
+datawindow(units=0 timer_interval=0 color=16777215 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=64 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(6) update=yes updatewhereclause=yes key=yes name=id_company dbname="COMPANY.id_company" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_company dbname="COMPANY.name_company" )
+ column=(type=char(5) update=yes updatewhereclause=yes name=id_city dbname="COMPANY.id_city" )
+ column=(type=char(5) update=yes updatewhereclause=yes name=id_state dbname="COMPANY.id_state" )
+ column=(type=char(5) update=yes updatewhereclause=yes name=id_country dbname="COMPANY.id_country" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=alias_company dbname="COMPANY.alias_company" )
+ column=(type=char(60) update=yes updatewhereclause=yes name=adrress_company dbname="COMPANY.adrress_company" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=phone_company dbname="COMPANY.phone_company" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=fax_company dbname="COMPANY.fax_company" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=modem_company dbname="COMPANY.modem_company" )
+ column=(type=char(30) update=yes updatewhereclause=yes name=group_company dbname="COMPANY.group_company" )
+ column=(type=decimal(0) update=yes updatewhereclause=yes name=zip_company dbname="COMPANY.zip_company" )
+ column=(type=char(1) update=yes updatewhereclause=yes name=com_main dbname="com_main" )
+ retrieve="SELECT  dba.company.id_company ,
+           dba.company.name_company ,
+           dba.company.id_city ,
+           dba.company.id_state ,
+           dba.company.id_country ,
+           dba.company.alias_company ,
+           dba.company.adrress_company ,
+           dba.company.phone_company ,
+           dba.company.fax_company ,
+           dba.company.modem_company ,
+           dba.company.group_company ,
+           dba.company.zip_company ,
+           'a' as com_main     
+        FROM dba.company    " update="dba.company" updatewhere=1 updatekeyinplace=no  sort="name_company A " )
+text(band=header alignment="2" text="Id Company" border="0" color="0" x="5" y="4" height="56" width="256" html.valueishtml="0"  name=id_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Name Company" border="0" color="0" x="265" y="4" height="56" width="937" html.valueishtml="0"  name=name_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id City" border="0" color="0" x="1207" y="4" height="56" width="137" html.valueishtml="0"  name=id_city_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id State" border="0" color="0" x="1349" y="4" height="56" width="165" html.valueishtml="0"  name=id_state_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Id Country" border="0" color="0" x="1522" y="4" height="56" width="224" html.valueishtml="0"  name=id_country_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Alias Company" border="0" color="0" x="1751" y="4" height="56" width="937" html.valueishtml="0"  name=alias_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Adrress Company" border="0" color="0" x="2693" y="4" height="56" width="1394" html.valueishtml="0"  name=adrress_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Phone Company" border="0" color="0" x="4091" y="4" height="56" width="357" html.valueishtml="0"  name=phone_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Fax Company" border="0" color="0" x="4453" y="4" height="56" width="302" html.valueishtml="0"  name=fax_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Modem Company" border="0" color="0" x="4759" y="4" height="56" width="375" html.valueishtml="0"  name=modem_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Group Company" border="0" color="0" x="5138" y="4" height="56" width="709" html.valueishtml="0"  name=group_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Zip Company" border="0" color="0" x="5851" y="4" height="56" width="288" html.valueishtml="0"  name=zip_company_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+text(band=header alignment="2" text="Com Main" border="0" color="0" x="6144" y="4" height="56" width="210" html.valueishtml="0"  name=com_main_t visible="1"  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=1 alignment="0" tabsequence=10 border="0" color="0" x="5" y="4" height="68" width="160" format="[general]" html.valueishtml="0"  name=id_company visible="1" edit.limit=6 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=2 alignment="0" tabsequence=20 border="0" color="0" x="265" y="4" height="68" width="937" format="[general]" html.valueishtml="0"  name=name_company visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=3 alignment="0" tabsequence=30 border="0" color="0" x="1207" y="4" height="68" width="137" format="[general]" html.valueishtml="0"  name=id_city visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=4 alignment="0" tabsequence=40 border="0" color="0" x="1349" y="4" height="68" width="137" format="[general]" html.valueishtml="0"  name=id_state visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=5 alignment="0" tabsequence=50 border="0" color="0" x="1522" y="4" height="68" width="133" format="[general]" html.valueishtml="0"  name=id_country visible="1" edit.limit=5 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=6 alignment="0" tabsequence=60 border="0" color="0" x="1751" y="4" height="68" width="937" format="[general]" html.valueishtml="0"  name=alias_company visible="1" edit.limit=40 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=7 alignment="0" tabsequence=70 border="0" color="0" x="2693" y="4" height="68" width="1394" format="[general]" html.valueishtml="0"  name=adrress_company visible="1" edit.limit=60 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=8 alignment="1" tabsequence=80 border="0" color="0" x="4091" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=phone_company visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=9 alignment="1" tabsequence=90 border="0" color="0" x="4453" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=fax_company visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=10 alignment="1" tabsequence=100 border="0" color="0" x="4759" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=modem_company visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=11 alignment="0" tabsequence=110 border="0" color="0" x="5138" y="4" height="68" width="709" format="[general]" html.valueishtml="0"  name=group_company visible="1" edit.limit=30 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=12 alignment="1" tabsequence=120 border="0" color="0" x="5851" y="4" height="68" width="274" format="[general]" html.valueishtml="0"  name=zip_company visible="1" edit.limit=0 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+column(band=detail id=13 alignment="0" tabsequence=130 border="0" color="0" x="6144" y="4" height="68" width="50" format="[general]" html.valueishtml="0"  name=com_main visible="1" edit.limit=1 edit.case=any edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Arial" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="536870912" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

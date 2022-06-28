@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_hasnewversion.srf
+global type fn_hasnewversion from function_object
+end type
+
+forward prototypes
+global function boolean fn_hasnewversion (string id_branch)
+end prototypes
+
+global function boolean fn_hasnewversion (string id_branch);// --------------------------------------------------------------------------
+// Chequea si la agencia no tiene la nueva version
+// --------------------------------------------------------------------------
+Long ll_hasoldversion
+Boolean lb_isnew
+
+SELECT count(*)  
+INTO :ll_hasoldversion  
+FROM dba.VERSION_PROGRAMA  
+WHERE dba.VERSION_PROGRAMA.IB_BRANCH = :id_branch   ;
+
+If ll_hasoldversion < 1 then
+	lb_isnew = false
+else
+	lb_isnew = true
+end if
+
+return lb_isnew
+
+end function
+

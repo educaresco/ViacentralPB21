@@ -1,0 +1,27 @@
+﻿$PBExportHeader$dw_state.srd
+$PBExportComments$DDDW para el manejo de la tabla de estados.
+release 9;
+datawindow(units=0 timer_interval=0 color=80269524 processing=0 HTMLDW=no print.printername="" print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 96 print.margin.bottom = 96 print.paper.source = 0 print.paper.size = 0 print.canusedefaultprinter=yes print.prompt=no print.buttons=no print.preview.buttons=no print.cliptext=no print.overrideprintjob=no print.collate=yes hidegrayline=no )
+header(height=76 color="536870912" )
+summary(height=0 color="536870912" )
+footer(height=0 color="536870912" )
+detail(height=76 color="536870912" )
+table(column=(type=char(1) update=yes updatewhereclause=yes name=flag_state dbname="STATE.FLAG_STATE" values="ACTIVE	A/INACTIVE	I/" )
+ column=(type=char(5) update=yes updatewhereclause=yes key=yes name=id_state dbname="STATE.ID_STATE" )
+ column=(type=char(5) update=yes updatewhereclause=yes key=yes name=id_country dbname="STATE.ID_COUNTRY" )
+ column=(type=char(40) update=yes updatewhereclause=yes name=name_state dbname="STATE.NAME_STATE" )
+ retrieve="PBSELECT( VERSION(400) TABLE(NAME=~"DBA.STATE~" ) COLUMN(NAME=~"DBA.STATE.FLAG_STATE~") COLUMN(NAME=~"DBA.STATE.ID_STATE~") COLUMN(NAME=~"DBA.STATE.ID_COUNTRY~") COLUMN(NAME=~"DBA.STATE.NAME_STATE~")) ORDER(NAME=~"DBA.STATE.ID_COUNTRY~" ASC=yes )  ORDER(NAME=~"DBA.STATE.ID_STATE~" ASC=yes ) " update="DBA.STATE" updatewhere=0 updatekeyinplace=no  sort="id_country A flag_state A name_state A " )
+text(band=header alignment="2" text="Country" border="2" color="0" x="151" y="12" height="56" width="649" html.valueishtml="0"  name=id_country_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Id" border="2" color="0" x="818" y="12" height="56" width="206" html.valueishtml="0"  name=id_state_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Flag" border="2" color="0" x="1682" y="12" height="56" width="366" html.valueishtml="0"  name=t_1 visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+text(band=header alignment="2" text="Name" border="2" color="0" x="1042" y="12" height="56" width="622" html.valueishtml="0"  name=name_state_t visible="1"  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="8421504" )
+column(band=detail id=3 alignment="0" tabsequence=10 border="5" color="0" x="151" y="4" height="60" width="649" format="[general]" html.valueishtml="0"  name=id_country visible="1" dddw.name=dddw_country dddw.displaycolumn=name_country dddw.datacolumn=id_country dddw.percentwidth=110 dddw.lines=20 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.imemode=0 dddw.vscrollbar=yes  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="16777215" )
+column(band=detail id=2 alignment="2" tabsequence=20 border="5" color="0" x="818" y="4" height="60" width="206" format="[general]" html.valueishtml="0"  name=id_state visible="1" edit.limit=5 edit.case=upper edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif ( flag_state = 'I', RGB(255,255,200),RGB(255,255,255))" )
+column(band=detail id=1 alignment="0" tabsequence=40 border="5" color="0" x="1682" y="4" height="60" width="366" format="[general]" html.valueishtml="0"  name=flag_state visible="1" ddlb.limit=0 ddlb.allowedit=no ddlb.case=any ddlb.useasborder=yes ddlb.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif ( flag_state = 'I', RGB(255,255,200),RGB(255,255,255))" )
+column(band=detail id=4 alignment="0" tabsequence=30 border="5" color="0" x="1042" y="4" height="60" width="622" format="[general]" html.valueishtml="0"  name=name_state visible="1" edit.limit=40 edit.case=upper edit.autoselect=yes edit.autohscroll=yes edit.imemode=0  font.face="Tahoma" font.height="-8" font.weight="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="16777215~tif ( flag_state = 'I', RGB(255,255,200),RGB(255,255,255))" )
+
+sparse(names="id_country")htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" generatejavascript="1" encodeselflinkargs="1" netscapelayers="0" )
+export.xml(headgroups="1" includewhitespace="0" metadatatype=0 savemetadata=0 )
+import.xml()
+export.pdf(method=0 distill.custompostscript="0" xslfop.print="0" )

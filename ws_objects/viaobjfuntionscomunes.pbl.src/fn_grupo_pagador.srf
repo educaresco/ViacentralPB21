@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_grupo_pagador.srf
+$PBExportComments$Devuelve el grupo pagador
+global type fn_grupo_pagador from function_object
+end type
+
+forward prototypes
+global function string fn_grupo_pagador (string ls_branch_pag)
+end prototypes
+
+global function string fn_grupo_pagador (string ls_branch_pag);string		ls_grupo
+		
+SELECT dba.branch.id_main_branch
+INTO :ls_grupo 
+FROM dba.branch  
+WHERE dba.branch.id_branch = :ls_branch_pag   ;
+				 		 
+if sqlca.sqlcode <> 0 then
+	return ""
+else
+	return ls_grupo
+end if
+end function
+

@@ -1,0 +1,822 @@
+﻿$PBExportHeader$fn_generateclosinghtml.srf
+global type fn_generateclosinghtml from function_object
+end type
+
+forward prototypes
+global subroutine fn_generateclosinghtml (string ps_idbranch, date pd_date1, date pd_date2, string ps_folder, string ps_type)
+end prototypes
+
+global subroutine fn_generateclosinghtml (string ps_idbranch, date pd_date1, date pd_date2, string ps_folder, string ps_type);SetPointer(HourGlass!)
+
+// ---------------------------------------------------------------------------------------
+// Variables de la Instancia
+//
+// is_idbranch --> Branch id
+// id_date1    --> Date From
+// id_date2    --> Date to
+// ---------------------------------------------------------------------------------------
+
+String ls_mascara = "$#,##0.00;$(#,##0.00)"
+
+String ls_filename, ls_htmlcode, ls_lb
+Integer i, li_FileNum
+
+ls_lb = "~r~n" // Salto de linea
+
+datetime id_date1, id_date2
+string is_idbranch, is_pathfaxes
+is_pathfaxes = ps_folder
+
+id_date1 = DATETIME(pd_date1,time('00:00:00'))
+id_date2 = DATETIME(pd_date2,time('23:59:59'))
+
+is_idbranch = Trim(ps_idbranch)
+
+// =========================================================================================
+// SECCION INICIAL
+// Variables
+
+String ls_namebranch, ls_phone_branch, ls_fax_branch
+Double ld_previous_amt, ld_payments_amt, ld_past_due, ld_net_amt_sent, ld_trans_fee, ld_commissions, &
+       ld_subtotal, ld_total_amt_due
+
+STRING	ls_grupo, ls_email
+
+	  SELECT dba.BRANCH.ID_MAIN_BRANCH, dba.BRANCH.FAX_BRANCH, dba.BRANCH.NAME_BRANCH, dba.BRANCH.PHONE1_BRANCH
+     INTO :LS_GRUPO, :ls_fax_branch, :ls_namebranch, :ls_phone_branch
+     FROM dba.BRANCH  
+     WHERE dba.BRANCH.ID_BRANCH = :is_idbranch   ;
+
+	  
+  SELECT dba.GROUP_BRANCH.EMAIL_GROUP  
+    INTO :ls_email  
+    FROM dba.GROUP_BRANCH  
+   WHERE dba.GROUP_BRANCH.ID_MAIN_BRANCH = :LS_GRUPO   ;
+
+ls_email = trim(ls_email)
+
+if ps_type = 'E' and (isnull(ls_email) or len(ls_email) < 1) then
+	messagebox("No EMail Specified","You have to specified an EMail for the Agency's Group",StopSign!)
+	return
+end if
+
+	  
+//	IF LEFT(ls_fax_branch,3) <> '703' then
+//		ls_fax_branch = '1' + ls_fax_branch
+//	end if
+	  
+//GENERAL EL ARCHIVO QUE ACOMPANA EL FAX
+//::(703) 684-7099
+//::A=FAX_MANUAL_081004223093025-A00702.html
+
+//FAX_MANUAL_081004223093025-A00702.txt
+
+Long		ll_numfax
+String	ls_filenamefax, ls_pre, ls_output
+
+ls_output = is_pathfaxes
+
+ls_pre = string(pd_date1,"MMDDYYYY")+"TO"+string(pd_date2,"MMDDYYYY")+"-"+STRING(today(),"MMDDYYYY")+STRING(NOW(),"HHMMSS")
+
+ls_filename		 = "FAX_MANUAL_"+ls_pre+'-'+is_idbranch+".html"
+ls_filenamefax  = ls_output+'FAX_MANUAL_'+ls_pre+'-'+is_idbranch+'.txt'
+
+if ps_type = 'F' then
+
+	ll_numfax  = FileOpen(ls_filenamefax,LineMode!, Write!, LockWrite!, Replace!)
+	FileWrite(ll_numfax,"::1"+ls_fax_branch)		// alejandro agrego el 1 para llamadas a larga distancia
+	FileWrite(ll_numfax,"::A="+ls_filename)
+	Fileclose(ll_numfax)
+
+end if
+
+ls_filename = ls_output + ls_filename
+
+
+li_FileNum = FileOpen(ls_filename, StreamMode!, Write!, LockWrite!, Replace!)
+	  
+ 
+
+//	SELECT SUM(dba.transaccion_diaria_payee.debit_trans_diaria) -  SUM(dba.transaccion_diaria_payee.credit_trans_diaria)   
+//     INTO :ld_previous_amt 
+//     FROM dba.transaccion_diaria_payee  
+//     WHERE dba.transaccion_diaria_payee.date_trans_diaria < :id_date1 and
+//			  dba.transaccion_diaria_payee.id_group_trans_diaria  = :LS_GRUPO and 
+//			  dba.transaccion_diaria_payee.id_group_trans_diaria not in ('NNNMM') ;
+			  
+///// PREVIOUS BALANCE \\\
+Double		TotalFee, CompanyFee, AgencyFee, TotalReceiver, NetAmount, AmountDue, TotalCredits, PreBal, TotalDebits
+
+SELECT Sum(DBA.RECEIVER.telex_receiver + DBA.RECEIVER.exchange_receiver), 
+	Sum(DBA.RECEIVER.telex_company + DBA.RECEIVER.exchange_company) , 
+	Sum(DBA.RECEIVER.total_receiver) , 
+	Sum(DBA.RECEIVER.net_amount_receiver) 
+INTO :TotalFee, :CompanyFee, :TotalReceiver, :NetAmount 	
+FROM DBA.receiver WHERE DBA.RECEIVER.ID_BRANCH = : is_idbranch AND DBA.receiver.date_receiver < :id_date1   ;
+
+AmountDue = TotalReceiver - AgencyFee
+
+Select sum(isnull(DBA.TRANSACCION_DIARIA_PAYEE.credit_trans_diaria,0))
+into :TotalCredits
+from DBA.TRANSACCION_DIARIA_PAYEE 
+WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND 
+DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria  < :id_date1 AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :LS_GRUPO ;
+
+
+Select sum( isnull(DBA.TRANSACCION_DIARIA_PAYEE.Debit_trans_diaria,0)) 
+into :TotalDebits
+from DBA.TRANSACCION_DIARIA_PAYEE WHERE DBA.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE NOT IN ('PB','TD','AVO') AND DBA.TRANSACCION_DIARIA_PAYEE.date_trans_diaria < :id_date1 AND DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :LS_GRUPO   ;
+
+
+PreBal = NetAmount + CompanyFee + TotalDebits - TotalCredits	  
+
+ld_previous_amt = PreBal
+
+
+SELECT   sum(dba.TRANSACCION_DIARIA_PAYEE.credit_TRANS_DIARIA) - SUM(dba.TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA )  
+		into	:ld_payments_amt
+       FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE in ('DA','AC','CC','AVO')  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1   AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2    ;
+	
+	if isnull(ld_payments_amt) then ld_payments_amt = 0
+	
+DOUBLE	LD_COMISION_COMP	
+	
+
+	SELECT 	SUM(DBA.RECEIVER.NET_AMOUNT_RECEIVER),
+			SUM(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO),
+			SUM(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+	INTO :ld_net_amt_sent,:ld_trans_fee,:LD_COMISION_COMP
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) ;					
+			
+if isnull(ld_net_amt_sent) 	then ld_net_amt_sent  = 0	
+if isnull(ld_trans_fee) 		then ld_trans_fee     = 0	
+if isnull(LD_COMISION_COMP) 	then LD_COMISION_COMP = 0	
+
+ld_payments_amt= ld_payments_amt * -1
+ld_past_due = ld_previous_amt + ld_payments_amt
+ld_commissions = (ld_trans_fee - LD_COMISION_COMP) * -1
+ld_subtotal = ld_net_amt_sent + ld_trans_fee + ld_commissions
+ld_total_amt_due = ld_past_due + ld_subtotal
+
+// HTML:
+ls_htmlcode = "" + ls_lb + &
+"<HEAD><TITLE>Daily ViaRep Invoice -- "+ls_namebranch+" ("+is_idbranch+")</TITLE>" + ls_lb + &
+"<STYLE>" + ls_lb + &
+".MainTitle{" + ls_lb + &
+"font-size: 25pt;" + ls_lb + &
+"font-weight: bold" + ls_lb + &
+"}" + ls_lb + &
+".PartnerName" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 12pt;" + ls_lb + &
+"font-weight: bold" + ls_lb + &
+"}" + ls_lb + &
+".NOData" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 20pt;" + ls_lb + &
+"font-weight: bold" + ls_lb + &
+"}" + ls_lb + &
+".FootNote" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 10pt;" + ls_lb + &
+"font-weight: normal" + ls_lb + &
+"}" + ls_lb + &
+".bars {background: blue}" + ls_lb + &
+"body {margin: 0}" + ls_lb + &
+".PartnerLocationName" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 14pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: none;" + ls_lb + &
+"text-align: center" + ls_lb + &
+"}" + ls_lb + &
+".PartnerLocationDetails" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 11pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: none;" + ls_lb + &
+"text-align: center" + ls_lb + &
+"}" + ls_lb + &
+".SectionHeader" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 12.5pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: None;" + ls_lb + &
+"text-align: left" + ls_lb + &
+"}" + ls_lb + &
+".SectionSummaryMain" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 12pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: None;" + ls_lb + &
+"text-align: left" + ls_lb + &
+"}" + ls_lb + &
+".SectionSummaryTotal" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 15pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: None;" + ls_lb + &
+"text-align: left" + ls_lb + &
+"}" + ls_lb + &
+".SectionSummarySupport" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 8pt;" + ls_lb + &
+"font-weight: bold;" + ls_lb + &
+"text-decoration: None;" + ls_lb + &
+"text-align: left" + ls_lb + &
+"}" + ls_lb + &
+".SectionTD" + ls_lb + &
+"{" + ls_lb + &
+"		background-color: d3d3d6" + ls_lb + &
+"}" + ls_lb + &
+".CardHeader" + ls_lb + &
+"{" + ls_lb + &
+"		font-size: 11.5pt;" + ls_lb + &
+"font-weight: normal;" + ls_lb + &
+"text-decoration: underline;" + ls_lb + &
+"text-align: center;" + ls_lb + &
+"text-valign: bottom;" + ls_lb + &
+"}" + ls_lb + &
+".CardData{" + ls_lb + &
+"font-size: 8.5pt;" + ls_lb + &
+"font-weight: normal;" + ls_lb + &
+"text-decoration: none;" + ls_lb + &
+"text-align: center" + ls_lb + &
+"}" + ls_lb + &
+".SINGLE" + ls_lb + &
+"{" + ls_lb + &
+"}" + ls_lb + &
+".Double{" + ls_lb + &
+"}" + ls_lb + &
+".break { page-break-before: always; }" + ls_lb + &
+"</STYLE>" + ls_lb + &
+"</HEAD>" + ls_lb + &
+"<BODY>" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD vAlign=top align=left width="+char(34)+"50%"+char(34)+"><IMG src="+char(34)+"http://www.viamericas.com/images/xlogo_02.gif"+char(34)+"></FONT></TD>" + ls_lb + &
+"<TD vAlign=top align=right width="+char(34)+"50%"+char(34)+"><B></B></FONT></TD></TR></TBODY></TABLE><!--<BR>" + ls_lb + &
+"<CENTER><B>" + ls_lb + &
+"<FONT SIZE="+char(34)+"3"+char(34)+">DEBIDO AL CIERRE DE BANCOS POR EL DIA FERIADO, REQUERIMOS QUE EL DEPOSITO CORRESPONDIENTE A LAS TRANSACCIONES DEL FIN DE SEMANA SEA REALIZADO EL DIA MARTES 12 DE NOVIEMBRE DEL 2002 ANTES DE LAS 11:AM.GRACIAS!</FONT>" + ls_lb + &
+"<HR>" + ls_lb + &
+"<FONT SIZE="+char(34)+"3"+char(34)+">DUE TO THE BANK CLOSING FOR THE HOLIDAY, WE REQUIRE TO MAKE THE DEPOSITS TO THE CORRESPONDING TRANSACTIONS FOR THE WEEKEND, ON TUESDAY NOVEMBER 12, 2002 BEFORE 11:00 AM.THANKS!</FONT><BR>" + ls_lb + &
+"<B>" + ls_lb + &
+"</CENTER>-->" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=middle colSpan=2><FONT class=MainTitle>DAILY INVOICE </FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=middle colSpan=2><FONT class=PartnerName>"+"Invoice Date: "+String(id_date1,"mm/dd/yyyy")+" to "+String(id_date2,"mm/dd/yyyy hh:mm:ss AM/PM")+"</FONT> </TD></TR></TBODY></TABLE><!-- Looping Through Locations-->" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD id=BranchName align=left width="+char(34)+"100%"+char(34)+"><FONT class=PartnerLocationName>"+ls_namebranch+"</FONT></TD></TR><!--<TR>" + ls_lb + &
+"<TD WIDTH="+char(34)+"100%"+char(34)+" ALIGN="+char(34)+"LEFT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"PartnerLocationName"+char(34)+">" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD WIDTH="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"PartnerLocationName"+char(34)+">" + ls_lb + &
+", &nbsp;" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>-->" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"100%"+char(34)+"><FONT class=PartnerLocationDetails id=BranchPhone>"+"Phone: "+ls_phone_branch+"</FONT>&nbsp; <FONT class=PartnerLocationDetails id=BranchFax>"+" Fax: "+ls_fax_branch+"<BR></FONT></TD></TR><!--<TR>" + ls_lb + &
+"<TD WIDTH="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"PartnerLocationName"+char(34)+" ID="+char(34)+"BranchFax"+char(34)+">" + ls_lb + &
+"FAX: <BR>" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>--></TBODY></TABLE>" + ls_lb + &
+"<TABLE style="+char(34)+"BORDER-RIGHT: black 4px double; BORDER-TOP: black 4px double; BORDER-LEFT: black 4px double; BORDER-BOTTOM: black 4px double"+char(34)+" width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=middle>" + ls_lb + &
+"<TABLE width="+char(34)+"90%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2><FONT class=SectionSummaryMain>PREVIOUS BALANCE</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"23.3%"+char(34)+"><FONT class=SectionSummaryMain>"+String(ld_previous_amt,ls_mascara)+" </FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2><FONT class=SectionSummaryMain>PAYMENTS / ADJUSTMENTS RECEIVED</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"23.3%"+char(34)+"><FONT class=SectionSummaryMain>"+string(ld_payments_amt,ls_mascara)+" </FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"33.3%"+char(34)+"></TD>" + ls_lb + &
+"<TD width="+char(34)+"43.3%"+char(34)+"></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 1px solid"+char(34)+" width="+char(34)+"23.3%"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2><FONT class=SectionSummaryMain>TOTAL PAST DUE</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"23.3%"+char(34)+"><FONT class=SectionSummaryMain>"+string(ld_past_due,ls_mascara)+"</FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=middle colSpan=2><FONT class=SectionSummarySupport>CURRENT CHARGES</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"23.3%"+char(34)+">&nbsp;</TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"33.3%"+char(34)+">&nbsp;</TD>" + ls_lb + &
+"<TD width="+char(34)+"43.3%"+char(34)+">" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"60%"+char(34)+"><FONT class=SectionSummarySupport>Net Amount Sent</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"40%"+char(34)+"><FONT class=SectionSummarySupport>"+string(ld_net_amt_sent,ls_mascara)+"</FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"60%"+char(34)+"><FONT class=SectionSummarySupport>Transaction Fees</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"40%"+char(34)+"><FONT class=SectionSummarySupport>"+string(ld_trans_fee,ls_mascara)+"</FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD width="+char(34)+"60%"+char(34)+"><FONT class=SectionSummarySupport>Commissions Earned</FONT></TD>" + ls_lb + &
+"<TD width="+char(34)+"40%"+char(34)+"><FONT class=SectionSummarySupport>"+string(ld_commissions,ls_mascara)+"</FONT></TD></TR></TBODY></TABLE></TD>" + ls_lb + &
+"<TD width="+char(34)+"33.3%"+char(34)+">&nbsp;</TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=left colSpan=2><FONT class=SectionSummaryMain>SUBTOTAL CURRENT CHARGES</FONT></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 1px solid"+char(34)+" width="+char(34)+"23.3%"+char(34)+"><FONT class=SectionSummaryMain>"+string(ld_subtotal,ls_mascara)+"</FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+" colSpan=3><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD class=SectionTD colSpan=3>" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=left width="+char(34)+"72%"+char(34)+"><FONT class=SectionSummaryTotal>TOTAL AMOUNT DUE</FONT></TD>" + ls_lb + &
+"<TD id=BalanceDue align=left width="+char(34)+"23.3%"+char(34)+"><FONT class=SectionSummaryTotal>"+string(ld_total_amt_due,ls_mascara)+"</FONT></TD><INPUT id=BalanceDueType type=hidden value=0> </TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><BR>" + ls_lb + &
+"<CENTER>FOR BILLING INQUIRIES PLEASE CALL 1 (800) 401 - 7626</CENTER><BR>&nbsp;" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2>" + ls_lb + &
+"<TABLE style="+char(34)+"BORDER-LEFT-COLOR: black; BORDER-BOTTOM-COLOR: black; BORDER-TOP-STYLE: solid; BORDER-TOP-COLOR: black; BORDER-RIGHT-STYLE: solid; BORDER-LEFT-STYLE: solid; BORDER-RIGHT-COLOR: black; BORDER-BOTTOM-STYLE: solid"+char(34)+" width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=left><FONT class=FootNote>Balances que permanescan con demorra de pago por mas de DOS dias resultaran en el CIERRE de la agencia hasta recibir confirmacion de deposito.</FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=left><FONT class=FootNote>Total past due balances that remain unpaid for more than TWO business days will result in the temporary termination of agency activity until proof of payment is received.</FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><BR>" + ls_lb + &
+"<TABLE cellSpacing=0 width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=4><FONT class=SectionHeader><U>Current Changes Detail</U> </FONT></TD></TR></TBODY></TABLE>" + ls_lb + &
+"<TABLE cellSpacing=0 width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR class=CardHeader>" + ls_lb + &
+"<TD vAlign=bottom align=right width="+char(34)+"20%"+char(34)+"><FONT class=CardHeader>Order Date </FONT></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"19%"+char(34)+"><FONT class=CardHeader>Invoice Number </FONT></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"9%"+char(34)+"><FONT class=CardHeader>Clerk </FONT></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"14%"+char(34)+"><FONT class=CardHeader>Receipient Name </FONT></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"12%"+char(34)+"><FONT class=CardHeader>Country </FONT></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"14%"+char(34)+"><FONT class=CardHeader>Sent Amount </FONT></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=4></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"14%"+char(34)+"><FONT class=CardHeader>Txn Fee </FONT></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=4></TD>" + ls_lb + &
+"<TD vAlign=bottom width="+char(34)+"12%"+char(34)+"><FONT class=CardHeader>Commission </FONT></TD></TR><!--8/9/2004-->"
+
+FileWrite(li_FileNum,ls_htmlcode)
+
+// ======================================================================================================
+// Ciclo de Invoices:
+
+String ls_invoice_number, ls_cashier,ls_namereceiver,ls_namecountry
+Double ld_amount, ld_fee, ld_commission
+Double ld_acum_amount, ld_acum_fee, ld_acum_commission
+DateTime ld_datereceiver
+
+DECLARE CUR_INVOICES CURSOR FOR  
+		 SELECT dba.RECEIVER.ID_RECEIVER,
+		   dba.RECEIVER.DATE_RECEIVER,
+         dba.RECEIVER.NAME_RECEIVER,   
+         dba.RECEIVER.ID_COUNTRY_RECEIVER,   
+			DBA.RECEIVER.NET_AMOUNT_RECEIVER,
+			(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO),
+			(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) )   
+			ORDER BY DBA.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA ASC,     
+						DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA ASC,
+						DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA ASC,
+						DBA.RECEIVER.ID_RECEIVER ASC;
+									
+									
+// SELECT dba.RECEIVER.ID_BRANCH,   
+//         dba.RECEIVER.ID_RECEIVER,   
+//         dba.RECEIVER.NAME_RECEIVER,   
+//         dba.RECEIVER.ID_COUNTRY_RECEIVER,   
+//         dba.RECEIVER.NET_AMOUNT_RECEIVER,
+//			DBA.RECEIVER.NET_AMOUNT_RECEIVER,
+//			DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO,
+//			DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP ,
+//		   dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA  
+//    FROM dba.RECEIVER,   
+//         dba.RELACION_INVOICES_PAYEE,   
+//         dba.TRANSACCION_DIARIA_PAYEE  
+//   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+//         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+//         ( ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+//         ( dba.RECEIVER.ID_BRANCH = 'A00702' ) AND  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= '2004-08-09 00:00:00' ) AND  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= '2004-08-09 23:00:00' ) )   
+//			ORDER BY DBA.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA ASC,     
+//						DBA.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA ASC,
+//						DBA.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA ASC,
+//						DBA.RECEIVER.ID_RECEIVER ASC;
+									
+
+// Totales
+ld_acum_amount = 0
+ld_acum_fee = 0
+ld_acum_commission = 0
+
+Double	ld_receiver, ld_fee_agent, ld_fee_comp
+String	ls_idcountry
+
+Open  CUR_INVOICES;
+Fetch  CUR_INVOICES into :ld_receiver, :ld_datereceiver, :ls_namereceiver, :ls_idcountry, :ld_amount, :ld_fee_agent, :ld_fee_comp ;
+DO WHILE SQLCA.SQLCODE = 0
+
+	ls_namereceiver = trim(LEFT(ls_namereceiver,15))
+	IF LEN(ls_namereceiver)=15 THEN ls_namereceiver = ls_namereceiver + "..."
+	ls_namecountry = trim(LEFT(ls_namecountry,10))
+	IF LEN(ls_namecountry)=10 THEN ls_namecountry = ls_namecountry + "..."	
+	
+	ls_invoice_number = is_idbranch + '-' + string(ld_receiver)
+	ls_cashier = 'CASHIER'
+	ls_namecountry = ls_idcountry
+	
+	// HTML:
+	ls_htmlcode = "" + &
+	"<TR class=CardData NOWRAP>" + ls_lb + &
+	"<TD align=right width="+char(34)+"20%"+char(34)+"><FONT class=CardData>"+String(ld_datereceiver,"mm/dd/yyyy hh:mm")+" </FONT></TD>" + ls_lb + &
+	"<TD width="+char(34)+"19%"+char(34)+"><FONT class=CardData>"+ls_invoice_number+" </FONT></TD>" + ls_lb + &
+	"<TD width="+char(34)+"9%"+char(34)+"><FONT class=CardData>"+ls_cashier+" </FONT></TD>" + ls_lb + &
+	"<TD noWrap width="+char(34)+"14%"+char(34)+"><FONT class=CardData>"+ls_namereceiver+" </FONT></TD>" + ls_lb + &
+	"<TD noWrap width="+char(34)+"12%"+char(34)+"><FONT class=CardData>"+ls_namecountry+" </FONT></TD>" + ls_lb + &
+	"<TD width="+char(34)+"14%"+char(34)+"><FONT class=CardData>"+String(ld_amount,ls_mascara)+" </FONT></TD>" + ls_lb + &
+	"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=4></TD>" + ls_lb + &
+	"<TD width="+char(34)+"14%"+char(34)+"><FONT class=CardData>"+String(ld_fee_agent,ls_mascara)+" </FONT></TD>" + ls_lb + &
+	"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" wdth=4></TD>" + ls_lb + &
+	"<TD width="+char(34)+"10%"+char(34)+"><FONT class=CardData>"+String((ld_fee_agent - ld_fee_comp),ls_mascara)+" </FONT></TD></TR>"
+	
+	ld_acum_amount = ld_acum_amount + ld_amount
+	ld_acum_fee = ld_acum_fee +ld_fee_agent
+	ld_acum_commission = ld_acum_commission + (ld_fee_agent - ld_fee_comp)
+	
+	FileWrite(li_FileNum,ls_htmlcode)
+
+	Fetch  CUR_INVOICES into :ld_receiver, :ld_datereceiver, :ls_namereceiver, :ls_idcountry, :ld_amount, :ld_fee_agent, :ld_fee_comp ;
+LOOP
+Close  CUR_INVOICES;
+// ======================================================================================================
+
+ls_htmlcode = "" + &
+"<TR>" + ls_lb + &
+"<TD colSpan=5><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+" width="+char(34)+"14%"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+" width="+char(34)+"14%"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+" width="+char(34)+"10%"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=right width="+char(34)+"62%"+char(34)+" colSpan=5><FONT style="+char(34)+"FONT-SIZE: 10pt"+char(34)+"><B>Total Current Changes</B>&nbsp;</FONT></TD>" + ls_lb + &
+"<TD align=middle width="+char(34)+"14%"+char(34)+"><FONT class=CardData><B>"+String(ld_acum_amount,ls_mascara)+"</B></FONT></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD align=middle width="+char(34)+"14%"+char(34)+"><FONT class=CardData><B>"+String(ld_acum_fee,ls_mascara)+"</B></FONT></TD>" + ls_lb + &
+"<TD width=0.33%><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=1></TD>" + ls_lb + &
+"<TD align=middle width="+char(34)+"10%"+char(34)+"><FONT class=CardData><B>"+String(ld_acum_commission,ls_mascara)+"</B></FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=right colSpan=8>&nbsp; </TD></TR><!--<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"7"+char(34)+" ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"Net Amount Sent:" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"<TD ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"$" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"7"+char(34)+" ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"Total Txn:" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"<TD ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+	"$" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"7"+char(34)+" ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"Total Commission:" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"<TD ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+	"$" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"7"+char(34)+" ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"Activity Total:" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"<TD ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"$" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"8"+char(34)+">" + ls_lb + &
+"<HR>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD COLSPAN="+char(34)+"7"+char(34)+" ALIGN="+char(34)+"RIGHT"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+"Net Due Amount:" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"<TD ALIGN="+char(34)+"RIGHT"+char(34)+" BGCOLOR="+char(34)+"#dcdcdc"+char(34)+">" + ls_lb + &
+"<FONT CLASS="+char(34)+"SectionHeader"+char(34)+">" + ls_lb + &
+	"$" + ls_lb + &
+"</FONT>" + ls_lb + &
+"</TD>" + ls_lb + &
+"</TR>--></TBODY></TABLE>" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=4><FONT class=SectionHeader><U>Payments / Adjustments Detail</U> </FONT></TD></TR>" + ls_lb + &
+"<TR class=CardHeader>" + ls_lb + &
+"<TD><FONT class=CardHeader>Effective Date </FONT></TD>" + ls_lb + &
+"<TD><FONT class=CardHeader>Comment / Type </FONT></TD>" + ls_lb + &
+"<TD><FONT class=CardHeader>Amount </FONT></TD></TR>"
+
+FileWrite(li_FileNum,ls_htmlcode)
+
+// ======================================================================================================
+// Ciclo de Ajustments:
+
+Datetime ld_effectivedate
+String ls_comment
+Double ld_debito, ld_credito, ld_amount_aju, ld_acum_amount_aju
+
+  DECLARE CUR_AJUSTE CURSOR FOR  
+  SELECT dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.DES_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.DEBIT_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA  
+       FROM dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE in ('DA','AC','CC','AVO')  AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :id_date1   AND  
+         dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2    
+ORDER BY cons_trans_diaria;
+
+// Totales
+ld_acum_amount_aju = 0
+
+Open  CUR_AJUSTE;
+Fetch  CUR_AJUSTE into :ld_effectivedate, :ls_comment, :ld_debito, :ld_credito ;
+DO WHILE SQLCA.SQLCODE = 0
+	
+	if isnull(ld_debito)  then ld_debito  = 0
+	if isnull(ld_credito) then ld_credito = 0
+	if isnull(ls_comment) then ls_comment = ''
+	
+	ld_amount_aju = ld_credito - ld_debito
+
+	ls_htmlcode = "" + &
+	"<TR class=CardData>" + ls_lb + &
+	"<TD><FONT class=CardData>"+String(ld_effectivedate,"mm/dd/yyyy")+" </FONT></TD>" + ls_lb + &
+	"<TD><FONT class=CardData>"+ls_comment+" </FONT></TD>" + ls_lb + &
+	"<TD><FONT class=CardData><I>"+String(ld_amount_aju,ls_mascara)+"</I> </FONT></TD></TR>"
+	ld_acum_amount_aju = ld_acum_amount_aju + ld_amount_aju
+	FileWrite(li_FileNum,ls_htmlcode)
+	
+	Fetch  CUR_AJUSTE into :ld_effectivedate, :ls_comment, :ld_debito, :ld_credito ;
+LOOP
+
+// ======================================================================================================
+
+ls_htmlcode = "" + &
+"<TD colSpan=2><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=right width="+char(34)+"62%"+char(34)+" colSpan=2><FONT style="+char(34)+"FONT-SIZE: 10pt"+char(34)+"><B>Total Payments / Adjustments</B>&nbsp;</FONT></TD>" + ls_lb + &
+"<TD align=middle width="+char(34)+"14%"+char(34)+"><FONT class=CardData><B>"+String(ld_acum_amount_aju,ls_mascara)+"</B></FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>" + ls_lb + &
+"<DIV class=break></DIV>" + ls_lb + &
+"<TABLE border=0></TR>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2>" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+" border=0>" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD vAlign=top align=left width="+char(34)+"50%"+char(34)+"><IMG src="+char(34)+"http://www.viamericas.com/images/xlogo_02.gif"+char(34)+"></FONT></TD>" + ls_lb + &
+"<TD vAlign=top align=right width="+char(34)+"50%"+char(34)+"></FONT></TD></TR></TBODY></TABLE></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD vAlign=top width="+char(34)+"49%"+char(34)+">" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2><FONT class=SectionHeader>Monthly Deposits Collected </FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD><FONT class=CardHeader>Effective Date </FONT></TD>" + ls_lb + &
+"<TD><FONT class=CardHeader>Amount </FONT></TD></TR>"
+
+FileWrite(li_FileNum,ls_htmlcode)
+
+// ======================================================================================================
+// ======================================================================================================
+// ======================================================================================================
+
+// Ciclo de Deposits:
+//+++++++++++
+// PENDIENTE: Cargar en un cursor
+Datetime ld_effectivedate_dep, ld_inicio_mes
+Double ld_amount_dep, ld_acum_amount_dep
+
+
+ld_effectivedate_dep = datetime(today(),now())
+ld_amount=0
+//+++++++++++
+
+// Totales
+ld_acum_amount_dep = 0
+
+ld_inicio_mes = dateTIME(dATE((string(id_date2,"YYYY-MM-")+string('1'))),tIME('00:00:00'))
+
+// DECLARE RECON CURSOR FOR  
+//  SELECT dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE,   
+//         dba.TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA  
+//    FROM dba.TRANSACCION_DIARIA_BANCO_PAYEE,   
+//         dba.TRANSACCION_DIARIA_PAYEE  
+//   WHERE ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA ) and  
+//         ( ( dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE >= :ld_inicio_mes ) AND  
+//         ( dba.TRANSACCION_DIARIA_BANCO_PAYEE.RECONCILIATIONDATE <= :id_date2 ) AND  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo ) AND  
+//         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'DA' ) )   ;
+
+DECLARE RECON CURSOR FOR  
+  SELECT dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA,   
+         dba.TRANSACCION_DIARIA_PAYEE.CREDIT_TRANS_DIARIA  
+    FROM dba.TRANSACCION_DIARIA_BANCO_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.TRANSACCION_DIARIA_BANCO_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :ld_inicio_mes ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :id_date2 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_GROUP_TRANS_DIARIA = :ls_grupo ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'DA' ) ) 
+ORDER BY dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA ASC ;
+
+
+Open RECON ;
+fetch RECON 	iNTO :ld_effectivedate_dep, :ld_amount_dep ; 
+DO WHILE sqlca.sqlcode = 0
+
+	ls_htmlcode = "" + &
+	"<TR>" + ls_lb + &
+	"<TD><FONT class=CardData>"+String(ld_effectivedate_dep,"mm/dd/yyyy")+" </FONT></TD>" + ls_lb + &
+	"<TD><FONT class=CardData>"+String(ld_amount_dep,ls_mascara)+" </FONT></TD></TR>"
+	ld_acum_amount_dep = ld_acum_amount_dep + ld_amount_dep;
+	FileWrite(li_FileNum,ls_htmlcode)
+
+	fetch RECON 	iNTO :ld_effectivedate_dep, :ld_amount_dep ; 
+LOOP
+
+Close	RECON ;
+
+// ======================================================================================================
+// ======================================================================================================
+// ======================================================================================================
+
+ls_htmlcode = "" + &
+"<TR>" + ls_lb + &
+"<TD><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=right><B>Total Monthly Deposits</B></TD>" + ls_lb + &
+"<TD><B>"+String(ld_acum_amount_dep,ls_mascara)+"</B></TD></TR></TBODY></TABLE></TD>" + ls_lb + &
+"<TD width="+char(34)+"2%"+char(34)+">&nbsp;</TD>" + ls_lb + &
+"<TD vAlign=top width="+char(34)+"49%"+char(34)+">" + ls_lb + &
+"<TABLE width="+char(34)+"100%"+char(34)+">" + ls_lb + &
+"<TBODY>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD colSpan=2><FONT class=SectionHeader>Monthly Earned Commisions </FONT></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD><FONT class=CardHeader>Earned Date </FONT></TD>" + ls_lb + &
+"<TD><FONT class=CardHeader>Amount </FONT></TD></TR>"
+
+FileWrite(li_FileNum,ls_htmlcode)
+
+// ======================================================================================================
+// Ciclo de Commissions:
+
+Date ld_effectivedate_com
+Double ld_amount_com, ld_acum_amount_com
+
+// Totales
+ld_acum_amount_com = 0
+
+// Pendiente: Cargar Cursor y llenar las variables
+Date		ld_ciclo
+Datetime	ld_fecha_ciclo1, ld_fecha_ciclo2
+
+int li_day, li_maxday
+
+li_maxday = integer(string(id_date2,"dd"))
+
+FOR li_day = 1 TO li_maxday
+
+	ld_ciclo = date(string(id_date2,"YYYY-MM-")+string(li_day))
+	ld_fecha_ciclo1 = Datetime(ld_ciclo,time('00:00:00'))
+	ld_fecha_ciclo2 = Datetime(ld_ciclo,time('23:59:59'))
+
+	SELECT SUM(DBA.RECEIVER.EXCHANGE_RECEIVER + DBA.RECEIVER.TELEX_RECEIVER + DBA.RECEIVER.TOTAL_MODO_PAGO) - SUM(DBA.RECEIVER.EXCHANGE_COMPANY + DBA.RECEIVER.TELEX_COMPANY   + DBA.RECEIVER.TOTAL_MODO_PAGO_COMP )
+	INTO :ld_amount_com
+    FROM dba.RECEIVER,   
+         dba.RELACION_INVOICES_PAYEE,   
+         dba.TRANSACCION_DIARIA_PAYEE  
+   WHERE ( dba.RECEIVER.ID_BRANCH = dba.RELACION_INVOICES_PAYEE.ID_BRANCH_INVOICE ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_RECEIVER = dba.RECEIVER.ID_RECEIVER ) and  
+         ( dba.TRANSACCION_DIARIA_PAYEE.CONS_TRANS_DIARIA = dba.RELACION_INVOICES_PAYEE.CONS_TRANS_DIARIA ) and  
+         ( dba.RELACION_INVOICES_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.ID_CONCEPTO_CONTABLE = 'TD' ) AND  
+         ( dba.RECEIVER.ID_BRANCH = :is_idbranch ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA >= :ld_fecha_ciclo1 ) AND  
+         ( dba.TRANSACCION_DIARIA_PAYEE.DATE_TRANS_DIARIA <= :ld_fecha_ciclo2 ) ;		
+
+	if isnull(ld_amount_com) then ld_amount_com = 0
+
+	ld_effectivedate_com  = ld_ciclo
+
+	ls_htmlcode = "" + &
+	"<TR>" + ls_lb + &
+	"<TD><FONT class=CardData>"+String(ld_effectivedate_com,"mm/dd/yyyy")+" </FONT></TD>" + ls_lb + &
+	"<TD><FONT class=CardData>"+String(ld_amount_com,ls_mascara)+" </FONT></TD></TR>"
+	ld_acum_amount_com = ld_acum_amount_com + ld_amount_com
+	FileWrite(li_FileNum,ls_htmlcode)
+
+NEXT
+
+// ======================================================================================================
+
+ls_htmlcode = "" + &
+"<TR>" + ls_lb + &
+"<TD><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD>" + ls_lb + &
+"<TD style="+char(34)+"BORDER-TOP: black 2px solid"+char(34)+"><IMG height=1 src="+char(34)+"/images/1pix.gif"+char(34)+" width=10></TD></TR>" + ls_lb + &
+"<TR>" + ls_lb + &
+"<TD align=right><B>Total Monthly Commissions</B></TD>" + ls_lb + &
+"<TD><B>"+String(ld_acum_amount_com,ls_mascara)+"</B></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>" + ls_lb + &
+"<CENTER><B>FOR BILLING INQUIRIES PLEASE CALL 1 (800) 401 - 7626</B></CENTER><!--Ending Loop Through Locations --></BODY>"
+
+FileWrite(li_FileNum,ls_htmlcode)
+FileClose(li_FileNum)
+
+if left(ps_type,2) = 'C:' then
+	ls_email=mid(ps_type,3)
+end if
+
+// Si es un EMAIL se manda el archivo generado
+if ps_type = 'E' or left(ps_type,2) = 'C:' then
+	run("c:\viamericasMT\MTSMail.exe "+trim(ls_email)+"#*#Daily Invoice for "+string(pd_date1,"MM-DD-YYYY")+"#*#"+ls_filename+"#*#This E-Mail includes an attachment from Viamericas Corporation.#*#Y")
+	messagebox("Complete","An E-Mail was generate for the branch",Information!)
+end if
+SetPointer(Arrow!)
+end subroutine
+

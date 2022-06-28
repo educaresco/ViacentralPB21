@@ -1,0 +1,29 @@
+﻿$PBExportHeader$fn_branch_incollection.srf
+global type fn_branch_incollection from function_object
+end type
+
+forward prototypes
+global function string fn_branch_incollection (string id_branch)
+end prototypes
+
+global function string fn_branch_incollection (string id_branch);
+string ls_status
+
+ls_status = "" 
+SELECT fin_status
+INTO :ls_status  
+FROM dba.BRANCH, dba.GROUP_BRANCH
+WHERE dba.BRANCH.ID_MAIN_BRANCH = dba.GROUP_BRANCH.ID_MAIN_BRANCH
+AND dba.BRANCH.ID_BRANCH = :id_branch;
+
+if SQLCA.SQLCode = 0 then
+	if not isnull(ls_status) and ls_status = 'CO' then
+		ls_status = "IN COLLECTION" 
+	else
+		ls_status = ""
+	end if
+end if
+
+return ls_status
+end function
+

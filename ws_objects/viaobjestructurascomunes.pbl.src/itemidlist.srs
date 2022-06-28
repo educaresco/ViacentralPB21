@@ -1,0 +1,5 @@
+﻿$PBExportHeader$itemidlist.srs
+global type itemidlist from structure
+	shitemid		mkid
+end type
+

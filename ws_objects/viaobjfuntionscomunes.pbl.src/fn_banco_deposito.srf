@@ -1,0 +1,23 @@
+﻿$PBExportHeader$fn_banco_deposito.srf
+global type fn_banco_deposito from function_object
+end type
+
+forward prototypes
+global function string fn_banco_deposito (double cons)
+end prototypes
+
+global function string fn_banco_deposito (double cons);string	ls_banco
+
+ls_banco = ''
+
+SELECT SHORTNAME_BANCO  
+  INTO :ls_banco
+  FROM dba.transaccion_diaria_banco_payee, dba.banco  
+ WHERE ( dba.transaccion_diaria_banco_payee.id_banco = dba.banco.id_banco ) 
+   AND ( dba.transaccion_diaria_banco_payee.cons_trans_diaria = :cons );
+
+if ISNULL(ls_banco) then ls_banco = ''
+
+return ls_banco
+end function
+
